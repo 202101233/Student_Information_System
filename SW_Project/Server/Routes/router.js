@@ -18,7 +18,7 @@ route.get('/facultyhome', controller.g_facultyhome);
 route.get('/studenthome', controller.g_studenthome);
 
 route.get('/viewcourse', controller.g_viewcourse);
-route.post('/viewcurse', controller.p_viewcourse);
+route.post('/viewcourse', controller.p_viewcourse);
 
 route.post('/updatecourse', controller.p_updatecourse);
 route.get('/addcourse', controller.g_addcourse);
@@ -38,4 +38,22 @@ route.post('/viewbranch', controller.p_viewbranch);
 route.post('/updatebranch', controller.p_updatebranch);
 route.get('/addbranch', controller.g_addbranch);
 route.post('/addbranch', controller.p_addbranch);
+
+route.get('/viewprogram',controller.g_addprogram);
+route.post('/viewprogram',controller.p_addprogram);
+
+route.post('/updateprogram', controller.p_updateprogram);
+route.get('/addprogram', controller.g_addprogram);
+route.post('/addprogram', controller.p_addprogram);
+
+route.get('/changepwdadmin', controller.g_changepwdadmin);
+route.post('/changepwdadmin', controller.p_changepwdadmin);
+
+route.get('/changepwdfaculty', controller.g_changepwdfaculty);
+route.post('/changepwdfaculty', controller.p_changepwdfaculty);
+
+route.get('/changepwdstudent', controller.g_changepwdstudent);
+route.post('/changepwdstudent', controller.p_changepwdstudent);
+
+
 

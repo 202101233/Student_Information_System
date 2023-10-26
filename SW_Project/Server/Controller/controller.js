@@ -220,8 +220,8 @@ exports.p_adddegree = async (req,res) => {
 
 exports.g_viewbranch = async (req,res) => {
     try{
-        const branchs = await Branch.find({}).exec();
-        res.render("viewbranch.ejs", { degree : branchs});
+        const branches = await Branch.find({}).exec();
+        res.render("viewbranch.ejs", { degree : branches});
     } catch(err) {
         console.error(err);
         res.status(500).send("An error occured while fetching branch data");
@@ -232,8 +232,8 @@ exports.p_viewbranch = async (req,res) => {
     try {
         if(req.body.edit)
         {
-            const branchs = await Branch.findOne({ _id : req.body.edit}).exac();
-            res.render("updatebranch.ejs", {branchs});
+            const branch = await Branch.findOne({ _id : req.body.edit}).exac();
+            res.render("updatebranch.ejs", {branch});
         }
         else {
             await Branch.deleteOne({ _id : req.body.delete }).exec();
@@ -276,6 +276,243 @@ exports.p_addbranch = async (req,res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding branch data");   
+    }
+}
+
+exports.g_changepwdadmin = async (req,res) => {
+    res.render("changepwdadmin");
+}
+
+exports.p_changepwdadmin = async (req,res) => {
+    try {
+        const ID = req.admin.id;           //user here means admin or not?
+        const { oldpwd, newpwd, confirmpwd} = req.body;
+
+        if(newpwd!=confirmpwd)
+        {
+            const title= "ERROR";
+            const message = "New passward and confirm passward do not mathch!";
+            const icon = "error";
+            const href = "/changepwdadmin";
+            res.render("alert.ejs", {title,message,icon,href});
+
+            return res.status(400).send("New passward and confirm passward do not mathch!");
+        }
+        const user = await Admin.findById(ID);
+
+        const pwdvalid= await bcrypt.compare(oldpwd,user.Passward);
+
+        if(!pwdvalid)
+        {
+            const title= "ERROR";
+            const message = "Old Passward is incorrect!";
+            const icon = "error";
+            const href = "/changepwdadmin";
+            res.render("alert.ejs", {title,message,icon,href});
+            
+            return res.status(401).send("Old passward is incorrect!");
+        }
+        
+        const hashedpwd = await bcrypt.hash(newpwd,saltRounds);
+        user.Passward = hashedpwd;
+        await user.save();
+
+        const title= "SUCCESS";
+        const message = "Passward changed successfully!";
+        const icon = "success";
+        const href = "/adminhome";
+        res.render("alert.ejs", {title,message,icon,href});
+            
+
+        res.status(200).send("Passward changed successfully");
+
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("An error occured while adding branch data");   
+    }
+}
+
+exports.g_changepwdfaculty = async (req,res) => {
+    res.render("changepwdfaculty");
+}
+
+exports.p_changepwdfaculty = async (req,res) => {
+    try {
+        const ID = req.faculty.id;           //user here means admin or not?
+        const { oldpwd, newpwd, confirmpwd} = req.body;
+
+        if(newpwd!=confirmpwd)
+        {
+            const title= "ERROR";
+            const message = "New passward and confirm passward do not mathch!";
+            const icon = "error";
+            const href = "/changepwdfaculty";
+            res.render("alert.ejs", {title,message,icon,href});
+
+            return res.status(400).send("New passward and confirm passward do not mathch!");
+        }
+        const user = await Admin.findById(ID);
+
+        const pwdvalid= await bcrypt.compare(oldpwd,user.Passward);
+
+        if(!pwdvalid)
+        {
+            const title= "ERROR";
+            const message = "Old Passward is incorrect!";
+            const icon = "error";
+            const href = "/changepwdfaculty";
+            res.render("alert.ejs", {title,message,icon,href});
+            
+            return res.status(401).send("Old passward is incorrect!");
+        }
+        
+        const hashedpwd = await bcrypt.hash(newpwd,saltRounds);
+        user.Passward = hashedpwd;
+        await user.save();
+
+        const title= "SUCCESS";
+        const message = "Passward changed successfully!";
+        const icon = "success";
+        const href = "/facultyhome";
+        res.render("alert.ejs", {title,message,icon,href});
+            
+
+        res.status(200).send("Passward changed successfully");
+
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("An error occured while changing pwd!");   
+    }
+}
+
+exports.g_changepwdstudent = async (req,res) => {
+    res.render("changepwdstudent");
+}
+
+exports.p_changepwdstudent = async (req,res) => {
+    try {
+        const ID = req.student.id;           //user here means admin or not?
+        const { oldpwd, newpwd, confirmpwd} = req.body;
+
+        if(newpwd!=confirmpwd)
+        {
+            const title= "ERROR";
+            const message = "New passward and confirm passward do not mathch!";
+            const icon = "error";
+            const href = "/changepwdstudent";
+            res.render("alert.ejs", {title,message,icon,href});
+
+            return res.status(400).send("New passward and confirm passward do not mathch!");
+        }
+        const user = await Admin.findById(ID);
+
+        const pwdvalid= await bcrypt.compare(oldpwd,user.Passward);
+
+        if(!pwdvalid)
+        {
+            const title= "ERROR";
+            const message = "Old Passward is incorrect!";
+            const icon = "error";
+            const href = "/changepwdstudent";
+            res.render("alert.ejs", {title,message,icon,href});
+            
+            return res.status(401).send("Old passward is incorrect!");
+        }
+        
+        const hashedpwd = await bcrypt.hash(newpwd,saltRounds);
+        user.Passward = hashedpwd;
+        await user.save();
+
+        const title= "SUCCESS";
+        const message = "Passward changed successfully!";
+        const icon = "success";
+        const href = "/studenthome";
+        res.render("alert.ejs", {title,message,icon,href});
+            
+
+        res.status(200).send("Passward changed successfully");
+
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("An error occured while updating pwd!");   
+    }
+}
+
+
+exports.g_viewprogram = async (req,res) => {
+    try {
+        const programs = await Program.find({})
+        .populate('DegreeOffered Branchoffered Courseoffered') 
+        .exec();
+
+        res.render("viewprogram.ejs", { program : programs});
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("An error occured while adding branch data");
+    }
+}
+
+exports.p_viewprogram = async (req,res) => {
+    try{
+        if(req.body.edit)
+        {
+            const program = await Program.findOne({ _id : req.body.edit})
+            .populate(' DegreeOffered Branchoffered Courseoffered') 
+            .exec();
+            res.render("updateprogram.ejs", {program});
+
+        } else {
+            await Program.deleteOne({ _id : req.body.delete}).exec();
+            const programs = await Program.find({})
+            .populate('DegreeOffered Branchoffered Courseoffered') 
+            .exec();
+
+            res.redirect("viewprogram");
+        }
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("An error occured while adding program data");
+    }
+}
+
+exports.p_updateprogram = async (req,res) => {
+    try {
+
+    }catch (err) {
+        console.error(err);
+        res.status(500).send("An error occured while updating program data");
+
+    }
+}
+
+exports.g_addprogram = async (req,res) => {
+    try{
+        const degrees = await Degree.find({}).exec();
+        const programs = await Program.find({}).exec();
+        const courses = await Course.find({}).exec();
+        res.render("addprogram.ejs", {degrees,programs,courses});
+
+    } catch(err){
+        console.error(err);
+        res.status(500).send("An error occured while adding program data");
+    }
+}
+
+exports.p_addprogram = async (req,res) => {
+    try{
+        const { degree , branch, courses} = req.body;
+
+        const newPrpgram = new Program ({
+            DegreeOffered : degree,
+            BranchOffered : branch,
+            CourseOffered : courses
+        });
+
+        await newPrpgram.save();
+        res.redirect("viewProgram");
+    } catch(err){
+        console.error(err);
+        res.status(500).send("An error occured while adding program data");
     }
 }
 
