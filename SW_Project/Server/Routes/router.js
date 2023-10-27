@@ -17,13 +17,15 @@ route.get('/adminhome', controller.g_adminhome);
 route.get('/facultyhome', controller.g_facultyhome);
 route.get('/studenthome', controller.g_studenthome);
 
+route.get('studentregistration', controller.g_studentregistration);
+route.post('studentregistration', controller.p_studentregistration);
+
 route.get('/viewcourse', controller.g_viewcourse);
 route.post('/viewcourse', controller.p_viewcourse);
 
 route.post('/updatecourse', controller.p_updatecourse);
 route.get('/addcourse', controller.g_addcourse);
 route.post('/addcourse', controller.p_addcourse);
-
 
 route.get('/viewdegree' , controller.g_viewdegree);
 route.post('/viewdegree', controller.p_viewdegree);

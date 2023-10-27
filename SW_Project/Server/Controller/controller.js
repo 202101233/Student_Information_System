@@ -78,6 +78,20 @@ exports.p_studentlogin = async (req,res) => {
 	}
 }
 
+
+exports.g_studentregistration = (isLoggedInstudent, (req,res)=> {
+    res.render("studentregistration.ejs");
+})
+
+exports.p_studentregistration = (isLoggedInstudent, (req,res) => {
+    try{
+
+    } catch(err)
+    {
+        
+    }
+})
+
 exports.g_adminhome = (isLoggedInadmin, (req,res) => {
     res.render("adminhome.ejs");
 })

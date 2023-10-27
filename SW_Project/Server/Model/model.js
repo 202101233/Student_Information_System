@@ -16,21 +16,23 @@ var StudentSchema = new mongoose.Schema({
     Batch : String,
     Blood_Group : String,
     Profile_image : Buffer,
-    ProgramRegister : { type : mongoose.Schema.type.ObjectID , ref: "Program"}
+    ProgramRegistered : { type : mongoose.Schema.Types.ObjectId, ref: "Program"},
+    Fee_Paid : Boolean          //paid : 1 and unpaid : 0
 })
 
 var FacultySchema = new mongoose.Schema({
     firstname : String,
     middlename : String,
     lastname : String,
-    Faculty_id : String,
+    //Faculty_id : String,
     phoneNo : String,
     Gender : String,
     Email_id : String,
     Address : String,
     Passward : String,
     Faculty_block : String,
-    Profile_image : Buffer,   
+    Profile_image : Buffer,
+    //JoiningDate : Date   
 })
 
 var AdminSchema = new mongoose.Schema({
@@ -49,44 +51,34 @@ var BranchSchema = new mongoose.Schema({
 var CourseSchema = new mongoose.Schema({
     Course_Name : String,
     Course_code : Number,
-    Course_credit : Number
+    Course_credit : Number,
+    Course_Type : Boolean           // Core : 1 and Elective : 0
 })
 
 var ProgramSchema = new mongoose.Schema({
-    DegreeOffered : { type : mongoose.Schema.type.ObjectId, ref: "Degree"},
-    BranchOffered : { type : mongoose.Schema.type.ObjectId, ref: "Branch"},
-    CourseOffered : [{ type : mongoose.Schema.type.ObjectId, ref: "Course"}],
+    DegreeOffered : { type : mongoose.Schema.Types.ObjectId, ref: "Degree"},
+    BranchOffered : { type : mongoose.Schema.Types.ObjectId, ref: "Branch"},
+    CourseOffered : [{ type : mongoose.Schema.Types.ObjectId, ref: "Course"}],
 })
 
 var SemesterSchema = new mongoose.Schema({
     Sem_name : String,
-    ProgramOffered : [{ type : mongoose.Schema.type,ObjectID, ref: "Program"}]
+    DateCreated: Date,
+    Sem_Type : Boolean,               // Autumn : 1 and Winter : 0
+    ProgramOffered : [{ type : mongoose.Schema.Types,ObjectId, ref: "Program"}]
 })
 
-var fee_structureSchema = new mongoose.Schema({
-    program_fee : { type : mongoose.Schema.type.ObjectID, ref : "Program"},
-    Fee_structure : Map,
-})
+// var fee_structureSchema = new mongoose.Schema({
+//     program_fee : { type : mongoose.Schema.Types.ObjectId, ref : "Program"},
+//     Fee_structure : Map,
+// })
 
-var fee_historySchema = new mongoose.Schema({
-    SrudentEnroll : { type : mongoose.Schema.type.ObjectID, ref : "Student"},
-    SemesterFee : { type : mongoose.Schema.type.ObjectID, ref : "Semester"},
-    Feestatus : Boolean,
-    Fee_paid : Map,
-    Date_Of_payment : Date
-})
-
-var TranscriptSchema = new mongoose.Schema({
-    Student_detials : {type : mongoose.Schema.type.ObjectID, ref : "Student"},
-    Course : [
-        {
-            Course_Name : String,
-            Grade : String
-        },
-    ],
-    Totalcredit : Number,
-    CPI : Number,
-})
+// var fee_historySchema = new mongoose.Schema({
+//     SrudentEnroll : { type : mongoose.Schema.Types.ObjectId, ref : "Student"},
+//     SemesterFee : { type : mongoose.Schema.Types.ObjectId, ref : "Semester"},
+//     Feestatus : Boolean,
+//     Date_Of_payment : Date
+// })
 
 var AnnouncementSchema = new mongoose.Schema({
     Title : String,
@@ -94,19 +86,33 @@ var AnnouncementSchema = new mongoose.Schema({
     Created_Date : Date
 })
 
-var Course_AllotmentSchema = new mongoose.Schema({
-    
+var TranscriptSchema = new mongoose.Schema({
+    Student_detials : {type : mongoose.Schema.type.ObjectID, ref : "Student"},
+    Courses : [CourseSchema],
+    Totalcredit : Number,
+    CPI : Number,
 })
+
+var Course_AllotmentSchema = new mongoose.Schema({
+    ProgramAssigned: { type: mongoose.Schema.Types.ObjectId, ref: "Program" },
+    CourseAssigned: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+    FacultyAssigned: { type: mongoose.Schema.Types.ObjectId,ref: "Faculty"},
+    SemesterAssigned: { type: mongoose.Schema.Types.ObjectId, ref: "Semester" },
+  });
+
+var Course_EnrollmentSchema = new mongoose.Schema({
+    courseEnrolled: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+    studentEnrolled: { type: mongoose.Schema.Types.ObjectId, ref: "Student" },
+    semesterEnrolled: { type: mongoose.Schema.Types.ObjectId, ref: "Semester" },
+    grade: Number,
+    attendance: { type: Number, min: 0, max: 100 },
+    dateEnrolled: Date,
+  });
 
 var ResultSchema = new mongoose.Schema({
-    student : { type : mongoose.Schema.type.ObjectID, ref : "Student"},
+    Student : { type : mongoose.Schema.type.ObjectID, ref : "Student"},
     Semester : String,
-    Grade : [{
-        Course : {type : mongoose.Schema.type.ObjectID, ref : "Course"},
-
-    }]
 })
-
 
 
 const Student = mongoose.model("Student", StudentSchema);
@@ -117,13 +123,14 @@ const Branch = mongoose.model("Branch", BranchSchema);
 const Course = mongoose.model("Course", CourseSchema);
 const Program = mongoose.model("Program", ProgramSchema);
 const Semester = mongoose.model("Semester", SemesterSchema);
-const fee_structure = mongoose.model("fee_structure", fee_structureSchema);
-const fee_history = mongoose.model("fee_history", fee_historySchema);
+// const fee_structure = mongoose.model("fee_structure", fee_structureSchema);
+// const fee_history = mongoose.model("fee_history", fee_historySchema);
 const Transcript = mongoose.model("Transcript", TranscriptSchema);
 const Announcement = mongoose.model("Announcement", AnnouncementSchema);
 const Course_Allotment = mongoose.model("Course_Allotment", Course_AllotmentSchema);
+const Course_Enrollment = mongoose.model("Course_Enrollment", Course_EnrollmentSchema);
 const Result = mongoose.model("Result", ResultSchema);
 
 
-module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Semester,fee_structure,fee_history,
-    Transcript,Announcement,Course_Allotment,Result};
+module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Semester,Transcript,Announcement,
+    Course_Allotment,Result};
