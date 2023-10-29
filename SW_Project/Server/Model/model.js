@@ -12,7 +12,7 @@ var StudentSchema = new mongoose.Schema({
     Email_id : String,
     Address : String,
     Parent_Email_Id : String,
-    Passward : String,
+    Password : String,
     Batch : String,
     Blood_Group : String,
     Profile_image : Buffer,
@@ -21,13 +21,15 @@ var StudentSchema = new mongoose.Schema({
 })
 
 var FacultySchema = new mongoose.Schema({
-    fullname : String,
+    firstname : String,
+    middlename : String,
+    lastname : String,
     //Faculty_id : String,
     phoneNo : String,
     Gender : String,
     Email_id : String,
     Address : String,
-    Passward : String,
+    Password : String,
     Faculty_block : String,
     Profile_image : Buffer,
     //JoiningDate : Date   
@@ -35,7 +37,7 @@ var FacultySchema = new mongoose.Schema({
 
 var AdminSchema = new mongoose.Schema({
     Email_id : String,
-    Passward : String
+    Password : String
 })
 
 var DegreeSchema = new mongoose.Schema({
@@ -131,4 +133,4 @@ const Result = mongoose.model("Result", ResultSchema);
 
 
 module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Semester,Transcript,Announcement,
-    Course_Allotment,Result};
+    Course_Allotment,Course_Enrollment,Result};

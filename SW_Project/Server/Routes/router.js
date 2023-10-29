@@ -17,6 +17,8 @@ route.get('/adminhome', controller.g_adminhome);
 route.get('/facultyhome', controller.g_facultyhome);
 route.get('/studenthome', controller.g_studenthome);
 
+// Admin Functionality
+
 route.get('studentregistration', controller.g_studentregistration);
 route.post('studentregistration', controller.p_studentregistration);
 
@@ -44,23 +46,35 @@ route.post('/addbranch', controller.p_addbranch);
 route.get('/viewprogram',controller.g_addprogram);
 route.post('/viewprogram',controller.p_addprogram);
 
-route.post('/updateprogram', controller.p_updateprogram);
+// route.post('/updateprogram', controller.p_updateprogram);
 route.get('/addprogram', controller.g_addprogram);
 route.post('/addprogram', controller.p_addprogram);
 
+route.get('/viewsemester', controller.g_viewsemester);
+route.post('/viewsemester', controller.p_viewsemester);
+
+route.get('addsemester', controller.g_addsemester);
+route.post('addsemester', controller.p_addsemester);
+
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);
+
+route.delete('/logoutadmin', controller.logoutadmin);
+route.delete('/logoutfaculty', controller.logoutfaculty);
+route.delete('/logoutstudent', controller.logoutstudent);
+
+// Faculty Functionality
+
+route.get('viewfaculty', controller.g_viewfaculty);
+route.post('viewfaculty', controller.p_viewfaculty);
+
+route.post('updatefaculty', controller.updatefaculty);
 
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
 
 route.get('/changepwdstudent', controller.g_changepwdstudent);
 route.post('/changepwdstudent', controller.p_changepwdstudent);
-
-
-route.get('/viewfaculty', controller.g_viewfaculty);
-route.get('/updatefaculty', controller.p_updatefaculty);
-route.post('/updatefaculty' , controller.p_updatefaculty);
 
 
 
