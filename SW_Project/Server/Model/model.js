@@ -21,9 +21,7 @@ var StudentSchema = new mongoose.Schema({
 })
 
 var FacultySchema = new mongoose.Schema({
-    firstname : String,
-    middlename : String,
-    lastname : String,
+    fullname : String,
     //Faculty_id : String,
     phoneNo : String,
     Gender : String,

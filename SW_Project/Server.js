@@ -4,6 +4,8 @@ const morgan=require("morgan");
 const bodyparser=require("body-parser");
 const path=require("path");
 const bcrypt=require('bcrypt');
+const validatePhoneNumber = require('validate-phone-number-node-js');
+const validator = require("email-validator");
 
 
 const connectDB=require("./Server/Database/connection");

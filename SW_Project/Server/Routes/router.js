@@ -58,4 +58,9 @@ route.get('/changepwdstudent', controller.g_changepwdstudent);
 route.post('/changepwdstudent', controller.p_changepwdstudent);
 
 
+route.get('/viewfaculty', controller.g_viewfaculty);
+route.get('/updatefaculty', controller.p_updatefaculty);
+route.post('/updatefaculty' , controller.p_updatefaculty);
+
+
 
