@@ -65,16 +65,26 @@ route.delete('/logoutstudent', controller.logoutstudent);
 
 // Faculty Functionality
 
-route.get('viewfaculty', controller.g_viewfaculty);
-route.post('viewfaculty', controller.p_viewfaculty);
+route.get('/viewfaculty', controller.g_viewfaculty);
+route.post('/viewfaculty', controller.p_viewfaculty);
 
-route.post('updatefaculty', controller.updatefaculty);
+route.post('/updatefaculty', controller.updatefaculty);
 
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
 
 route.get('/changepwdstudent', controller.g_changepwdstudent);
 route.post('/changepwdstudent', controller.p_changepwdstudent);
+
+
+
+//forgot password
+
+route.get('/forgotpwd', controller.g_forgotpwd);   // this is common for all 3 users
+
+route.post('/forgotpwdfaculty', controller.p_forgotpwdfaculty);  //email enter, mail send with reset link
+route.get('/resetpwd/:id/:token', controller.g_resetpwd);  //is it common for all???
+route.post('/resetpwd/:id/:token', controller.p_resetpwdfaculty);
 
 
 
