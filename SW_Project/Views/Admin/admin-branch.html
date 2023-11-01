@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../Assets/css/admin-branch.css">
+    <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="upperbar">
+            <div class="weblogoplace">
+                <img src="logo.png" alt="not rendered" id="weblogoimg">
+            </div>
+            <div class="webnameplace">
+                <div class="webname"><p id="temp1">Student Information System</p></div>
+            </div>        
+        </div>
+        <div class="downflex">
+        <div class="sidenav">
+            <div class="sidenavopt">
+                <ul>
+                    <li><a href="#" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
+                    <li id="for-down"><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i>
+                        <select name="" id="test" onmousedown="forfocus()" onblur="forblur()" class="dropmenu" onchange="window.location.href=this.value;">
+                            <option value="none" selected disabled hidden class="dropitems">New Registration</option>
+                            <option value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands." class="dropitmes">Student Registration</option>
+                            <option value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands." class="dropitmes">Faculty Registration</option>
+                          </select>
+                    </a></li>
+                   
+                    <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Course Management </a></li>
+                    <li><a href="#"><i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;Degree Management </a></li>
+                    <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;branch Management </a></li>
+                    <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Programme Management </a></li>
+                    <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Semester </a></li>
+                    
+                    <li><a href="#"><i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;Announcement </a></li>
+                    
+                    <li><a href="#"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>&nbsp;Fees </a></li>
+                    <li><a href="#"><i class="fa-solid fa-key"></i> Change Password </a></li>
+                    <li><a  href="#"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
+                  </ul>
+            </div>
+            <div class="sidenavdown">
+                <div class="curruserlogo">
+    
+                </div>
+                <div class="currusername">
+                    Prof Saurbh Tiwari
+                </div>
+            </div>
+        </div>
+    
+        <div class="content">
+            
+            <div class="btn-place">
+                <button type="button" class="btn"><b>Add Degree</b></button>
+            </div>
+            
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <th style="width: 20%;">Sr No.</th>
+                        <th style="width: 40%;">Branch</th>
+                        <th style="width: 20%;">Update</th>
+                        <th style="width: 20%;">Remove</th>
+                    </thead>
+                
+                
+                    <tbody>
+                        <div class="temp-div">
+                        <tr>
+                            <td class="leftpad" style="width: 20%;">1</td>
+                            <td class="leftpad" style="width: 40%;">ICT</td>
+                            <td class="center" style="width: 20%;"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center" style="width: 20%;"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        <tr>
+                            <td class="leftpad">2</td>
+                            <td class="leftpad">MNC</td>
+                            <td class="center"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        <tr>
+                            <td class="leftpad">3</td>
+                            <td class="leftpad">ICT-CS</td>
+                            <td class="center"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        <tr>
+                            <td class="leftpad">4</td>
+                            <td class="leftpad">Computer Science</td>
+                            <td class="center"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        <tr>
+                            <td class="leftpad">5</td>
+                            <td class="leftpad">Chemical Engineering</td>
+                            <td class="center"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        <tr>
+                            <td class="leftpad">6</td>
+                            <td class="leftpad">Mechanical Engineering</td>
+                            <td class="center"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        <tr>
+                            <td class="leftpad">7</td>
+                            <td class="leftpad">Civil Engineering</td>
+                            <td class="center"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        <tr>
+                            <td class="leftpad">8</td>
+                            <td class="leftpad">Designing</td>
+                            <td class="center"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        <tr>
+                            <td class="leftpad">9</td>
+                            <td class="leftpad">Cyber Security</td>
+                            <td class="center"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                        </tr>
+                        </div>
+                    </tbody>
+                </table>
+            </div>
+        
+            
+     <!-- content     -->
+    </div>
+
+    
+    <!-- downflex -->
+    </div>
+
+    <!-- wrapper -->
+    </div>
+<script src="admin-branch.js"></script>
+</body>
+</html>
+</body>
+</html>

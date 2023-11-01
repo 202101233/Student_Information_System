@@ -2,6 +2,7 @@ const express = require("express");
 const route = express.Router()
 
 const controller = require('../Controller/controller');
+const { model } = require("mongoose");
 
 route.get('/',controller.homepage);
 
@@ -19,8 +20,8 @@ route.get('/studenthome', controller.g_studenthome);
 
 // Admin Functionality
 
-route.get('studentregistration', controller.g_studentregistration);
-route.post('studentregistration', controller.p_studentregistration);
+route.get('/studentregistration', controller.g_studentregistration);
+route.post('/studentregistration', controller.p_studentregistration);
 
 route.get('/viewcourse', controller.g_viewcourse);
 route.post('/viewcourse', controller.p_viewcourse);
@@ -51,27 +52,27 @@ route.get('/addprogram', controller.g_addprogram);
 route.post('/addprogram', controller.p_addprogram);
 
 route.get('/viewsemester', controller.g_viewsemester);
-route.post('/viewsemester', controller.p_viewsemester);
+// route.post('/viewsemester', controller.p_viewsemester);
 
-route.get('addsemester', controller.g_addsemester);
-route.post('addsemester', controller.p_addsemester);
+// route.get('/addsemester', controller.g_addsemester);
+// route.post('/addsemester', controller.p_addsemester);
 
-route.get('admin-announcement', controller.g_admin_announcement);
-route.post('admin-announcement', controller.p_admin_announcement);
+route.get('/admin-announcement', controller.g_admin_announcement);
+route.post('/admin-announcement', controller.p_admin_announcement);
 
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);
 
-route.delete('/logoutadmin', controller.logoutadmin);
+// route.delete('/logoutadmin', controller.logoutadmin);
 route.delete('/logoutfaculty', controller.logoutfaculty);
 route.delete('/logoutstudent', controller.logoutstudent);
 
 // Faculty Functionality
 
 route.get('/viewfaculty', controller.g_viewfaculty);
-route.post('/viewfaculty', controller.p_viewfaculty);
+// route.post('/viewfaculty', controller.p_viewfaculty);
 
-route.post('/updatefaculty', controller.updatefaculty);
+// route.post('/updatefaculty', controller.updatefaculty);
 
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
@@ -83,14 +84,16 @@ route.post('/changepwdstudent', controller.p_changepwdstudent);
 
 //forgot password
 
-route.get('/forgotpwd', controller.g_forgotpwd);   // this is common for all 3 users
+// route.get('/forgotpwd', controller.g_forgotpwd);   // this is common for all 3 users
 
-route.post('/forgotpwdfaculty', controller.p_forgotpwdfaculty);  //email enter, mail send with reset link
-route.get('/resetpwd/:id/:token', controller.g_resetpwd);  //is it common for all???
-route.post('/resetpwd/:id/:token', controller.p_resetpwdfaculty);
+// route.post('/forgotpwdfaculty', controller.p_forgotpwdfaculty);  //email enter, mail send with reset link
+// route.get('/resetpwd/:id/:token', controller.g_resetpwd);  //is it common for all???
+// route.post('/resetpwd/:id/:token', controller.p_resetpwdfaculty);
 
 
 
 // Student Functionality
 
-route.get('')
+// route.get('')
+
+module.exports = route

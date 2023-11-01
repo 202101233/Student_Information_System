@@ -1,0 +1,278 @@
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: open sans;
+}
+
+.wrapper{
+    height: 100vh;
+    width: 100vw;
+    background-image: url(https://img.freepik.com/free-photo/blue-abstract-gradient-wave-wallpaper_53876-108364.jpg?size=626&ext=jpg&ga=GA1.1.1929311289.1694337303&semt=ais);
+    background-size: cover;
+}
+
+.upperbar{
+    
+    display: flex;
+    height: 8.5vh;
+}
+
+.weblogoplace{
+    
+    width: 20vw;
+    height: 8.5vh;
+    background-color: rgba(195, 206, 226,0.4);
+}
+.webnameplace{
+    
+    width: 80vw;
+    height: 8.5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(195, 206, 226,0.4);
+}
+
+.sidenav
+{
+    width: 20vw;
+    height: 91.5vh;
+    background-color: rgba(195, 206, 226,0.4);
+    
+}
+.sidenavopt{
+    width: 20vw;
+    height: 83vh;
+    border: 0.1px solid white;
+}
+.sidenavdown{
+    width: 20vw;
+    height: 8.5vh;
+    
+}
+
+.content{
+    
+    width: 80vw;
+    height: 91.5vh;
+    
+}
+
+.downflex{
+    display: flex;
+}
+
+#weblogoimg
+{
+    height: 100%;
+    width: 100%;
+}
+
+.webname{
+   font-size: 5vh;
+}
+
+.sidenavopt li{
+    
+    height: 6vh;
+    
+    margin-bottom: 1vh;
+}
+
+.sidenavopt ul{
+    margin-top: 4vh;
+}
+.sidenavopt ul li a{
+    
+    font-size: 2.5vh;
+    color: black;
+    text-decoration: none;
+    margin-left: 0.7vw;
+    margin-bottom: 12vh;
+}
+
+.sidenavdown{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.curruserlogo{
+    
+    height: 80%;
+    width: 15%;
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWZWFVq0QIidGN0ioQJHhNBoEr1DvlH_yR05nH2_uz3tku7PvXWnDGshe5PHLqxQ91oMQ&usqp=CAU");
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 7vh;
+}
+
+.currusername
+{
+    font-size: 3vh;
+    margin-left: -2vw;
+    
+
+}
+
+/* commonpage ends hereh */
+
+
+
+
+.facultyinfo{
+    width:80vw;
+    height:50vh;
+    display: flex;
+    /* outline:0.2vh solid black;
+    outline-offset: -0.2vh; */
+
+ }
+
+ .facultyphoto{
+
+    height: 40vh;
+    width: 17vw;
+    /* outline:0.5vh solid black;
+    outline-offset: -0.5vh; */
+    border-radius: 2vh;
+	margin-left: 2vh;
+	margin-top: 6vh;
+	margin-bottom: 2.5vh;
+    background-color: rgba(198, 203, 212, 0.4);
+    /* border-radius: 25vh; */
+}
+
+
+.facultyimg{
+    height: 30vh;
+    width: 15vw;
+    margin-left: 1vw;
+    margin-top: 5.5vh;
+    /* border-radius: 500px; */
+	margin-right: 5vh;
+    border-radius: 15vh;
+}
+
+
+.facultydetail{
+    display: inline-block;
+    /* outline:0.2vh solid black;
+    outline-offset: -0.2vh; */
+    height: 48vh;
+    width: 59.5vw;
+}
+
+.facultyname{
+	height: 8vh;
+    /* outline: 2px solid black;
+    outline-offset: -2px; */
+    border-radius: 6px;
+    margin-top: 5.3vh;
+    padding-top: 1.5vh;
+    padding-left: 4vh;
+}
+
+
+
+ .degree{
+    height: 8vh;
+    /* outline: 2px solid black;
+    outline-offset: -2px;
+    border-radius: 6px; */
+	padding-top: 2vh;
+    padding-left: 4vh;
+    font-size: 23px;
+    font-family: sans-serif;
+}
+
+
+.mo-number{
+    height: 8vh;
+    /* outline: 2px solid black;
+    outline-offset: -2px;
+    border-radius: 6px; */
+    padding: 2vh 2vw;
+    font-size: 20px;
+}
+
+.location{
+    height: 8vh;
+    /* outline: 2px solid black;
+    outline-offset: -2px;
+    border-radius: 6px; */
+    padding: 2vh 2vw;
+    font-size: 20px;
+}
+
+.email{
+    height: 8vh;
+    /* outline: 2px solid black;
+    outline-offset: -2px;
+    border-radius: 6px; */
+    padding: 2vh 2vw;
+    font-size: 20px;
+} 
+
+
+
+
+
+.biography{
+    width: 77vw;
+    height: 40vh;
+
+    /* outline:0.5vh solid rgb(2, 26, 51);
+    outline-offset: -0.5vh; */
+    padding: 0.8vh 2vh;
+    font-size: 20px;
+    font-family: sans-serif;
+    margin-left: 1.5vh;
+    margin-right: 3vh;
+	margin-bottom: 0.7vh;
+    border-radius: 2vh;
+    position: sticky;
+    /* background-color: rgba(195, 206, 226,0.4); */
+    /* opacity: 0.8; */
+}
+
+.biography .paras{
+   
+    height: 27vh;
+    overflow-y: auto;
+}
+
+.facultyname:hover,.degree:hover,.mo-number:hover,.location:hover,.email:hover {
+    transform: scale(1.007);
+	transition: 0.1s;
+}
+
+ .facultyphoto:hover
+{
+    transform: scale(1.05);
+	transition: 0.1s;
+}
+.biography:hover
+{
+    transform: scale(1.027);
+	transition: 0.2s;
+}
+
+/* .facultyphoto:hover{
+    transform: scale(1.007);
+	transition: 0.1s;
+} */
+
+.biography h1{
+    margin: 10px 0px;
+}
+
+
+
+
