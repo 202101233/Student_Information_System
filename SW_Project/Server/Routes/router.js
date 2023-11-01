@@ -56,6 +56,9 @@ route.post('/viewsemester', controller.p_viewsemester);
 route.get('addsemester', controller.g_addsemester);
 route.post('addsemester', controller.p_addsemester);
 
+route.get('admin-announcement', controller.g_admin_announcement);
+route.post('admin-announcement', controller.p_admin_announcement);
+
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);
 
@@ -78,3 +81,6 @@ route.post('/changepwdstudent', controller.p_changepwdstudent);
 
 
 
+// Student Functionality
+
+route.get('')

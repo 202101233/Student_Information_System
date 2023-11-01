@@ -101,7 +101,7 @@ exports.g_facultyhome = (isLoggedInfaculty, async (req,res) => {
 exports.g_studenthome = (isLoggedInstudent, async (req,res) => {
     try {
         const student = await Student.findOne({ _id: req.user });
-        res.render("adminhome.ejs", { student });
+        res.render("studenthome.ejs", { student });
     } catch (err) {
         console.error(err);
         // Handle the error appropriately, such as sending an error response to the client or logging it.
@@ -389,13 +389,45 @@ exports.p_addprogram = async (req,res) => {
 // Admin Semester Manegement
 
 exports.g_viewsemester = async (req,res) => {
-
+    try{
+        res.render("semesterdetails.ejs");
+    } catch(err){
+        res.status(500).send("Internal Server Error");
+    }
 }
+
+
 
 // Admin Fee Management
 
 
+exports.g_admin_announcement = async (req,res) => {
+    try{
+        const announcement = await Announcement.find({}).exec();
+        res.render("admin-announcement.ejs", { announcement });
+    } catch(err){
+        res.status(500).send("Internal Server Error");
+    }
+}
 
+exports.p_admin_announcement = async (req,res) => {
+    try{
+        const { title, description, due_date } = req.body;
+
+        const newannouncement = {
+            Title : title,
+            Description : description,
+            expireAt : new Date (due_date),
+            
+        }
+
+        await newannouncement.save();
+        res.redirect("admin-announcement");
+    } catch(err){
+        console.error(err);
+        res.status(500).send("An error occured while adding announcement");
+    }
+}
 exports.g_changepwdadmin = async (req,res) => {
     try{
         const admin = await Admin.findOne({ _id: req.user });
@@ -611,17 +643,84 @@ exports.logoutfaculty = async (req, res, next) => {
 
 // Student Functionality
 
-exports.get('/viewstudent', async (req, res) => {
-    try {
+
+
+exports.g_viewstudent = async (req,res) => {
+    try{
         const ID = req.Student.id;     //Student as a schema name?
         const user = await Student.findById(ID).populate('ProgramRegistered');
-        const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered');
-        res.render('viewstudent.ejs', { user, program });
-    } catch (error) {
+        if(!ID)
+        {
+            console.error('Error:', error);
+            res.status(404).send('User Not Found');
+        }else {
+            const program = await Program.findById(user.ProgramRegistered).populate('DegreeOffered BranchOffered');
+            res.render('viewstudent.ejs', { user, program });
+        }
+
+    } catch(err) {
         console.error('Error:', error);
         res.status(500).send('Internal Server Error');
     }
-});
+}
+
+exports.p_viewstudent = async (req, res) => {
+    try {
+        const validphone = validatePhoneNumber.validate(req.body.mobileNO)
+        if (!validphone) {
+            const title = "ERROR";
+            const message = " Mobile no is invalid";
+            const icon = "error";
+            const href = "/viewstudent";
+            res.status(401).render("alert.ejs", { title, message, icon, href });
+        }
+
+        const validemail = validator.validate(req.body.myemail);
+        if (!validemail) {
+            const title = "ERROR";
+            const message = " Email ID is invalid";
+            const icon = "error";
+            const href = "/viewstudent";
+            res.status(401).render("alert.ejs", { title, message, icon, href });
+        }
+
+        const ID = req.student.id;
+        const update = {
+            firstname: req.body.firstname,
+            middlename: req.body.middlename,
+            lastname: req.body.lastname,
+            mobileNO: req.body.mobileNO,
+            Email_id : req.body.email_id,
+            Address : req.body.address,
+            Parent_Email_id : req.body.p_email_id,
+        }
+
+
+        await Student.updateOne({ ID, user }).exec();
+
+        const title = "SUCCESS";
+        const message = "Student details updated!";
+        const icon = "success";
+        const href = "/viewstudent";
+        res.render("alert.ejs", { title, message, icon, href });
+
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occured while updating profile");
+    }
+}
+
+
+exports.g_courseregistration = async (req,res) => {
+    try {
+        const student = await Student.findOne({ _id :req,user});
+        res.render("sempage.ejs", { student });
+
+    } catch (err){
+
+    }
+}
 
 exports.g_changepwdstudent = async (req,res) => {
     try{
