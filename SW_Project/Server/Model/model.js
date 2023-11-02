@@ -181,10 +181,10 @@ const SemesterSchema = new mongoose.Schema({
 });
 
 
-// var fee_structureSchema = new mongoose.Schema({
-//     program_fee : { type : mongoose.Schema.Types.ObjectId, ref : "Program"},
-//     Fee_structure : Map,
-// })
+var fee_structureSchema = new mongoose.Schema({
+    program_fee : { type : mongoose.Schema.Types.ObjectId, ref : "Program"},
+    Fee_structure : Map,
+})
 
 // var fee_historySchema = new mongoose.Schema({
 //     SrudentEnroll : { type : mongoose.Schema.Types.ObjectId, ref : "Student"},
