@@ -59,12 +59,8 @@ const StudentSchema = new mongoose.Schema({
 
 
 const FacultySchema = new mongoose.Schema({
-    firstname: {
-        type: String,
-        required: true,
-    },
-    middlename: String,
-    lastname: {
+   
+    fullname: {
         type: String,
         required: true,
     },
@@ -80,15 +76,21 @@ const FacultySchema = new mongoose.Schema({
         unique: true,
         // match: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
     },
-    Address: String,
+    
+    Education: {
+        type: String,
+        required: true
+    },
+
     Password: {
         type: String,
         required: true,
         unique: true,
     },
+    
     Faculty_block: {
         type: String,
-        // required: true,
+        required: true,
     },
     Profile_image: Buffer,
 });

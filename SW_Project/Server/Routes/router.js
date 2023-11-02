@@ -47,7 +47,6 @@ route.post('/addbranch', controller.p_addbranch);
 route.get('/viewprogram',controller.g_addprogram);
 route.post('/viewprogram',controller.p_addprogram);
 
-// route.post('/updateprogram', controller.p_updateprogram);
 route.get('/addprogram', controller.g_addprogram);
 route.post('/addprogram', controller.p_addprogram);
 
@@ -58,29 +57,40 @@ route.get('/viewsemester', controller.g_viewsemester);
 // route.post('/addsemester', controller.p_addsemester);
 
 route.get('/admin-announcement', controller.g_admin_announcement);
-route.post('/admin-announcement', controller.p_admin_announcement);
+route.post('/add_announcement', controller.p_admin_announcement);
 
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);
 
 route.delete('/logoutadmin', controller.logoutadmin);
-route.delete('/logoutfaculty', controller.logoutfaculty);
-route.delete('/logoutstudent', controller.logoutstudent);
+
+
 
 // Faculty Functionality
 
 route.get('/viewfaculty', controller.g_viewfaculty);
-// route.post('/viewfaculty', controller.p_viewfaculty);
 
-// route.post('/updatefaculty', controller.updatefaculty);
+route.get('/updatefaculty', controller.g_updatefaculty);
+route.post('/updatefaculty', controller.p_updatefaculty);
 
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
 
+route.delete('/logoutfaculty', controller.logoutfaculty);
+
+
+
+//Student Functionality
+
+route.get('/viewstudent', controller.g_viewstudent);
+
+route.get('/updatestudent', controller.g_updatestudent);
+route.post('/updatestudent', controller.p_updatestudent);
+
 route.get('/changepwdstudent', controller.g_changepwdstudent);
 route.post('/changepwdstudent', controller.p_changepwdstudent);
 
-
+route.delete('/logoutstudent', controller.logoutstudent);
 
 //forgot password
 
