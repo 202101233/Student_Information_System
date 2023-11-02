@@ -91,9 +91,4 @@ route.post('/changepwdstudent', controller.p_changepwdstudent);
 // route.post('/resetpwd/:id/:token', controller.p_resetpwdfaculty);
 
 
-
-// Student Functionality
-
-// route.get('')
-
 module.exports = route
