@@ -63,7 +63,7 @@ route.post('/admin-announcement', controller.p_admin_announcement);
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);
 
-// route.delete('/logoutadmin', controller.logoutadmin);
+route.delete('/logoutadmin', controller.logoutadmin);
 route.delete('/logoutfaculty', controller.logoutfaculty);
 route.delete('/logoutstudent', controller.logoutstudent);
 

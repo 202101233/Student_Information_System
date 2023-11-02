@@ -1,71 +1,185 @@
 const mongoose = require('mongoose');
 
-var StudentSchema = new mongoose.Schema({
-    firstname : String,
-    middlename : String,
-    lastname : String,
-    stud_id : String,
-    phoneNo : String,
-    Gender : String,
-    DOB : Date,
-    Email_id : String,
-    Address : String,
-    Parent_Email_Id : String,
-    Password : String,
-    Batch : String,
-    Blood_Group : String,
-    Profile_image : Buffer,
-    ProgramRegistered : { type : mongoose.Schema.Types.ObjectId, ref: "Program"},
-    Fee_Paid : Boolean          //paid : 1 and unpaid : 0
-})
 
-var FacultySchema = new mongoose.Schema({
-    firstname : String,
-    middlename : String,
-    lastname : String,
-    //Faculty_id : String,
-    phoneNo : String,
-    Gender : String,
-    Email_id : String,
-    Address : String,
-    Password : String,
-    Faculty_block : String,
-    Profile_image : Buffer,
-    //JoiningDate : Date   
-})
+const StudentSchema = new mongoose.Schema({
+    firstname: {
+        type: String,
+        required: true,
+    },
+    middlename: String,
+    lastname: {
+        type: String,
+        required: true,
+    },
+    stud_id: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    phoneNo: String,
+    Gender: {
+        type: String,
+        // enum: ['Male', 'Female', 'Other'],
+    },
+    DOB: Date,
+    Email_id: {
+        type: String,
+        required: true,
+        unique: true,
+        // match: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
+    },
+    Address: String,
+    Parent_Email_Id: {
+        type: String,
+        // match: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
+    },
+    Password: {
+        type: String,
+        required: true,
+        // unique: true,
+    },
+    Batch: {
+        type: String,
+        required: true,
+    },
+    Blood_Group: {
+        type: String,
+        // enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Unknown'],
+    },
+    Profile_image: Buffer,
+    ProgramRegistered: {
+        type: mongoose.Schema.Types.ObjectId, ref: "Program",
+    },
+    Fee_Paid: {
+        type: Boolean,
+        default: false,
+    },
+});
 
-var AdminSchema = new mongoose.Schema({
-    Email_id : String,
-    Password : String
-})
 
-var DegreeSchema = new mongoose.Schema({
-    Degree_name : String
-})
 
-var BranchSchema = new mongoose.Schema({
-    Branch_name: String,
-})
+const FacultySchema = new mongoose.Schema({
+    firstname: {
+        type: String,
+        required: true,
+    },
+    middlename: String,
+    lastname: {
+        type: String,
+        required: true,
+    },
+    phoneNo: String,
+    DOB: Date,
+    Gender: {
+        type: String,
+        // enum: ['Male', 'Female', 'Other'],
+    },
+    Email_id: {
+        type: String,
+        required: true,
+        unique: true,
+        // match: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
+    },
+    Address: String,
+    Password: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    Faculty_block: {
+        type: String,
+        // required: true,
+    },
+    Profile_image: Buffer,
+});
 
-var CourseSchema = new mongoose.Schema({
-    Course_Name : String,
-    Course_code : Number,
-    Course_credit : Number,
-    Course_Type : Boolean           // Core : 1 and Elective : 0
-})
 
-var ProgramSchema = new mongoose.Schema({
-    DegreeOffered : { type : mongoose.Schema.Types.ObjectId, ref: "Degree"},
-    BranchOffered : { type : mongoose.Schema.Types.ObjectId, ref: "Branch"},
-    CourseOffered : [{ type : mongoose.Schema.Types.ObjectId, ref: "Course"}],
-})
 
-var SemesterSchema = new mongoose.Schema({
-    Sem_name : String,
+const AdminSchema = new mongoose.Schema({
+    Email_id: {
+        type: String,
+        required: true,
+        unique: true,
+        // match: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
+    },
+    Password: {
+        type: String,
+        required: true,
+        // unique: true,
+    },
+});
+
+const DegreeSchema = new mongoose.Schema({
+    Degree_name: {
+        type: String,
+        required: true,
+    },
+});
+
+const BranchSchema = new mongoose.Schema({
+    Branch_name: {
+        type: String,
+        required: true,
+    },
+});
+
+const CourseSchema = new mongoose.Schema({
+    Course_Name: {
+        type: String,
+        required: true,
+    },
+    Course_code: {
+        type: Number,
+        required: true,
+        unique: true,
+    },
+    Course_credit: {
+        type: Number,
+        required: true,
+    },
+    Course_Type: {
+        type: Boolean,
+        required: true,
+    },
+});
+
+
+const ProgramSchema = new mongoose.Schema({
+    DegreeOffered: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Degree",
+        required: true,
+    },
+    BranchOffered: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Branch",
+        required: true,
+    },
+    CourseOffered: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+        required: true,
+    }],
+});
+
+
+const SemesterSchema = new mongoose.Schema({
+    Sem_name: {
+        type: String,
+        required: true,
+    },
     DateCreated: Date,
-    Sem_Type : Boolean,               // Autumn : 1 and Winter : 0
-    ProgramOffered : [{ type : mongoose.Schema.Types.ObjectId, ref: "Program"}]
-})
+    Sem_Type: {
+        type: Boolean,
+        required: true,
+    },
+    ProgramOffered: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Program",
+        required: true,
+    }],
+});
+
 
 // var fee_structureSchema = new mongoose.Schema({
 //     program_fee : { type : mongoose.Schema.Types.ObjectId, ref : "Program"},
@@ -79,39 +193,101 @@ var SemesterSchema = new mongoose.Schema({
 //     Date_Of_payment : Date
 // })
 
-var AnnouncementSchema = new mongoose.Schema({
-    Title : String,
-    Description : String,
-    expireAt : Date
-})
 
-var TranscriptSchema = new mongoose.Schema({
-    Student_detials : {type : mongoose.Schema.Types.ObjectId, ref : "Student"},
-    Courses : [CourseSchema],
-    Totalcredit : Number,
-    CPI : Number,
-})
+const AnnouncementSchema = new mongoose.Schema({
+    Title: {
+        type: String,
+        required: true,
 
-var Course_AllotmentSchema = new mongoose.Schema({
-    ProgramAssigned: { type: mongoose.Schema.Types.ObjectId, ref: "Program" },
-    CourseAssigned: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
-    FacultyAssigned: { type: mongoose.Schema.Types.ObjectId,ref: "Faculty"},
-    SemesterAssigned: { type: mongoose.Schema.Types.ObjectId, ref: "Semester" },
-  });
+    },
+    Description: {
+        type: String,
+        required: true,
+    },
+    Due_Date: {
+        type: Date,
+        required: true,
+    },
+});
 
-var Course_EnrollmentSchema = new mongoose.Schema({
-    courseEnrolled: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
-    studentEnrolled: { type: mongoose.Schema.Types.ObjectId, ref: "Student" },
-    semesterEnrolled: { type: mongoose.Schema.Types.ObjectId, ref: "Semester" },
+
+const TranscriptSchema = new mongoose.Schema({
+    Student_details: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+        required: true, // Add this if it's required
+    },
+    Courses: [{
+        course: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
+            required: true, // Add this if it's required
+        },
+        grade: String, // You can specify the data type for grades
+    }],
+    Totalcredit: Number,
+    CPI: Number,
+});
+
+
+
+const Course_AllotmentSchema = new mongoose.Schema({
+    ProgramAssigned: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Program",
+        required: true,
+    },
+    CourseAssigned: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+        required: true,
+    },
+    FacultyAssigned: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Faculty",
+        required: true,
+    },
+    SemesterAssigned: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Semester",
+        required: true,
+    },
+});
+
+const Course_EnrollmentSchema = new mongoose.Schema({
+    courseEnrolled: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+        required: true,
+    },
+    studentEnrolled: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+        required: true,
+    },
+    semesterEnrolled: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Semester",
+        required: true,
+    },
     grade: Number,
-    attendance: { type: Number, min: 0, max: 100 },
+    attendance: {
+        type: Number,
+        // min: 0,
+        // max: 100,
+    },
     dateEnrolled: Date,
-  });
+});
 
-var ResultSchema = new mongoose.Schema({
-    Student : { type : mongoose.Schema.Types.ObjectId, ref : "Student"},
-    Semester : String,
-})
+const ResultSchema = new mongoose.Schema({
+    Student: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+        required: true,
+    },
+    Semester: String, // You might want to add validation for the format here
+});
+
 
 
 const Student = mongoose.model("Student", StudentSchema);
