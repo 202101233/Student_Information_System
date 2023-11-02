@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 var StudentSchema = new mongoose.Schema({
     firstname : String,
     middlename : String,
@@ -65,7 +64,7 @@ var SemesterSchema = new mongoose.Schema({
     Sem_name : String,
     DateCreated: Date,
     Sem_Type : Boolean,               // Autumn : 1 and Winter : 0
-    ProgramOffered : [{ type : mongoose.Schema.Types,ObjectId, ref: "Program"}]
+    ProgramOffered : [{ type : mongoose.Schema.Types.ObjectId, ref: "Program"}]
 })
 
 // var fee_structureSchema = new mongoose.Schema({
@@ -83,11 +82,11 @@ var SemesterSchema = new mongoose.Schema({
 var AnnouncementSchema = new mongoose.Schema({
     Title : String,
     Description : String,
-    Created_Date : Date
+    expireAt : Date
 })
 
 var TranscriptSchema = new mongoose.Schema({
-    Student_detials : {type : mongoose.Schema.type.ObjectID, ref : "Student"},
+    Student_detials : {type : mongoose.Schema.Types.ObjectId, ref : "Student"},
     Courses : [CourseSchema],
     Totalcredit : Number,
     CPI : Number,
@@ -110,7 +109,7 @@ var Course_EnrollmentSchema = new mongoose.Schema({
   });
 
 var ResultSchema = new mongoose.Schema({
-    Student : { type : mongoose.Schema.type.ObjectID, ref : "Student"},
+    Student : { type : mongoose.Schema.Types.ObjectId, ref : "Student"},
     Semester : String,
 })
 
