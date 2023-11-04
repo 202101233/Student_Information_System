@@ -234,26 +234,50 @@ const TranscriptSchema = new mongoose.Schema({
 
 
 const Course_AllotmentSchema = new mongoose.Schema({
-    ProgramAssigned: {
+    Program_associate: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Program",
         required: true,
     },
-    CourseAssigned: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
-        required: true,
+    // CourseAssigned: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Course",
+    //     required: true,
+    // },
+    // FacultyAssigned: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Faculty",
+    //     required: true,
+    // },
+    // SemesterAssigned: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Semester",
+    //     required: true,
+    // },
+    // BatchAssigned : {
+    //     type : String,
+    //     required : true
+    // }
+    
+    Batch : {
+        type : String,
+        required : true
     },
-    FacultyAssigned: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Faculty",
-        required: true,
-    },
-    SemesterAssigned: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Semester",
-        required: true,
-    },
+
+    Courseallocate : [{
+        course_code: {
+            type: String,
+            required :true
+        },
+        course_type: {
+            type : Boolean,
+            required : true
+        },
+        Faculty_Assgined : {
+            type : String,
+            required : true
+        }
+    }]
 });
 
 const Course_EnrollmentSchema = new mongoose.Schema({

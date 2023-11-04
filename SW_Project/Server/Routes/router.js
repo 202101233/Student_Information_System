@@ -51,10 +51,10 @@ route.get('/addprogram', controller.g_addprogram);
 route.post('/addprogram', controller.p_addprogram);
 
 route.get('/viewsemester', controller.g_viewsemester);
-// route.post('/viewsemester', controller.p_viewsemester);
+route.post('/viewsemester', controller.p_viewsemester);
 
-// route.get('/addsemester', controller.g_addsemester);
-// route.post('/addsemester', controller.p_addsemester);
+route.get('/addsemester', controller.g_addsemester);
+route.post('/addsemester', controller.p_addsemester);
 
 route.get('/admin-announcement', controller.g_admin_announcement);
 route.post('/add_announcement', controller.p_admin_announcement);
@@ -77,7 +77,6 @@ route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
 
 route.delete('/logoutfaculty', controller.logoutfaculty);
-
 
 
 //Student Functionality

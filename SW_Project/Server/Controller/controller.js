@@ -1,5 +1,6 @@
 var { Student, Admin, Faculty, Degree, Branch, Course, Program, Semester, Transcript, Announcement,
     Course_Allotment, Course_Enrollment, Result } = require('../Model/model');
+const { proppatch } = require('../Routes/router');
 
 
 exports.homepage = (req, res) => {
@@ -116,22 +117,99 @@ exports.g_studentregistration = (isLoggedInstudent, (req, res) => {
 
 exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  mail valu baki
     try {
-        const newstudent = new Student({
-            firstname: req.body.name.split(" ")[0],
-            middlename: req.body.name.split(" ")[1],
-            lastname: req.body.name.split(" ")[2],
-            Email_id: req.body.email,
 
-        })
+        if(req.body.email.split("@")[1]!="daiict.ac.in"){
+            const title = "ERROR";
+            const message = "Invalid Email";
+            const icon = "error";
+            const href = "/studentregistration";
+            res.render("alert.ejs", { title, message, icon, href });
 
-        await newstudent.save();
-        res.redirect("adminhome");
+        }
+
+        const ID = req.body.email.split("@")[0];
+        const Batch = req.body.email.substr(0,4);
+
+        const student = await Student.findOne({ email : req.body.email});
+
+        if(!student){
+            const title = "ERROR";
+            const message = "Student Email already exists";
+            const icon = "error";
+            const href = "/studentregistration";
+            res.render("alert.ejs", { title, message, icon, href });
+        }
+        else {
+            const randompass = generatePass();
+            const hashedPassward = await bcrypt.hash(randompass,saltRounds);
+
+            const newstudent = new Student({
+                firstname: req.body.name.split(" ")[0],
+                middlename: req.body.name.split(" ")[1],
+                lastname: req.body.name.split(" ")[2],
+                Email_id: req.body.email,
+            })
+
+            await newstudent.save();
+
+            const transporter = nodemailer.createTransport({
+                service : "gmail",
+                host : "smtp.gmail.com",
+                port : "587",
+                tls : {
+                    ciphers : "SSLv3",
+                    rejectUnauthorized : false,
+                },
+                auth : {
+                    user : "e-campus-daiict@gmail.com",
+                    pass : process.env.GMAILPASSWORD,                    // env file?????????
+                }
+            });
+
+
+            const mailoption = {
+                from : "e-campus-daiict@gmail.com",
+                to : req.body.email,
+                Subject : "Account Created",
+                html : `
+                <h2> Your student account has been created. </h2>
+                <p> Here are information : </p>
+                <p> <b> Email ID : </b> ${req.body.email} </p>
+                <p> <b> Password : </b> ${randomPass} </p> 
+                <a href= >Click here to login</a>       
+                `,                                                          // change link
+            }
+
+            await transporter.sendMail(mailoption);
+
+            const title = "SUCCESS";
+            const message = "Student added successfully!";
+            const icon = "success";
+            const href = "/adminHome";
+            res.render("alert.ejs", { title, message, icon, href });
+        }
     } catch (err) {
         console.error(err);
-        res.status(500).send("An error occured while adding course data");
+        const title = "ERROR";
+        const message = "Unknown error ocurred!";
+        const icon = "error";
+        const href = "/adminHome";
+        res.render("alert.ejs", { title, message, icon, href });
     }
 })
 
+
+function generatePass(){
+    var pass = " ";
+    var str= "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789@#$";
+
+    for(let i=1;i<=10;i++){
+        var char = Math.floor(Math.random() + str.length() + 1);
+        pass+=str.charAt(char);
+    }
+    return pass;
+
+}
 // Admin Course Management
 
 exports.g_viewcourse = async (req, res) => {
@@ -387,16 +465,76 @@ exports.p_addprogram = async (req, res) => {
 
 // Admin Semester Manegement
 
-// exports.g_viewsemester = async (req,res) => {
-//     try{
-//         res.render("semesterdetails.ejs");
-//     } catch(err){
-//         res.status(500).send("Internal Server Error");
-//     }
-// }
+exports.g_viewsemester = async (req,res) => {
+    try{
+        res.render("semesterdetails.ejs");
+    } catch(err){
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+exports.p_viewsemester = async (req,res) => {
+    try{
+        await Course_Allotment.deleteOne({ _id: req.body.delete }).exec();
+        //const course = await Course.find({});
+        res.redirect("viewsemester");
+    } catch(err) {
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+exports.g_addsemester = async (req,res) => {
+    try{
+        res.render("addsemester.ejs");
+    } catch(err){
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+exports.p_addsemester = (upload.single('excelfile'), async (req,res) => {
+    try{
+        const filepath = req.file.path;
+        const semsester = await processExcelFile(filepath);
+
+        await Course_Allotment.insertMany(semsester);
+
+        req.session.semsester = semsester;
+
+    } catch(err){
+        console.err("Error occured while proccesing and uploading semester data");
+        res.status(500).send("Error occured while proccesing and uploading semester data");
+    }
+});
+
+async function processExcelFile(filepath){
+    const workbook = new Excel.workbook();
+    await workbook.xlsx.readfile(filepath);
+
+    const workshhet = workbook.getWorksheet(1);
+    const sem_data= [];
+    
+    const batch = req.body.Batch;
+    const Program = req.body.Program;
+
+    workshhet.eachRow((row,rownumber) => {
+
+        if(rownumber>1){
+            const course_id = row.getCell(1).value;
+            const course_type = row.getCell(2).value;
+            const faculty_assign = row.getCell(3).value;
 
 
-
+            sem_data.push({
+                Program_associate : program,
+                Batch : batch,
+                Course_code : course_id,
+                COurse_type : course_type,
+                Faculty_Assigned : faculty_assign
+            });
+        }
+    });
+    return sem_data;
+}
 // Admin Fee Management
 
 //admin announcement
@@ -417,8 +555,7 @@ exports.p_add_announcement = async (req, res) => {
         const newannouncement = {
             Title: title,
             Description: description,
-            expireAt: new Date(due_date),
-
+            Due_data : new Date(due_date),
         }
 
         await newannouncement.save();
@@ -428,6 +565,7 @@ exports.p_add_announcement = async (req, res) => {
         res.status(500).send("An error occured while adding announcement");
     }
 }
+
 exports.g_changepwdadmin = async (req, res) => {
     try {
         const admin = await Admin.findOne({ _id: req.user });
@@ -722,7 +860,31 @@ exports.p_updatestudent = async (req, res) => {
     }
 }
 
+// View Announcement
 
+exports.g_student_announcement = async (req,res) => {
+    try{
+        const announcements = await Announcement.find({}).exec();
+
+        const Curr_date = new Date();
+
+        const valid_announcement = [];
+
+        for(const announcement of announcements){
+            if(announcement.Due_data > Curr_date){
+                valid_announcement.push(announcement);
+            }
+            else{ 
+                await Announcement.deleteOne({ _id : announcement._id});
+            }
+        }
+        res.render("student-announcement.ejs", {announcements : valid_announcement});
+    } catch (err){
+        res.status(500).send("An error occured while fetching announcement data");
+    }
+}
+
+// Change Pwd Student
 exports.g_changepwdstudent = async (req, res) => {
     try {
         const student = await Student.findOne({ _id: req.user });
