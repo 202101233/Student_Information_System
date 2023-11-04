@@ -153,8 +153,10 @@ tr:hover{
     /* outline:0.2vh solid blue;
     outline-offset: -0.2vh; */
     
-    background-color: white;
-    box-shadow: 3px 3px 3px 3px gray;
+    background-color: transparent;
+    box-shadow: 1px 1px 2px black;
+    border-radius: 13px;
+    backdrop-filter: blur(50px);
     
 }
 
@@ -192,22 +194,31 @@ tr:hover{
     margin-top: 1vh;
 }
 
+.for-include-edit-btn{
+    
+    height: 87vh;
+    width: 54vw;
+    margin-left: 3vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 
 .right-box{
     width: 53vw;
-    height: 80vh;
+    height: 81vh;
     display: inline-block;
-    /* max-height: 80vh;
-    overflow-y: auto; */
-    /* outline:0.2vh solid red;
-    outline-offset: -0.2vh; */
+   
     
-    margin-left: 3vh;
-    background-color: white;
-    box-shadow: 3px 3px 3px 3px gray;
+    
+    background-color: transparent;
+    box-shadow: 1px 1px 2px black;
     overflow-y: auto;
     overflow-x: hidden;
-
+    border-radius: 13px;
+    backdrop-filter: blur(50px);
+    
     
 }
 
@@ -254,22 +265,42 @@ button{
 
 .temp-wrapper{
     
-    height: 90%;
+    height: 95%;
     width: 100%;
     display: flex;
     justify-content: center;
+    
 }
 
 .buttonplace{
     
-    width: 5vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -29.2vw;
+    margin-top: 2vh;
+    
 }
 
 .buttonplace:hover{
     transform: scale(1.04);
     transition: 0.2s;
+}
+
+tr:hover{
+    transform: scale(1.01);
+    transition: 0.2s;
+}
+
+button{
+    background-color: rgb(2, 26, 51, 0.85);
+    color: white;
+}
+
+.ip-boxes-editable{
+    height: 100%;
+    width: 95%;
+    font-size: 2.2vh;
+    background: transparent;
+    border-radius: 10px;
+    border: none;
 }

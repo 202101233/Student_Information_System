@@ -1,11 +1,8 @@
-
-
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 body{
     font-family: open sans;
 }
@@ -50,6 +47,7 @@ body{
     width: 20vw;
     height: 83vh;
     border: 0.1px solid white;
+    overflow-y: auto;
 }
 .sidenavdown{
     width: 20vw;
@@ -57,15 +55,6 @@ body{
     
 }
 
-.content{
-    
-    width: 80vw;
-    height: 91.5vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
 
 .downflex{
     display: flex;
@@ -78,7 +67,7 @@ body{
 }
 
 .webname{
-   font-size: 5vh;
+    font-size: 5vh;
 }
 
 .sidenavopt li{
@@ -121,121 +110,147 @@ body{
     font-size: 3vh;
     margin-left: -2vw;
     
-
-}
-
-/* ////////////////////////////////////////////////////////////// */
-
-.table-wrapper{
-    
-    max-height: 65vh;
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
-    
     
 }
 
-table{
+.content{
     
-    width: 90%;
-    
-    border-collapse: separate;
-    border-spacing: 2.4vh 2vw;
-    height: 100%;
-    position: relative;
-    
-    table-layout: fixed;
-}
-
-
-
-
-th{
-    
-    height: 8vh;
-    font-size: 2.62vh;
-    color: white;
-    background-color: rgb(2, 26, 51);
-   
-    border-radius: 10px;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-}
-
-
-td{
-    background-color: rgba(195, 206, 226,0.4);
-    border-radius: 10px;
-}
-
-
-
-
-.leftpad{
-    height: 8vh;
-    font-size: 2.4vh;
-    padding-left: 0.8vw;
-}
-
-.center{
-    height: 8vh;
+    width: 80vw;
+    height: 91.5vh;
     display: flex;
     justify-content: center;
-    align-items: center;  
+    align-items: center;
+    
 }
 
-.check-box{
-    width: 3.2vw;
-    height: 3.2vh;
-    accent-color: rgb(2, 26, 51);
+select{
+    /* border: 2px solid red; */
+    height: 4vh;
+    width: 13vw;
+    font-size: 2.5vh;
+  
+    background: transparent;
+    border: none;
+    outline: none;
 }
 
-.center-items{
-    font-size: 2.6vh;
+/* background-color: rgba(195, 206, 226,0.4); */
+option{
+    background-color: rgba(170, 206, 226, 0.4);
+    border: none;
+    outline: none;
 }
 
+/* common page ends here */
 
+.addcourse-wrapper{
+  
+  height: 60%;
+  padding: 6vh;
+  width: 40%;
+  border-radius: 13px;
+  backdrop-filter: blur(50px);
+  box-shadow: 2px 2px 2px black;
+  border: 2px solid whitesmoke;
+}
 
-table tbody tr td a{
+.addcourse-wrapper:hover{
+    transform: scale(1.02);
+    transition: 0.2s;
+}
+
+.maintag-place{
+    
+    height: 20%;
+    width: 100%;
+    margin-bottom: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    color: whitesmoke;
+    border-radius: 13px;
+    background-color: rgb(2, 26, 51);
+    
+}
+
+.temp-wrapper{
+    
+    height: 17%;
+    width: 100%;
+    margin-bottom: 3vh;
+    display: flex;
+   
+}
+
+.tag-place{
+    
+    height: 100%;
+    width: 38%;
+    display: flex;
+    align-items: center;
+}
+
+.tag-text{
+    font-size: 2.2vh;
+    margin-left: 1vw;
+}
+
+.inputbox-place{
+    
+    height: 100%;
+    width: 62%;
+    display: flex;
+    align-items: center;
+}
+
+.ip-box{
+    height: 80%;
+    font-size: 2vh;
+    background-color: transparent;
     text-decoration: none;
-    color:  rgb(2, 26, 51);
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
-table tbody tr td a i{
-    transform: scale(0.8);
+.ip-box:focus{
+    transform: scale(1.04);
+    transition: 0.2s;
+    outline-color: cornflowerblue;
 }
 
+#ip-name{
+    width: 95%;
+}
 
-tr:hover{
-    transform: scale(1.01);
-	transition: 0.1s;
+#ip-code{
+    width: 95%;
+}
+
+#ip-credit{
+    width: 95%;
 }
 
 .btn-place{
-    
-    height: 6vh;
-    width: 71.5%;
-    margin-bottom: 2vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5vh;
-    
+     
+     height: 15%;
+     width: 100%;
+     margin-top: 5vh;
+     display: flex;
+     justify-content: center;
+     align-items: center;
 }
+
 
 .btn{
     color: white;
-    background-color: rgb(3, 142, 1);
+    background-color: rgb(2, 26, 51);
     border: 1px solid whitesmoke;
-    height: 6vh;
+    height: 90%;
     padding-left: 1vw;
     padding-right: 1vw;
     border-radius: 10px;
-    font-size: 2.5vh;
+    font-size: 2.3vh;
   
   }
   

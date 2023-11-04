@@ -57,15 +57,6 @@ body{
     
 }
 
-.content{
-    
-    width: 80vw;
-    height: 91.5vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
 
 .downflex{
     display: flex;
@@ -78,7 +69,7 @@ body{
 }
 
 .webname{
-   font-size: 5vh;
+    font-size: 5vh;
 }
 
 .sidenavopt li{
@@ -121,126 +112,31 @@ body{
     font-size: 3vh;
     margin-left: -2vw;
     
-
-}
-
-/* ////////////////////////////////////////////////////////////// */
-
-.table-wrapper{
-    
-    max-height: 65vh;
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
-    
     
 }
 
-table{
+.content{
     
-    width: 90%;
-    
-    border-collapse: separate;
-    border-spacing: 2.4vh 2vw;
-    height: 100%;
-    position: relative;
-    
-    table-layout: fixed;
-}
-
-
-
-
-th{
-    
-    height: 8vh;
-    font-size: 2.62vh;
-    color: white;
-    background-color: rgb(2, 26, 51);
-   
-    border-radius: 10px;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-}
-
-
-td{
-    background-color: rgba(195, 206, 226,0.4);
-    border-radius: 10px;
-}
-
-
-
-
-.leftpad{
-    height: 8vh;
-    font-size: 2.4vh;
-    padding-left: 0.8vw;
-}
-
-.center{
-    height: 8vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;  
-}
-
-.check-box{
-    width: 3.2vw;
-    height: 3.2vh;
-    accent-color: rgb(2, 26, 51);
-}
-
-.center-items{
-    font-size: 2.6vh;
-}
-
-
-
-table tbody tr td a{
-    text-decoration: none;
-    color:  rgb(2, 26, 51);
-}
-
-table tbody tr td a i{
-    transform: scale(0.8);
-}
-
-
-tr:hover{
-    transform: scale(1.01);
-	transition: 0.1s;
-}
-
-.btn-place{
-    
-    height: 6vh;
-    width: 71.5%;
-    margin-bottom: 2vh;
+    width: 80vw;
+    height: 91.5vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 5vh;
     
 }
+/* commonpage ends hereh */
 
-.btn{
-    color: white;
-    background-color: rgb(3, 142, 1);
-    border: 1px solid whitesmoke;
-    height: 6vh;
-    padding-left: 1vw;
-    padding-right: 1vw;
-    border-radius: 10px;
-    font-size: 2.5vh;
-  
-  }
-  
-  .btn:hover{
-      transition: 0.2s;
-      transform: scale(1.1);
-  }
 
+
+.welcome-place , .username-place{
+    
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Georgia, serif;
+}
+
+.place-for-tag p{
+    font-size: 6vh;
+}

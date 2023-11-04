@@ -63,8 +63,8 @@ body{
     height: 91.5vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    border: 2px solid green;
 }
 
 .downflex{
@@ -128,13 +128,14 @@ body{
 
 .table-wrapper{
     
-    max-height: 65vh;
-    width: 70%;
+    max-height: 68%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
-    
+    /* border: 2px solid red; */
+    margin-top: 3vh;
     
 }
 
@@ -196,6 +197,7 @@ td{
 
 .center-items{
     font-size: 2.6vh;
+    
 }
 
 
@@ -215,7 +217,7 @@ tr:hover{
 	transition: 0.1s;
 }
 
-.btn-place{
+/* .btn-place{
     
     height: 6vh;
     width: 71.5%;
@@ -224,6 +226,7 @@ tr:hover{
     justify-content: center;
     align-items: center;
     margin-top: 5vh;
+    border: 2px solid black;
     
 }
 
@@ -243,4 +246,70 @@ tr:hover{
       transition: 0.2s;
       transform: scale(1.1);
   }
+ */
 
+
+.student-list-tag-place{
+    /* border: 2px solid red; */
+    height: 10%;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3.7vh;
+    font-weight: 800;
+    margin-top: 5%;
+}
+
+.course-detail-place{
+    width: 90%;
+    height: 13%;
+    box-shadow: 2px 2px 2px black;
+    margin-top: 4%;
+    display: flex;
+    border-radius: 10px;
+    background: transparent;
+    backdrop-filter: blur(50px);
+}
+
+.course-detail-place:hover{
+    transform: scale(1.02);
+    transition: 0.2s;
+}
+
+.course-code-place{
+    
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.4vh;
+    
+}
+
+.course-name-place{
+    
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.4vh;
+}
+
+.upload-sheet-place{
+    
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.4vh;
+}
+
+#file-ip{
+    margin-left: 0.7vw;
+    font-size: 2.2vh;
+    
+}

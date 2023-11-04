@@ -1,11 +1,8 @@
-
-
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 body{
     font-family: open sans;
 }
@@ -50,6 +47,7 @@ body{
     width: 20vw;
     height: 83vh;
     border: 0.1px solid white;
+    overflow-y: auto;
 }
 .sidenavdown{
     width: 20vw;
@@ -57,15 +55,6 @@ body{
     
 }
 
-.content{
-    
-    width: 80vw;
-    height: 91.5vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
 
 .downflex{
     display: flex;
@@ -78,7 +67,7 @@ body{
 }
 
 .webname{
-   font-size: 5vh;
+    font-size: 5vh;
 }
 
 .sidenavopt li{
@@ -121,15 +110,45 @@ body{
     font-size: 3vh;
     margin-left: -2vw;
     
-
+    
 }
 
+.content{
+    
+    width: 80vw;
+    height: 91.5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+select{
+    /* border: 2px solid red; */
+    height: 4vh;
+    width: 13vw;
+    font-size: 2.5vh;
+  
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+/* background-color: rgba(195, 206, 226,0.4); */
+option{
+    background-color: rgba(170, 206, 226, 0.4);
+    border: none;
+    outline: none;
+}
+
+/* common page ends hreer */
 /* ////////////////////////////////////////////////////////////// */
 
 .table-wrapper{
     
     max-height: 65vh;
-    width: 70%;
+    width: 95%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -159,7 +178,9 @@ th{
     font-size: 2.62vh;
     color: white;
     background-color: rgb(2, 26, 51);
-   
+    /* border-left: 1vh solid transparent;
+    border-right: 1vh solid transparent;
+    background-clip: padding-box; */
     border-radius: 10px;
     position: sticky;
     top: 0;
@@ -183,15 +204,8 @@ td{
 
 .center{
     height: 8vh;
-    display: flex;
     justify-content: center;
     align-items: center;  
-}
-
-.check-box{
-    width: 3.2vw;
-    height: 3.2vh;
-    accent-color: rgb(2, 26, 51);
 }
 
 .center-items{
@@ -218,12 +232,13 @@ tr:hover{
 .btn-place{
     
     height: 6vh;
-    width: 71.5%;
+    width: 80%;
     margin-bottom: 2vh;
     display: flex;
+    margin-top: 3vh;
     justify-content: center;
     align-items: center;
-    margin-top: 5vh;
+    
     
 }
 
@@ -244,3 +259,16 @@ tr:hover{
       transform: scale(1.1);
   }
 
+  #course-dropdown{
+    border: 1px solid whitesmoke;
+    width: 90%;
+
+  }
+
+
+  .file-ip{
+    height: 90%;
+    width: 50%;
+    font-size: 2vh;
+    
+  }

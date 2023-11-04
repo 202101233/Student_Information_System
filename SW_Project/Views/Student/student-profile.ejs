@@ -64,7 +64,7 @@
             </div>
     
     
-      
+            <div class="for-include-edit-btn">
             <div class="right-box">
               
               <div class="table-responsive table-hover">
@@ -74,99 +74,117 @@
                 <tbody>
     
                 <tr>
-                    <td>First Name</td>
-                    <td>:</td>
-                    <td> Ram </td>
+                    <td style="width: 25%;">First Name</td>
+                    <td style="width: 2%;">:</td>
+                    <td style="width: 68%;"> 
+                      <input readonly type="text" class="ip-boxes-editable" value="Ram" id="first-name">
+                    </td>
                 </tr>
     
                 <tr>
                   <td>Middle Name</td>
                   <td>:</td>
-                  <td>Vijaybhai </td>
+                  <td>
+                    <input readonly type="text" class="ip-boxes-editable" value="Vijaybhai" id="middle-name">
+                   </td>
               </tr>
     
               <tr>
                   <td>Last Name</td>
                   <td>:</td>
-                  <td>Agrawal </td>
+                  <td>
+                    <input readonly type="text" class="ip-boxes-editable" value="Agarwal" id="last-name">
+                  </td>
               </tr>
     
               <tr>
                     <td>Student ID</td>
                     <td>:</td>
-                    <td>20210000 </td> 
+                    <td>
+                      <input readonly type="text" class="ip-boxes-editable" value="202101011" id="student-id">
+                    </td> 
               </tr>
                 
               <tr>
                 <td>Mobile Number</td>
                 <td>:</td>
-                <td>9999999999 </td>
+                <td>
+                  <input readonly type="text" class="ip-boxes-editable" value="999999999" id="mobile-no">
+                </td>
             </tr>
     
     
             <tr>
               <td>Gender</td>
               <td>:</td>
-              <td>Male </td>
+              <td>
+                <input readonly type="text" class="ip-boxes-editable" value="Ram" id="gender">
+              </td>
             </tr>
     
             <tr>
               <td>Date Of Birth</td>
               <td>:</td>
-              <td>07-05-2003 </td>
+              <td>
+                <input readonly type="date" class="ip-boxes-editable" value="20-01-1999" id="dob">
+                 </td>
             </tr>
     
             <tr>
                 <td>Email Address</td>
                 <td>:</td>
-                <td>abcdefgh@gmail.com </td>
+                <td>
+                  <input readonly type="email" class="ip-boxes-editable" value="adnbcd@gmail,com" id="emailaddr">  
+                </td>
               </tr>
                 
               <tr>
                 <td>Permanent Address</td>
                 <td>:</td>
-                <td>G-road, krushnanagar - delhi delhi, delhi- 123456 qbv 1ivq qievb bv   1JRNRF qbvf be viqerbv evqvqehvnbqv qcqenc qer qehuvbqe </td>
+                <td>
+                  
+                  <input readonly type="text" class="ip-boxes-editable" value="G-road, krushnanagar - delhi delhi, delhi- 123456 " id="homeaddr">
+                </td>
             </tr>  
                 
                 
             <tr>
               <td>Parent Email Address</td>
               <td>:</td>
-              <td>abcdefgh@gmail.com </td>
+              <td>
+                <input readonly type="email" class="ip-boxes-editable" value="adnbcd@gmail,com" id="parentmailaddr">  
+              </td>
             </tr>
     
-            <tr>
-              <td>Password</td>
-              <td>:</td>
-              <td>........ </td>
-            </tr>
+            
     
             <tr>
               <td>Batch</td>
               <td>:</td>
-              <td>B.tech-2021</td>
+              <td>
+                <input readonly type="text" class="ip-boxes-editable" value="B.Tech-2021" id="batch">
+              </td>
             </tr>
     
     
             <tr>
               <td>Blood-group</td>
               <td>:</td>
-              <td>A-positive</td>
+              <td>
+                <input readonly type="text" class="ip-boxes-editable" value="A-positive" id="bloodgroup">
+              </td>
             </tr>
     
             
              <tr>
               <td>ProgramRegistered</td>
               <td>:</td>
-              <td>ICT</td>
+              <td>
+                <input readonly type="text" class="ip-boxes-editable" value="ICT-CS" id="programme">
+              </td>
             </tr>
     
-            <tr>
-              <td>Fee_Paid</td>
-              <td>:</td>
-              <td>Yes</td>
-            </tr>
-     
+           
               
                
                 </tbody>
@@ -175,12 +193,16 @@
     
             </div>
 
+            <div class="buttonplace">
+             <button class="edit-btn" onclick="edit()">Edit</button>
+            </div>
+            
+            <!-- for-include-bottom button-->
+            </div>
+
             </div>
             
            
-           <div class="buttonplace">
-            <button>Edit</button>
-           </div>
             
      <!-- content     -->
     </div>
@@ -192,6 +214,7 @@
     <!-- wrapper -->
     </div>
 
+    <script src="../../Assets/js/student-profile.js"></script>
 </body>
 </html>
 </body>

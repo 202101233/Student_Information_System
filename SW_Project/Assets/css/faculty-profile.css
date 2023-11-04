@@ -181,56 +181,95 @@ body{
 }
 
 .facultyname{
-	height: 8vh;
-   
+	height: 4vh;
+    font-size: 3.5vh;
     border-radius: 6px;
-    padding-top: 1.5vh;
-    padding-left: 4vh;
+    margin-top: 1.5vh;
+    margin-left: 4vh;
+    width: 90%;
+    background: transparent;
+    border-radius: 10px;
+    border: none;
 }
 
 
 
  .degree{
-    height: 8vh;
-   
-	padding-top: 2vh;
-    padding-left: 4vh;
+    height: 4vh;
+    width: 90%;
+    background: transparent;
+	margin-top: 2vh;
+    margin-left: 4vh;
     font-size: 23px;
     font-family: sans-serif;
+    border-radius: 10px;
+    border: none;
 }
 
 
 .mo-number{
-    height: 8vh;
-  
-    padding: 2vh 2vw;
+    height: 4vh;
+    margin-top: 4vh;
+    margin-bottom: 2vh;
+    margin-left: 0.6vw;
     font-size: 20px;
+    background: transparent;
+    border-radius: 10px;
+    border: none;
+}
+
+.facultydetail i{
+    margin-left: 4vh;
 }
 
 .location{
-    height: 8vh;
-    
-    padding: 2vh 2vw;
+    height: 4vh;
+    width: 70%;
+    background: transparent;
+    margin-bottom: 2vh;
+    margin-left: 0.6vw;
+    margin-top: 2vh;
     font-size: 20px;
+    border-radius: 10px;
+    border: none;
 }
 
 .email{
-    height: 8vh;
-   
-    padding: 2vh 2vw;
+    height: 4vh;
+    width: 40%;
+    background: transparent;
+    
+    margin-bottom: 2vh;
+    margin-left: 0.6vw;
+    margin-top: 2vh;
     font-size: 20px;
+    border-radius: 10px;
+    border: none;
 } 
 
 .genderplace{
     /* border: 2px solid red; */
-    padding: 2vh 2vw;
+    height: 4vh;
+    width: 10%;
+    background: transparent;
+    margin-bottom: 2vh;
+    margin-left: 0.6vw;
+    margin-top: 2vh;
     font-size: 20px;
+    border-radius: 10px;
+    border: none;
 }
 
 .dobplace{
     /* border: 2px solid black; */
-    padding: 2vh 2vw;
+    height: 4vh;
+    background: transparent;
+    margin-bottom: 5vh;
+    margin-left: 0.6vw;
+    margin-top: 2vh;
     font-size: 20px;
+    border-radius: 10px;
+    border: none;
 }
 
 
@@ -245,14 +284,10 @@ body{
     border-radius: 2vh;
     position: sticky;
     padding-left: 4vh;
+    border: none;
 
 }
 
-.biography .paras{
-   
-    height: 27vh;
-    overflow-y: auto;
-}
 
 .facultyname:hover,.degree:hover,.mo-number:hover,.location:hover,.email:hover ,.dobplace:hover,.genderplace:hover{
     transform: scale(1.007);
@@ -322,5 +357,18 @@ button{
     height: 3vh;
     width: 23%;
     margin-left: 2vh;
+}
+
+.paras{
+    
+    font-size: 2vh;
+    font-family: sans-serif;
+    width: 97%;
+    background: transparent;
+    padding-top: 1.5vh;
+    padding-left: 0.3vw;
+    padding-right: 0.3vw;
+    border-radius: 10px;
+    border: none;
 }
 

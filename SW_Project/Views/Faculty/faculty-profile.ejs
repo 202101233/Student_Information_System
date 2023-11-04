@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../Assets/css/faculty-detail-c.css">
+    <link rel="stylesheet" href="../../Assets/css/faculty-profile.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -50,33 +51,30 @@
             <div class="for-include-biography">
             <div class="facultydetail">
     
-            
+                    </h1><input readonly id="facultyname1" class="facultyname" type="text" value="Saurabh Tiwari"></h1><br>
     
-                   
-                    <div class="facultyname"><h1>Saurabh Tiwari</h1></div>
+                    <input readonly id="degree1"  class="degree" type="text" value="PhD (Computer Science & Engineering), IIITDM, Jabalpur"><br>
     
-                    <div class="degree"><b>PhD (Computer Science & Engineering), IIITDM, Jabalpur</b></div>
+                    <i class="fa fa-phone"></i><input readonly id="mo-number1"  class="mo-number" type="text" value="079-68261618"><br>
     
-                    <div class="mo-number"> <i class="fa fa-phone"></i> 079-68261618</div>
+                    <i class='fa fa-map-marker'></i><input readonly id="location1"  class="location" type="text" value="# 1102, FB-1, DA-IICT, Gandhinagar, Gujarat, India – 382007"><br>
     
-                    <div class="location"><i class='fa fa-map-marker'></i>&nbsp;# 1102, FB-1, DA-IICT, Gandhinagar, Gujarat, India – 382007</div>
+                    <i class="fa fa-envelope"></i><input readonly id="email1"  class="email" type="text" value="saurabh_t[at]daiict[dot]ac[dot]in"><br>
     
-                    <div class="email"><i class="fa fa-envelope"></i> saurabh_t[at]daiict[dot]ac[dot]in</div>
-    
-                    <div class="genderplace"><i class="fa fa-mars-stroke" aria-hidden="true"></i>&nbsp;Male</div>
+                    <i class="fa fa-mars-stroke" aria-hidden="true"></i><input readonly id="genderplace1"  class="genderplace" type="text" value="Male"><br>
 
-                    <div class="dobplace"><i class="fa fa-calendar-o" aria-hidden="true"></i>&nbsp;20-02-1947</div>
+                    <i class="fa fa-calendar-o" aria-hidden="true"></i><input readonly id="dobplace1"  class="dobplace" type="date" name="" id="" value="20-02-1947">
                 
             </div>
 
             <div class="biography">
                 <h2>Biography</h2>
-                <br><br>
-                <div class="paras">
-                <p> &nbsp &nbsp &nbsp Saurabh Tiwari is a Faculty Member at Dhirubhai Ambani Institute of Information and Communication Technology (DA-IICT), Gandhinagar (India). Previously, he worked as a Postdoc Researcher at MÃ¤lardalen University, (Sweden) worked with Volvo Construction Equipment AB in the area of Model-Based System Engineering (MBT, MBD). His current research interests are in the area of Requirements Engineering, Empirical Software Engineering, and Model-Based Software Engineering. He graduated with an MTech degree from National Institute of Technology, Allahabad (India), and the PhD degree in Computer Science and Engineering from Indian Institute of Information Technology, Design and Manufacturing (IIITDM), Jabalpur (India) in June 2010 and June 2016 respectively.</p>
+                <br>
                 
+                <textarea readonly name="" id="paras1" cols="110" rows="10" class="paras">
+                Saurabh Tiwari is a Faculty Member at Dhirubhai Ambani Institute of Information and Communication Technology (DA-IICT), Gandhinagar (India). Previously, he worked as a Postdoc Researcher at MÃ¤lardalen University, (Sweden) worked with Volvo Construction Equipment AB in the area of Model-Based System Engineering (MBT, MBD). His current research interests are in the area of Requirements Engineering, Empirical Software Engineering, and Model-Based Software Engineering. He graduated with an MTech degree from National Institute of Technology, Allahabad (India), and the PhD degree in Computer Science and Engineering from Indian Institute of Information Technology, Design and Manufacturing (IIITDM), Jabalpur (India) in June 2010 and June 2016 respectively 
+                </textarea>
                 
-                </div>
       
             </div>
 
@@ -91,7 +89,7 @@
             </div>
         <div class="buttonplace">
             <div class="buttonplace2">
-            <button>Edit</button>
+            <button class="btnedit" onclick="edit()">Edit</button>
             </div>
         </div>
         </div>
@@ -106,6 +104,6 @@
 
     <!-- wrapper -->
     </div>
-
+    <script src="../../Assets/js/faculty-profile.js"></script>
 </body>
 </html>
