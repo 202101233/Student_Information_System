@@ -1,6 +1,6 @@
 var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Announcement,
-    Course_Allotment, Attendance,Grade, Result } = require('../Model/model');
-const { proppatch } = require('../Routes/router');
+    Course_Allotment, Attendance,Grade,Course_Enrollment, Result } = require('../Model/model');
+const { proppatch, use } = require('../Routes/router');
 
 
 exports.homepage = (req, res) => {
@@ -1002,7 +1002,7 @@ exports.p_updatestudent = async (req, res) => {
             res.status(401).render("alert.ejs", { title, message, icon, href });
         }
 
-        const ID = req.student.id;
+        const ID = req.Student.id;
         const update = {
             firstname: req.body.firstname,
             middlename: req.body.middlename,
@@ -1033,7 +1033,125 @@ exports.p_updatestudent = async (req, res) => {
     }
 }
 
-// 
+// Course Registration
+
+exports.g_courseregistration = async (req,res) => {
+    try{
+        const last_sem = await Course_Allotment.find().sort({Date_created : -1}).limit(1);
+        const sem_name = last_sem.Semester_name;
+
+        const ID = res.Student.id;
+
+        const user = await Student.findnyId(ID);
+        const p_name = user.ProgramRegistered;
+        const batch = user.Batch;
+
+        const coursesTaught = await Course_Allotment.aggregate([
+            {
+                $match: { Semester_name: sem_name, Program_associate : p_name, Batch : batch } // Match the documents with the specified semester name
+            },
+            {
+                $unwind: "$Courseallocate" // Deconstruct the Courseallocate array
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude the _id field from the result
+                    Course_upload: "$Courseallocate.Course_upload",
+                    Course_type : "$Courseallocate.Course_type"// Include the Course_upload field from Courseallocate
+                }
+            }
+        ]);
+
+        res.render("courseregistration.ejs", { coursesTaught , sem_name, p_name, batch});
+    } catch(err){
+        res.status(500).send("An error occured while registering course");
+    }
+}
+
+exports.p_courseregistration = async (req,res) => {
+    try{
+        if(req.body.register.length!==6) {
+            const title = "ERROR";
+            const message = "Please select only 6 courses!";
+            const icon = "error";
+            const href = "/courseregistration";
+            res.render("alert.ejs", { title, message, icon, href });
+        }
+
+        const student = await Student.findById(req.user);
+        const semester = await Course_Allotment.findById(req.body.sem);
+
+        const courses = req.body.register;
+
+        const newCourseEnrollment = new Course_Enrollment({
+            studentEnrolled : student,
+            semesterEnrolled : semester,
+            courseEnrolled : courses
+        })
+ 
+        await newCourseEnrollment.save();
+        const title = "SUCCESS";
+        const message = "Course Registration completed!";
+        const icon = "success";
+        const href = "/studenthome";
+        res.render("alert.ejs", { title, message, icon, href });
+
+    } catch(err) {
+        res.status(500).send("An error occured while course registration");
+    }
+}
+
+// See grade
+
+exports.g_viewgrade = async (req,res) => {
+    try{
+        const ID = req.Student.id;
+
+        const user = await Student.findById(ID);
+        const p_name = user.ProgramRegistered;
+        const batch = user.Batch;
+
+        const sem_enroll = await Course_Enrollment.aggregate([
+            {
+                $match : {Program_associate : p_name, Batch : batch}
+            },
+            {
+                $project: {
+                _id: 0, // Exclude the _id field from the result
+                Semester_name : "Semester_name"
+                }   
+            }
+        ])
+        res.render("viewgrade.ejs", { sem_enroll });
+    } catch(err){
+        res.status(500).send("An error occured while fetching semester data");
+    }
+}
+
+exports.g_viewattendence = async (req,res) => {
+    try{
+        const ID = req.Student.id;
+
+        const user = await Student.findById(ID);
+        const p_name = user.ProgramRegistered;
+        const batch = user.Batch;
+
+        const sem_enroll = await Course_Enrollment.aggregate([
+            {
+                $match : {Program_associate : p_name, Batch : batch}
+            },
+            {
+                $project: {
+                _id: 0, // Exclude the _id field from the result
+                Semester_name : "Semester_name"
+                }   
+            }
+        ])
+        res.render("viewattendence.ejs", { sem_enroll });
+    } catch(err){
+        res.status(500).send("An error occured while fetching semester data");
+    }
+}
 
 // View Announcement
 
@@ -1071,7 +1189,7 @@ exports.g_changepwdstudent = async (req, res) => {
 
 exports.p_changepwdstudent = async (req, res) => {
     try {
-        const ID = req.student.id;           //user here means student or not?
+        const ID = req.Student.id;           //user here means student or not?
         const { oldpwd, newpwd, confirmpwd } = req.body;
 
         if (newpwd != confirmpwd) {

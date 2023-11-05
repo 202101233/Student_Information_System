@@ -96,6 +96,15 @@ route.get('/viewstudent', controller.g_viewstudent);
 route.get('/updatestudent', controller.g_updatestudent);
 route.post('/updatestudent', controller.p_updatestudent);
 
+route.get('/courseregistration', controller.g_courseregistration);
+route.post('/courseregistration', controller.p_courseregistration);
+
+route.get('/viewgrade', controller.g_viewgrade);
+route.post('/viewgrade', controller.p_viewgrade);
+
+route.get('/viewattendence', controller.g_viewattendence);
+route.post('/viewattendence', controller.p_viewattendence);
+
 route.get('/changepwdstudent', controller.g_changepwdstudent);
 route.post('/changepwdstudent', controller.p_changepwdstudent);
 

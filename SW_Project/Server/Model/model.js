@@ -326,30 +326,33 @@ const GradeSchema = new mongoose.Schema({
 });
 
 
-// const Course_EnrollmentSchema = new mongoose.Schema({
-//     courseEnrolled: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "Course",
-//         required: true,
-//     },
-//     studentEnrolled: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "Student",
-//         required: true,
-//     },
-//     semesterEnrolled: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "Semester",
-//         required: true,
-//     },
-//     grade: Number,
-//     attendance: {
-//         type: Number,
-//         // min: 0,
-//         // max: 100,
-//     },
-//     dateEnrolled: Date,
-// });
+const Course_EnrollmentSchema = new mongoose.Schema({
+    
+    studentEnrolled: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+        required: true,
+    },
+    semesterEnrolled: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CourseAllotment",
+        required: true,
+    },
+
+    courseEnrolled: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+        required: true,
+    }],
+
+    // grade: Number,
+    // attendance: {
+    //     type: Number,
+    //     // min: 0,
+    //     // max: 100,
+    // },
+    // dateEnrolled: Date,
+});
 
 const ResultSchema = new mongoose.Schema({
     Student: {
@@ -377,9 +380,9 @@ const Announcement = mongoose.model("Announcement", AnnouncementSchema);
 const Course_Allotment = mongoose.model("Course_Allotment", Course_AllotmentSchema);
 const Attendance = mongoose.model("Attendance", AttendanceSchema);
 const Grade = mongoose.model("Grade", GradeSchema);
-// const Course_Enrollment = mongoose.model("Course_Enrollment", Course_EnrollmentSchema);
+const Course_Enrollment = mongoose.model("Course_Enrollment", Course_EnrollmentSchema);
 const Result = mongoose.model("Result", ResultSchema);
 
 
 module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Transcript,Announcement,
-    Course_Allotment,Attendance,Grade,Result};
+    Course_Allotment,Attendance,Grade,Course_Enrollment,Result};
