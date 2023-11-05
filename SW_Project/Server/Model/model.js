@@ -138,11 +138,7 @@ const CourseSchema = new mongoose.Schema({
     Course_credit: {
         type: Number,
         required: true,
-    },
-    Course_Type: {
-        type: Boolean,
-        required: true,
-    },
+    }
 });
 
 
@@ -165,22 +161,22 @@ const ProgramSchema = new mongoose.Schema({
 });
 
 
-const SemesterSchema = new mongoose.Schema({
-    Sem_name: {
-        type: String,
-        required: true,
-    },
-    DateCreated: Date,
-    Sem_Type: {
-        type: Boolean,
-        required: true,
-    },
-    ProgramOffered: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Program",
-        required: true,
-    }],
-});
+// const SemesterSchema = new mongoose.Schema({
+//     Sem_name: {
+//         type: String,
+//         required: true,
+//     },
+//     DateCreated: Date,
+//     Sem_Type: {
+//         type: Boolean,
+//         required: true,
+//     },
+//     ProgramOffered: [{
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "Program",
+//         required: true,
+//     }],
+// });
 
 
 var fee_structureSchema = new mongoose.Schema({
@@ -254,56 +250,106 @@ const Course_AllotmentSchema = new mongoose.Schema({
     //     ref: "Semester",
     //     required: true,
     // },
-    // BatchAssigned : {
-    //     type : String,
-    //     required : true
-    // }
-    
+    Semester_name : {
+        type : String,
+        required : true
+    },
+    Date_created : {
+        type : Date,
+        required : true
+    },
+
     Batch : {
         type : String,
         required : true
     },
 
     Courseallocate : [{
-        course_code: {
-            type: String,
-            required :true
+        Course_upload: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
+            required: true,
         },
-        course_type: {
+        Course_type : {
             type : Boolean,
             required : true
         },
-        Faculty_Assgined : {
-            type : String,
-            required : true
-        }
+        Faculty_assigned: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Faculty",
+            required: true,
+        },
     }]
 });
 
-const Course_EnrollmentSchema = new mongoose.Schema({
+
+const AttendanceSchema = new mongoose.Schema({
     courseEnrolled: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
         required: true,
     },
-    studentEnrolled: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Student",
-        required: true,
-    },
-    semesterEnrolled: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Semester",
-        required: true,
-    },
-    grade: Number,
-    attendance: {
-        type: Number,
-        // min: 0,
-        // max: 100,
-    },
-    dateEnrolled: Date,
+    Attendance_data : [{
+        Student_enrolled: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Student",
+            required: true
+        },
+        Present_days : {
+            type : Number,
+            required : true
+        },
+        Total_days : {
+            type : Number,
+            required : true
+        }
+    }]
 });
+
+const GradeSchema = new mongoose.Schema({
+    courseEnrolled: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+        required: true,
+    },
+    Grade_data : [{
+        Student_enrolled: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Student",
+            required: true
+        },
+        Grade : {
+            type : Number,
+            required : true
+        }
+    }]
+});
+
+
+// const Course_EnrollmentSchema = new mongoose.Schema({
+//     courseEnrolled: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "Course",
+//         required: true,
+//     },
+//     studentEnrolled: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "Student",
+//         required: true,
+//     },
+//     semesterEnrolled: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "Semester",
+//         required: true,
+//     },
+//     grade: Number,
+//     attendance: {
+//         type: Number,
+//         // min: 0,
+//         // max: 100,
+//     },
+//     dateEnrolled: Date,
+// });
 
 const ResultSchema = new mongoose.Schema({
     Student: {
@@ -323,15 +369,17 @@ const Degree = mongoose.model("Degree", DegreeSchema);
 const Branch = mongoose.model("Branch", BranchSchema);
 const Course = mongoose.model("Course", CourseSchema);
 const Program = mongoose.model("Program", ProgramSchema);
-const Semester = mongoose.model("Semester", SemesterSchema);
+// const Semester = mongoose.model("Semester", SemesterSchema);
 // const fee_structure = mongoose.model("fee_structure", fee_structureSchema);
 // const fee_history = mongoose.model("fee_history", fee_historySchema);
 const Transcript = mongoose.model("Transcript", TranscriptSchema);
 const Announcement = mongoose.model("Announcement", AnnouncementSchema);
 const Course_Allotment = mongoose.model("Course_Allotment", Course_AllotmentSchema);
-const Course_Enrollment = mongoose.model("Course_Enrollment", Course_EnrollmentSchema);
+const Attendance = mongoose.model("Attendance", AttendanceSchema);
+const Grade = mongoose.model("Grade", GradeSchema);
+// const Course_Enrollment = mongoose.model("Course_Enrollment", Course_EnrollmentSchema);
 const Result = mongoose.model("Result", ResultSchema);
 
 
-module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Semester,Transcript,Announcement,
-    Course_Allotment,Course_Enrollment,Result};
+module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Transcript,Announcement,
+    Course_Allotment,Attendance,Grade,Result};

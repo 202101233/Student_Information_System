@@ -1,5 +1,5 @@
-var { Student, Admin, Faculty, Degree, Branch, Course, Program, Semester, Transcript, Announcement,
-    Course_Allotment, Course_Enrollment, Result } = require('../Model/model');
+var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Announcement,
+    Course_Allotment, Attendance,Grade, Result } = require('../Model/model');
 const { proppatch } = require('../Routes/router');
 
 
@@ -514,22 +514,27 @@ async function processExcelFile(filepath){
     const sem_data= [];
     
     const batch = req.body.Batch;
-    const Program = req.body.Program;
+    const program = req.body.Program;
+    const Semester_n = req.body.S_name;
 
-    workshhet.eachRow((row,rownumber) => {
+    workshhet.eachRow(async (row,rownumber) => {
 
         if(rownumber>1){
             const course_id = row.getCell(1).value;
             const course_type = row.getCell(2).value;
             const faculty_assign = row.getCell(3).value;
 
+            const obj1 = await Course.find({ Course_code : course_id});
+            const obj2 = await Faculty.find({ fullname : faculty_assign});
 
             sem_data.push({
                 Program_associate : program,
                 Batch : batch,
-                Course_code : course_id,
-                COurse_type : course_type,
-                Faculty_Assigned : faculty_assign
+                Date_created : new Date(),
+                Course_code : obj1._id,
+                Course_type : course_type,
+                Faculty_Assigned : obj2._id,
+                Semester_name : Semester_n,
             });
         }
     });
@@ -537,7 +542,7 @@ async function processExcelFile(filepath){
 }
 // Admin Fee Management
 
-//admin announcement
+// Admin announcement
 
 exports.g_admin_announcement = async (req, res) => {
     try {
@@ -555,7 +560,7 @@ exports.p_add_announcement = async (req, res) => {
         const newannouncement = {
             Title: title,
             Description: description,
-            Due_data : new Date(due_date),
+            Due_date : due_date,
         }
 
         await newannouncement.save();
@@ -704,11 +709,181 @@ exports.p_updatefaculty = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching degree data");
-
-
     }
 }
 
+exports.g_coursegrade = async (req,res) => {
+    try{
+        const last_sem = await Course_Allotment.find().sort({Date_created:-1}).limit(1);
+        const semester_name = last_sem.Semester_name;
+
+        const f_name = req.Faculty.id;
+
+        const coursesTaught = await Course_Allotment.aggregate([
+            {
+                $match: { Semester_name: semester_name } // Match the documents with the specified semester name
+            },
+            {
+                $unwind: "$Courseallocate" // Deconstruct the Courseallocate array
+            },
+            {
+                $match: { "Courseallocate.Faculty_assigned": f_name } // Match the documents with the specified faculty
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude the _id field from the result
+                    Course_upload: "$Courseallocate.Course_upload" // Include the Course_upload field from Courseallocate
+                }
+            }
+        ]);
+
+        res.render("coursegrade.ejs", { coursesTaught , semester_name});
+    } catch(err){
+        console.error(err);
+        res.status(500).send("An error occured while adding grade data");
+    }
+}
+
+exports.p_coursegrade = async (req,res) => {
+    try{
+        const course =await Course.findOne({ _id :req.body.mycheckbox });
+        res.render("addgrade.ejs", {course}); 
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("An error occured while adding grade data");
+    }
+}
+
+exports.p_addgrade = (upload.single('excelfile'), async (req,res) => {
+    try{
+        const filepath = req.file.path;
+        const grade = await processExcelFile(filepath);
+
+        await Grade.insertMany(grade);
+
+        req.session.grade = grade;
+
+    } catch(err){
+        console.error(err);
+        res.status(500).send("An error occured while adding grade data");
+    }
+})
+
+async function processExcelFile(filepath){
+    const workbook = new Excel.workbook();
+    await workbook.xlsx.readfile(filepath);
+
+    const workshhet = workbook.getWorksheet(1);
+    const grade_data= [];
+    // const obj = req.body._id;
+
+    // const course_name = obj.course_name;             // Optional
+    // const course_code = obj.course_code;
+
+    workshhet.eachRow(async (row,rownumber) => {
+
+        if(rownumber>1){
+            const student_id = row.getCell(1).value;
+            const marks = row.getCell(2).value;
+
+            const obj = await Student.find({ stud_id : student_id});
+
+            grade_data.push({
+                courseEnrolled : course_code,
+                stud_id : obj._id,
+                grade : marks
+            });
+        }
+    });
+    return grade_data;
+}
+
+exports.g_courseattendence = async (req,res) => {
+    try{
+        const last_sem = await Course_Allotment.find().sort({Date_created:-1}).limit(1);
+        const semester_name = last_sem.Semester_name;
+
+        const f_name = req.Faculty.id;
+
+        const coursesTaught = await Course_Allotment.aggregate([
+            {
+                $match: { Semester_name: semester_name } // Match the documents with the specified semester name
+            },
+            {
+                $unwind: "$Courseallocate" // Deconstruct the Courseallocate array
+            },
+            {
+                $match: { "Courseallocate.Faculty_assigned": f_name } // Match the documents with the specified faculty
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude the _id field from the result
+                    Course_upload: "$Courseallocate.Course_upload" // Include the Course_upload field from Courseallocate
+                }
+            }
+        ]);
+
+        res.render("courseattendence.ejs", { coursesTaught , semester_name});
+    } catch(err){
+        console.error(err);
+        res.status(500).send("An error occured while adding attendence data");
+    }
+}
+
+exports.p_courseattendence = async (req,res) => {
+    try{
+        const course =await Course.findOne({ _id :req.body.mycheckbox });
+        res.render("addattendence.ejs", {course}); 
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("An error occured while adding attendence data");
+    }
+}
+
+exports.p_addattendence = (upload.single('excelfile'), async (req,res) => {
+    try{
+        const filepath = req.file.path;
+        const attendance = await processExcelFile(filepath);
+
+        await Attendance.insertMany(grade);
+
+        req.session.attendance = attendance;
+
+    } catch(err){
+        console.error(err);
+        res.status(500).send("An error occured while adding attendence data");
+    }
+})
+
+async function processExcelFile(filepath){
+    const workbook = new Excel.workbook();
+    await workbook.xlsx.readfile(filepath);
+
+    const workshhet = workbook.getWorksheet(1);
+    const attendance_data= [];
+    
+    // const course_name = req.body.course_name;             // Optional
+    const course_code = req.body.course_code;
+
+    workshhet.eachRow(async (row,rownumber) => {
+
+        if(rownumber>1){
+            const student_id = row.getCell(1).value;
+            const present_days = row.getCell(2).value;
+            const total_days = row.getCell(3).value;
+
+            const obj = await Student.find({ stud_id : student_id});
+
+            attendance_data.push({
+                courseEnrolled : course_code,
+                stud_id : obj._id,
+                Present_days : present_days,
+                Total_days : total_days 
+            });
+        }
+    });
+    return attendance_data;
+}
 
 
 exports.g_changepwdfaculty = async (req, res) => {
@@ -778,8 +953,6 @@ exports.logoutfaculty = async (req, res, next) => {
 
 
 // Student Functionality
-
-
 
 exports.g_viewstudent = async (req, res) => {
     try {
@@ -859,6 +1032,8 @@ exports.p_updatestudent = async (req, res) => {
         res.status(500).send("An error occured while updating profile");
     }
 }
+
+// 
 
 // View Announcement
 

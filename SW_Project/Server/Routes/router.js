@@ -73,6 +73,16 @@ route.get('/viewfaculty', controller.g_viewfaculty);
 route.get('/updatefaculty', controller.g_updatefaculty);
 route.post('/updatefaculty', controller.p_updatefaculty);
 
+route.get('coursegrade', controller.g_coursegrade);
+route.post('coursegrade', controller.p_coursegrade);
+
+route.post('addgrade', controller.p_addgrade);
+
+route.get('courseattendence', controller.g_courseattendence);
+route.post('courseattendence', controller.p_courseattendence);
+
+route.post('addattendence', controller.p_add_attendence);
+
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
 
