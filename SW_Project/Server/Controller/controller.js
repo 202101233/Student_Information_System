@@ -1,6 +1,9 @@
 var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Announcement,
     Course_Allotment, Attendance,Grade,Course_Enrollment, Result } = require('../Model/model');
 const { proppatch, use } = require('../Routes/router');
+const multer = require("multer");
+const upload = multer({ dest: 'uploads/' });
+
 
 
 exports.homepage = (req, res) => {
@@ -1109,11 +1112,11 @@ exports.g_viewgrade = async (req,res) => {
 
         const user = await Student.findById(ID);
         const p_name = user.ProgramRegistered;
-        const batch = user.Batch;
+        // const batch = user.Batch;
 
         const sem_enroll = await Course_Enrollment.aggregate([
             {
-                $match : {Program_associate : p_name, Batch : batch}
+                $match : {Program_associate : p_name, studentenrolled : user}     // batch or student????
             },
             {
                 $project: {
@@ -1136,7 +1139,7 @@ exports.g_viewattendence = async (req,res) => {
         const p_name = user.ProgramRegistered;
         const batch = user.Batch;
 
-        const sem_enroll = await Course_Enrollment.aggregate([
+        const sem_enroll = await Course_Allotment.aggregate([
             {
                 $match : {Program_associate : p_name, Batch : batch}
             },
@@ -1152,6 +1155,46 @@ exports.g_viewattendence = async (req,res) => {
         res.status(500).send("An error occured while fetching semester data");
     }
 }
+
+// exports.p_viewattendence= async (req, res) => {
+//     try{
+//         const ID =req.Student.id;
+//         const sem_select = req.Course_Allotment.Semester_name;
+
+//         const user = await Student.findById(ID);
+
+//         const courseEnrollments = await Course_Enrollment.find({
+//             studentEnrolled : user,
+//             semesterEnrolled :  sem_select
+
+//         }).populate('courseEnrolled');
+
+//         // const attendenceDate = [];
+//         const attendencedata = await Attendance.aggregate([
+//             {
+//                 $match: { Semester_name: semester_name } // Match the documents with the specified semester name
+//             },
+//             {
+//                 $unwind: "$Courseallocate" // Deconstruct the Courseallocate array
+//             },
+//             {
+//                 $match: { "Courseallocate.Faculty_assigned": f_name } // Match the documents with the specified faculty
+//             },
+//             {
+//                 $project: {
+//                     _id: 0, // Exclude the _id field from the result
+//                     Course_upload: "$Courseallocate.Course_upload" // Include the Course_upload field from Courseallocate
+//                 }
+//             }
+//         ]);
+
+
+
+
+
+//     }catch(err){
+//         res.status(500).send("An error occured while fetching semester data");
+// }
 
 // View Announcement
 

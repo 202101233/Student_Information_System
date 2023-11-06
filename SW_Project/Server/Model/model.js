@@ -284,7 +284,7 @@ const Course_AllotmentSchema = new mongoose.Schema({
 
 
 const AttendanceSchema = new mongoose.Schema({
-    courseEnrolled: {
+    A_courseEnrolled: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
         required: true,
@@ -307,7 +307,7 @@ const AttendanceSchema = new mongoose.Schema({
 });
 
 const GradeSchema = new mongoose.Schema({
-    courseEnrolled: {
+    G_courseEnrolled: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",
         required: true,
