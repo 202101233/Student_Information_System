@@ -7,19 +7,19 @@ const upload = multer({ dest: 'uploads/' });
 
 
 exports.homepage = (req, res) => {
-    res.render("index.ejs");
+    res.render("user-choice");
 }
 
 exports.g_adminlogin = (req, res) => {
-    res.render("adminlogin.ejs");
+    res.render("Admin/adminlogin.ejs");
 }
 
 exports.g_facultylogin = (req, res) => {
-    res.render("facultylogin.ejs");
+    res.render("Faculty/facultylogin.ejs");
 }
 
 exports.g_studentlogin = (req, res) => {
-    res.render("studentlogin.ejs");
+    res.render("Student/studentlogin.ejs");
 }
 
 exports.p_adminlogin = async (req, res) => {         //passport??????
@@ -30,7 +30,7 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
             //check if password matches
             const result = req.body.password === user.Password;
             if (result) {
-                res.render("adminhome.ejs");
+                res.render("Admin/adminhome.ejs");
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -556,7 +556,7 @@ exports.g_admin_announcement = async (req, res) => {
     }
 }
 
-exports.p_add_announcement = async (req, res) => {
+exports.p_addmin_announcement = async (req, res) => {
     try {
         const { title, description, due_date } = req.body;
 

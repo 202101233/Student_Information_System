@@ -57,7 +57,7 @@ route.get('/addsemester', controller.g_addsemester);
 route.post('/addsemester', controller.p_addsemester);
 
 route.get('/admin-announcement', controller.g_admin_announcement);
-route.post('/add_announcement', controller.p_admin_announcement);
+route.post('/add_announcement', controller.p_addmin_announcement);
 
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);
@@ -81,7 +81,7 @@ route.post('addgrade', controller.p_addgrade);
 route.get('courseattendence', controller.g_courseattendence);
 route.post('courseattendence', controller.p_courseattendence);
 
-route.post('addattendence', controller.p_add_attendence);
+route.post('addattendence', controller.p_addattendence);
 
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
@@ -105,6 +105,7 @@ route.get('/viewgrade', controller.g_viewgrade);
 route.get('/viewattendence', controller.g_viewattendence);
 // route.post('/viewattendence', controller.p_viewattendence);
 
+route.get('/student-announcement', controller.g_student_announcement);
 route.get('/changepwdstudent', controller.g_changepwdstudent);
 route.post('/changepwdstudent', controller.p_changepwdstudent);
 

@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
+const express = require("express");
+const passport = require('passport');
+const LocalStrategy = require("passport-local");
+const passportLocalMongoose = require('passport-local-mongoose');
+const session = require("express-session");
 
 
+const app = express();
+
+app.use(require("connect-flash")());
 const StudentSchema = new mongoose.Schema({
     firstname: {
         type: String,
@@ -363,7 +371,9 @@ const ResultSchema = new mongoose.Schema({
     Semester: String, // You might want to add validation for the format here
 });
 
-
+StudentSchema.plugin(passportLocalMongoose);
+AdminSchema.plugin(passportLocalMongoose);
+FacultySchema.plugin(passportLocalMongoose);
 
 const Student = mongoose.model("Student", StudentSchema);
 const Admin = mongoose.model("Admin", AdminSchema);
@@ -382,6 +392,36 @@ const Attendance = mongoose.model("Attendance", AttendanceSchema);
 const Grade = mongoose.model("Grade", GradeSchema);
 const Course_Enrollment = mongoose.model("Course_Enrollment", Course_EnrollmentSchema);
 const Result = mongoose.model("Result", ResultSchema);
+
+
+// Set up Passport configuration
+passport.use(new LocalStrategy(Student.authenticate()));
+passport.serializeUser(Student.serializeUser());
+passport.deserializeUser(Student.deserializeUser());
+
+passport.use(new LocalStrategy(Admin.authenticate()));
+passport.serializeUser(Admin.serializeUser());
+passport.deserializeUser(Admin.deserializeUser());
+
+passport.use(new LocalStrategy(Faculty.authenticate()));
+passport.serializeUser(Faculty.serializeUser());
+passport.deserializeUser(Faculty.deserializeUser());
+
+app.use(
+	session({
+	  name: "user-session", // Set a unique name for sessions
+	  secret: "your-secret-key",
+	  resave: false,
+	  saveUninitialized: false,
+	  // You can also specify additional session options here
+	})
+  );
+
+
+  app.use(require("connect-flash")());
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Transcript,Announcement,
