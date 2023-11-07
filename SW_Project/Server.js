@@ -14,6 +14,8 @@ const ejs = require('ejs');
 const session = require('express-session');
 const mongoose = require('mongoose');
 
+// mongoose.connect("mongodb+srv://admin:sis_it304@cluster0.7fcnw1p.mongodb.net/?retryWrites=true&w=majority")
+
 
 const model = require('./Server/Model/model');
 
@@ -24,10 +26,10 @@ const connectDB=require("./Server/Database/connection");
 dotenv.config({path : 'config.env'});
 const app=express();
 
-const PORT = process.env.PORT|| 8000;
+const PORT = process.env.PORT|| 8080;
 
 //log request
-//app.use(morgan('tiny'));
+app.use(morgan('tiny'));
 
 //mongoDB connection
 connectDB();
@@ -46,7 +48,7 @@ app.set("view engine", "ejs")
 // app.use('/js',express.static(path.resolve(__dirname,"Assets/js")))
 
 //load router
-app.use('/', require('./Server/Routes/router'));
+app.use('/', require('./Server/Routes/router')); 
 
 //set static paths
 app.use(express.static(__dirname + '/Assets'));

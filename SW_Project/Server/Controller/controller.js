@@ -25,17 +25,19 @@ exports.g_studentlogin = (req, res) => {
 exports.p_adminlogin = async (req, res) => {         //passport??????
     try {
         // check if the user exists
-        const user = await Admin.findOne({ a_emailid: req.body.a_email });
+        const user = await Admin.findOne({ Email_id: req.body.a_email });
         if (user) {
             //check if password matches
-            const result = req.body.password === user.Password;
+            const result = req.body.a_password === user.Password;
             if (result) {
-                res.render("Admin/adminhome.ejs");
+                res.render("Admin/adminhome.ejs",{admin : user});
+                
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
         } else {
-            res.status(400).json({ error: "User doesn't exist" });
+            console.log(req.body);
+            res.status(400).json({ error: "User doesn't exist"});
         }
     } catch (err) {
         res.status(400).json({ err });
@@ -48,7 +50,7 @@ exports.p_facultylogin = async (req, res) => {
         const user = await Faculty.findOne({ f_emailid: req.body.f_email });
         if (user) {
             //check if password matches
-            const result = req.body.password === user.Password;
+            const result = req.body.f_password === user.Password;
             if (result) {
                 res.render("facultyhome.ejs");
             } else {
@@ -68,7 +70,7 @@ exports.p_studentlogin = async (req, res) => {
         const user = await Student.findOne({ s_emailid: req.body.s_email });
         if (user) {
             //check if password matches
-            const result = req.body.password === user.Password;
+            const result = req.body.s_password === user.Password;
             if (result) {
                 res.render("studenthome.ejs");
             } else {
@@ -85,7 +87,7 @@ exports.p_studentlogin = async (req, res) => {
 exports.g_adminhome = (isLoggedInadmin, async (req, res) => {
     try {
         const admin = await Admin.findOne({ _id: req.user });
-        res.render("adminhome.ejs", { admin });
+        res.render("Admin/adminhome", { admin });
     } catch (err) {
         console.error(err);
         // Handle the error appropriately, such as sending an error response to the client or logging it.
