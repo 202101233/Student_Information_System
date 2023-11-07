@@ -47,12 +47,12 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
 exports.p_facultylogin = async (req, res) => {
     try {
         // check if the user exists
-        const user = await Faculty.findOne({ f_emailid: req.body.f_email });
+        const user = await Faculty.findOne({ Email_id: req.body.f_email });
         if (user) {
             //check if password matches
             const result = req.body.f_password === user.Password;
             if (result) {
-                res.render("facultyhome.ejs");
+                res.render("facultyhome.ejs", {faculty : user});
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
