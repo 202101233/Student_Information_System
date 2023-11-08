@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../Assets/css/faculty-change-password.css">
+    <link rel="stylesheet" href="css/faculty-change-password.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="wrapper">
     <div class="upperbar">
         <div class="weblogoplace">
-            <img src="logo.png" alt="not rendered" id="weblogoimg">
+            <img src="img/logo.png" alt="not rendered" id="weblogoimg">
         </div>
         <div class="webnameplace">
             <div class="webname"><p id="temp1">Student Information System</p></div>
@@ -21,12 +21,12 @@
     <div class="sidenav">
         <div class="sidenavopt">
             <ul>
-                <li><a href="#" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
-                <li><a href="#" class="bcolor"><i class="fa-solid fa-user"></i> Faculty Details </a></li>
-                <li><a href="#" class="bcolor"><i class="fa-solid fa-file"></i> Course Grade</a></li>
+                <li><a href="/faculty-homepage" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
+                <li><a href="/faculty-profile" class="bcolor"><i class="fa-solid fa-user"></i> Faculty Details </a></li>
+                <li><a href="" class="bcolor"><i class="fa-solid fa-file"></i> Course Grade</a></li>
                 <li><a href="#"><i class="fa-solid fa-clipboard"></i> Course Attendence </a></li>
-                <li><a href="#"><i class="fa-solid fa-key"></i> Change Password </a></li>
-                <li><a  href="#"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
+                <li><a href="/changepwdfaculty"><i class="fa-solid fa-key"></i> Change Password </a></li>
+                <li><a  href="/user-choice"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
               </ul>
         </div>
         <div class="sidenavdown">
@@ -34,7 +34,7 @@
 
             </div>
             <div class="currusername">
-                Prof Saurbh Tiwari
+             <%= Faculty.fullname%>
             </div>
         </div>
     </div>
@@ -51,10 +51,10 @@
             <p class="subtags">Old Password</p>
             <div class="containerforinput">
                 <div class="sidelogoofpass">
-                    <img src="../../Assets/img/unlock.png" alt="">
+                    <img src="img/unlock.png" alt="">
                 </div>
                 <div class="inputbox">
-                    <input type="password" placeholder="Enter Old Password">
+                    <input type="password" name="oldpwd" placeholder="Enter Old Password">
                     <hr class="horizontalline">
                 </div>
             </div>
@@ -62,10 +62,10 @@
             <p class="subtags">New Password</p>
             <div class="containerforinput">
                 <div class="sidelogoofpass">
-                    <img src="../../Assets/img/lock.png" alt="">
+                    <img src="img/lock.png" alt="">
                 </div>
                 <div class="inputbox">
-                    <input type="password" placeholder="Enter New Password">
+                    <input type="password" name="newpwd" placeholder="Enter New Password">
                     <hr class="horizontalline">
                 </div>
             </div>
@@ -73,10 +73,10 @@
             <p class="subtags">Confirm New Password</p>
             <div class="containerforinput">
                 <div class="sidelogoofpass">
-                    <img src="../../Assets/img/lock.png" alt="">
+                    <img src="img/lock.png" alt="">
                 </div>
                 <div class="inputbox">
-                    <input type="password" placeholder="Confirm New Password">
+                    <input type="password" name= "confirmpwd" placeholder="Confirm New Password">
                     <hr class="horizontalline">
                 </div>
 

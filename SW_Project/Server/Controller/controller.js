@@ -11,26 +11,26 @@ exports.homepage = (req, res) => {
 }
 
 exports.g_adminlogin = (req, res) => {
-    res.render("Admin/adminlogin.ejs");
+    res.render("Admin/adminlogin");
 }
 
 exports.g_facultylogin = (req, res) => {
-    res.render("Faculty/facultylogin.ejs");
+    res.render("Faculty/facultylogin");
 }
 
 exports.g_studentlogin = (req, res) => {
-    res.render("Student/studentlogin.ejs");
+    res.render("Student/studentlogin");
 }
 
 exports.p_adminlogin = async (req, res) => {         //passport??????
     try {
         // check if the user exists
-        const user = await Admin.findOne({ a_emailid: req.body.a_email });
+        const user = await Admin.findOne({ Email_id: req.body.a_email });
         if (user) {
             //check if password matches
-            const result = req.body.password === user.Password;
+            const result = req.body.a_password === user.Password;
             if (result) {
-                res.render("Admin/adminhome.ejs");
+                res.render("Admin/adminhome");
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -45,12 +45,12 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
 exports.p_facultylogin = async (req, res) => {
     try {
         // check if the user exists
-        const user = await Faculty.findOne({ f_emailid: req.body.f_email });
+        const user = await Faculty.findOne({ Email_id: req.body.f_email });
         if (user) {
             //check if password matches
-            const result = req.body.password === user.Password;
+            const result = req.body.f_password === user.Password;
             if (result) {
-                res.render("facultyhome.ejs");
+                res.render("Faculty/facultyhome");
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -65,12 +65,12 @@ exports.p_facultylogin = async (req, res) => {
 exports.p_studentlogin = async (req, res) => {
     try {
         // check if the user exists
-        const user = await Student.findOne({ s_emailid: req.body.s_email });
+        const user = await Student.findOne({ Email_id: req.body.s_email });
         if (user) {
             //check if password matches
-            const result = req.body.password === user.Password;
+            const result = req.body.s_password === user.Password;
             if (result) {
-                res.render("studenthome.ejs");
+                res.render("Student/studenthome");
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -84,7 +84,7 @@ exports.p_studentlogin = async (req, res) => {
 
 exports.g_adminhome = (isLoggedInadmin, async (req, res) => {
     try {
-        const admin = await Admin.findOne({ _id: req.user });
+        const admin = await Admin.findOne({ Email_id: req.user });
         res.render("adminhome.ejs", { admin });
     } catch (err) {
         console.error(err);
@@ -115,7 +115,7 @@ exports.g_studenthome = (isLoggedInstudent, async (req, res) => {
 // Admin Functionality
 
 exports.g_studentregistration = (isLoggedInstudent, (req, res) => {
-    res.render("studentregistration.ejs");
+    res.render("Admin/admin-student-registration");
 })
 
 exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  mail valu baki
@@ -218,7 +218,7 @@ function generatePass(){
 exports.g_viewcourse = async (req, res) => {
     try {
         const courses = await Course.find({}).exec();
-        res.render("viewcourse.ejs", { course: courses });
+        res.render("Admin/viewcourse", { course: courses });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching course data");
@@ -229,12 +229,12 @@ exports.p_viewcourse = async (req, res) => {
     try {
         if (req.body.edit) {
             const course = await Course.findOne({ _id: req.body.edit }).exac();
-            res.render("updatecourse.ejs", { course });
+            res.render("Admin/updatecourse", { course });
         }
         else {
             await Course.deleteOne({ _id: req.body.delete }).exec();
             //const course = await Course.find({});
-            res.redirect("viewcourse");
+            res.redirect("Admin/viewcourse");
         }
     } catch (err) {
         console.error(err);
@@ -252,7 +252,7 @@ exports.p_updatecourse = async (req, res) => {
         };
 
         await Course.updateOne(filter, update);
-        res.redirect("viewcourse");
+        res.redirect("Admin/viewcourse");
 
     } catch (err) {
         console.error(err);
@@ -261,7 +261,7 @@ exports.p_updatecourse = async (req, res) => {
 }
 
 exports.g_addcourse = (req, res) => {
-    res.render("addcourse.ejs");
+    res.render("Admin/addcourse");
 }
 
 exports.p_addcourse = async (req, res) => {
@@ -273,7 +273,7 @@ exports.p_addcourse = async (req, res) => {
         })
 
         await newcourse.save();
-        res.redirect("viewcourse");
+        res.redirect("Admin/viewcourse");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding course data");
@@ -285,7 +285,7 @@ exports.p_addcourse = async (req, res) => {
 exports.g_viewdegree = async (req, res) => {
     try {
         const degrees = await Degree.find({}).exec();
-        res.render("viewdegree.ejs", { degree: degrees });
+        res.render("Admin/viewdegree", { degree: degrees });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching degree data");
@@ -296,12 +296,12 @@ exports.p_viewdegree = async (req, res) => {
     try {
         if (req.body.edit) {
             const degree = await Degree.findOne({ _id: req.body.edit }).exac();
-            res.render("updatedegree.ejs", { degree });
+            res.render("Admin/updatedegree", { degree });
         }
         else {
             await Degree.deleteOne({ _id: req.body.delete }).exec();
             // const degree = await Degree.find({});
-            res.redirect("viewdegree");
+            res.redirect("Admin/viewdegree");
         }
     } catch (err) {
         console.error(err);
@@ -317,7 +317,7 @@ exports.p_updatedegree = async (req, res) => {
         };
 
         await Degree.updateOne(filter, update);
-        res.redirect("viewdegree");
+        res.redirect("Admin/viewdegree");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while updating degree data");
@@ -325,7 +325,7 @@ exports.p_updatedegree = async (req, res) => {
 }
 
 exports.g_adddegree = async (req, res) => {
-    res.render("viewdegree.ejs");
+    res.render("Admin/viewdegree");
 }
 
 exports.p_adddegree = async (req, res) => {
@@ -335,7 +335,7 @@ exports.p_adddegree = async (req, res) => {
         });
 
         await newdegree.save();
-        res.redirect("viewdegree");
+        res.redirect("Admin/viewdegree");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding degree data");
@@ -347,7 +347,7 @@ exports.p_adddegree = async (req, res) => {
 exports.g_viewbranch = async (req, res) => {
     try {
         const branches = await Branch.find({}).exec();
-        res.render("viewbranch.ejs", { branch: branches });
+        res.render("Admin/viewbranch", { branch: branches });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching branch data");
@@ -358,12 +358,12 @@ exports.p_viewbranch = async (req, res) => {
     try {
         if (req.body.edit) {
             const branch = await Branch.findOne({ _id: req.body.edit }).exac();
-            res.render("updatebranch.ejs", { branch });
+            res.render("Admin/updatebranch", { branch });
         }
         else {
             await Branch.deleteOne({ _id: req.body.delete }).exec();
             //const branch = await Branch.find({});
-            res.redirect("viewbranch");
+            res.redirect("Admin/viewbranch");
         }
     } catch (err) {
         console.error(err);
@@ -379,7 +379,7 @@ exports.p_updatebranch = async (req, res) => {
         };
 
         await Branch.updateOne(filter, update);
-        res.redirect("viewbrach");
+        res.redirect("Admin/viewbrach");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while updating branch data");
@@ -387,7 +387,7 @@ exports.p_updatebranch = async (req, res) => {
 }
 
 exports.g_addbranch = async (req, res) => {
-    res.render("viewbranch.ejs");
+    res.render("Admin/viewbranch");
 }
 
 exports.p_addbranch = async (req, res) => {
@@ -397,7 +397,7 @@ exports.p_addbranch = async (req, res) => {
         });
 
         await newbranch.save();
-        res.redirect("viewbranch");
+        res.redirect("Admin/viewbranch");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding branch data");
@@ -412,7 +412,7 @@ exports.g_viewprogram = async (req, res) => {
             .populate('DegreeOffered Branchoffered Courseoffered')
             .exec();
 
-        res.render("viewprogram.ejs", { program: programs });
+        res.render("Admin/viewprogram", { program: programs });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching program data");
@@ -427,7 +427,7 @@ exports.p_viewprogram = async (req, res) => {
         //.populate('DegreeOffered Branchoffered Courseoffered') 
         //.exec();
 
-        res.redirect("viewprogram");
+        res.redirect("Admin/viewprogram");
 
     } catch (err) {
         console.error(err);
@@ -440,7 +440,7 @@ exports.g_addprogram = async (req, res) => {
         const degrees = await Degree.find({}).exec();
         const branch = await Branch.find({}).exec();
         const courses = await Course.find({}).exec();
-        res.render("addprogram.ejs", { degrees, branch, courses });
+        res.render("Admin/addprogram", { degrees, branch, courses });
 
     } catch (err) {
         console.error(err);
@@ -459,7 +459,7 @@ exports.p_addprogram = async (req, res) => {
         });
 
         await newPrpgram.save();
-        res.redirect("viewProgram");
+        res.redirect("Admin/viewProgram");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding program data");
@@ -470,7 +470,7 @@ exports.p_addprogram = async (req, res) => {
 
 exports.g_viewsemester = async (req,res) => {
     try{
-        res.render("semesterdetails.ejs");
+        res.render("Admin/semesterdetails");
     } catch(err){
         res.status(500).send("Internal Server Error");
     }
@@ -576,8 +576,8 @@ exports.p_addmin_announcement = async (req, res) => {
 
 exports.g_changepwdadmin = async (req, res) => {
     try {
-        const admin = await Admin.findOne({ _id: req.user });
-        res.render("changepwdadmin.ejs", { admin });
+        const admin = await Admin.findOne({ Email_id: req.user });
+        res.render("Admin/changepwdadmin", { admin });
     } catch (err) {
         res.status(500).send("Internal Server Error");
     }
@@ -634,7 +634,7 @@ exports.p_changepwdadmin = async (req, res) => {
 exports.logoutadmin = async (req, res, next) => {
     try {
         req.logOut(req.user);
-        res.redirect('/adminlogin');
+        res.redirect('Admin/adminlogin');
     } catch (err) {
         next(err);
     }
@@ -646,10 +646,10 @@ exports.logoutadmin = async (req, res, next) => {
 
 exports.g_viewfaculty = async (req, res) => {
     try {
-        const ID = req.Faculty.id;
+        const ID = req.body.Email_id;
         const user = await Faculty.findById(ID);
 
-        res.render("viewfaculty.ejs", { user });
+        res.render("Faculty/faculty-profile", { user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching degree data");

@@ -20,8 +20,8 @@ route.get('/studenthome', controller.g_studenthome);
 
 // Admin Functionality
 
-route.get('/studentregistration', controller.g_studentregistration);
-route.post('/studentregistration', controller.p_studentregistration);
+route.get('/admin-student-registration', controller.g_studentregistration);
+route.post('/admin-student-registration', controller.p_studentregistration);
 
 route.get('/viewcourse', controller.g_viewcourse);
 route.post('/viewcourse', controller.p_viewcourse);
