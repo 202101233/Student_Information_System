@@ -345,6 +345,7 @@ exports.p_viewprogram = async (req,res) => {
             //.exec();
 
         res.redirect("viewprogram");
+        }
 
     } catch (err) {
         console.error(err);
