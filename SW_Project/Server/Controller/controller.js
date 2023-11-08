@@ -3,6 +3,7 @@ var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Anno
 const { proppatch, use } = require('../Routes/router');
 const multer = require("multer");
 const upload = multer({ dest: 'uploads/' });
+const path = require("path");
 
 
 
@@ -27,13 +28,20 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
         // check if the user exists
         const user = await Admin.findOne({ Email_id: req.body.a_email });
         if (user) {
+            console.log("nik");
+            console.log(user)
+            console.log(user.admin_name)
             //check if password matches
             const result = req.body.a_password === user.Password;
             if (result) {
-                res.render("Admin/adminhome.ejs",{admin : user});
+                console.log("nik");
+                // res.render("../views/Admin/adminhome.ejs",{admin : user});
+                res.redirect('/adminhome');
+                console.log("nik");
                 
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
+                console.log("nik");
             }
         } else {
             console.log(req.body);
@@ -52,7 +60,7 @@ exports.p_facultylogin = async (req, res) => {
             //check if password matches
             const result = req.body.f_password === user.Password;
             if (result) {
-                res.render("facultyhome.ejs", {faculty : user});
+                res.render("Faculty/facultyhome.ejs", {faculty : user});
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -67,12 +75,20 @@ exports.p_facultylogin = async (req, res) => {
 exports.p_studentlogin = async (req, res) => {
     try {
         // check if the user exists
-        const user = await Student.findOne({ s_emailid: req.body.s_email });
+        console.log("XXX");
+        const data = req.body;
+        const email_student=data.s_email;
+        const pass = data.s_password;
+        console.log(email_student);
+        console.log(pass)
+        const user = await Student.findOne({ Email_id: req.body.s_email });
+        console.log("YYY");
+        console.log(user);
         if (user) {
             //check if password matches
-            const result = req.body.s_password === user.Password;
-            if (result) {
-                res.render("studenthome.ejs");
+            
+            if (req.body.s_password === user.Password) {
+                res.render("Student/studenthome.ejs",{student : user});
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -86,9 +102,12 @@ exports.p_studentlogin = async (req, res) => {
 
 exports.g_adminhome = (isLoggedInadmin, async (req, res) => {
     try {
+        console.log(req);
         const admin = await Admin.findOne({ _id: req.user });
-        res.render("Admin/adminhome", { admin });
+        console.log("nik");
+        res.render("../views/Admin/adminhome.ejs", { admin });
     } catch (err) {
+        console.log("nikErr");
         console.error(err);
         // Handle the error appropriately, such as sending an error response to the client or logging it.
     }
@@ -97,7 +116,7 @@ exports.g_adminhome = (isLoggedInadmin, async (req, res) => {
 exports.g_facultyhome = (isLoggedInfaculty, async (req, res) => {
     try {
         const faculty = await Faculty.findOne({ _id: req.user });
-        res.render("facultyhome.ejs", { faculty });
+        res.render("Faculty/facultyhome.ejs", { faculty });
     } catch (err) {
         console.error(err);
         // Handle the error appropriately, such as sending an error response to the client or logging it.
@@ -107,7 +126,7 @@ exports.g_facultyhome = (isLoggedInfaculty, async (req, res) => {
 exports.g_studenthome = (isLoggedInstudent, async (req, res) => {
     try {
         const student = await Student.findOne({ _id: req.user });
-        res.render("studenthome.ejs", { student });
+        res.render("Student/studenthome.ejs", { student });
     } catch (err) {
         console.error(err);
         // Handle the error appropriately, such as sending an error response to the client or logging it.
@@ -220,7 +239,7 @@ function generatePass(){
 exports.g_viewcourse = async (req, res) => {
     try {
         const courses = await Course.find({}).exec();
-        res.render("viewcourse.ejs", { course: courses });
+        res.render("../Views/Admin/viewcourse.ejs", { course: courses });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching course data");
@@ -414,7 +433,7 @@ exports.g_viewprogram = async (req, res) => {
             .populate('DegreeOffered Branchoffered Courseoffered')
             .exec();
 
-        res.render("viewprogram.ejs", { program: programs });
+        res.render("../views/Admin/viewprogram.ejs", { program: programs });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching program data");
@@ -429,7 +448,7 @@ exports.p_viewprogram = async (req, res) => {
         //.populate('DegreeOffered Branchoffered Courseoffered') 
         //.exec();
 
-        res.redirect("viewprogram");
+        res.redirect("/viewprogram");
 
     } catch (err) {
         console.error(err);
@@ -442,7 +461,7 @@ exports.g_addprogram = async (req, res) => {
         const degrees = await Degree.find({}).exec();
         const branch = await Branch.find({}).exec();
         const courses = await Course.find({}).exec();
-        res.render("addprogram.ejs", { degrees, branch, courses });
+        res.render("../views/Admin/addprogram.ejs", { degrees, branch, courses });
 
     } catch (err) {
         console.error(err);

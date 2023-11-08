@@ -26,7 +26,7 @@ const connectDB=require("./Server/Database/connection");
 dotenv.config({path : 'config.env'});
 const app=express();
 
-const PORT = process.env.PORT|| 8000;
+const PORT = 8100;
 
 //log request
 app.use(morgan('tiny'));
@@ -52,7 +52,10 @@ app.use('/', require('./Server/Routes/router'));
 
 //set static paths
 app.use(express.static(__dirname + '/Assets'));
-app.set('views', path.join(__dirname, 'views'));
+// app.set('views', path.join(__dirname, 'views'));
+app.use('/Admin',express.static(path.resolve(__dirname + '/views/Admin')));
+app.use('/Faculty',express.static(path.resolve(__dirname + '/views/Faculty')));
+app.use('/Student',express.static(path.resolve(__dirname + '/views/Student')));
 
 
 // Admin.plugin(passportLocalMongoose);

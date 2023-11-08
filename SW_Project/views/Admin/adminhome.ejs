@@ -21,11 +21,11 @@
                 </div>
             </div>
         </div>
-        <div class="downflex" action="/adminhome", method="post">
+        <div class="downflex" action="/adminhome" , method="post">
             <div class="sidenav">
                 <div class="sidenavopt">
                     <ul>
-                        <li><a href="adminhome.ejs" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
+                        <li><a href='/adminhome' class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
                         <li id="for-down"><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i>
                                 <select name="" id="test" onmousedown="forfocus()" onblur="forblur()" class="dropmenu"
                                     onchange="window.location.href=this.value;">
@@ -40,13 +40,13 @@
                                 </select>
                             </a></li>
 
-                        <li><a href="viewcourse.ejs"><i class="fa-solid fa-clipboard"></i>&nbsp;Course Management </a>
+                        <li><a href="/viewcourse"><i class="fa-solid fa-clipboard"></i>&nbsp;Course Management </a>
                         </li>
-                        <li><a href="viewdegree.ejs"><i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;Degree
+                        <li><a href="/viewdegree"><i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;Degree
                                 Management </a></li>
-                        <li><a href="viewbranch.ejs"><i class="fa-solid fa-clipboard"></i>&nbsp;branch Management </a>
+                        <li><a href="/viewbranch"><i class="fa-solid fa-clipboard"></i>&nbsp;branch Management </a>
                         </li>
-                        <li><a href="viewprogram.ejs"><i class="fa-solid fa-clipboard"></i>&nbsp;Programme Management
+                        <li><a href="/viewprogram"><i class="fa-solid fa-clipboard"></i>&nbsp;Programme Management
                             </a></li>
                         <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Semester </a></li>
 
@@ -62,18 +62,13 @@
                     <div class="curruserlogo">
 
                     </div>
-                    <div class="currusername">
-                        <%= admin.admin_name%>
-                    </div>
+                    <div class="currusername"> </div> 
                 </div>
             </div>
 
             <div class="content">
-
-
                 <!-- content     -->
             </div>
-
 
             <!-- downflex -->
         </div>
