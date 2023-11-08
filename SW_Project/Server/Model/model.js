@@ -106,6 +106,10 @@ const FacultySchema = new mongoose.Schema({
 
 
 const AdminSchema = new mongoose.Schema({
+    admin_name : {
+        type : String,
+        required : true,
+    },
     Email_id: {
         type: String,
         required: true,

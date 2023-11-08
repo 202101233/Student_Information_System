@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>Document</title>
+=======
+    <title>Admin home</title>
+>>>>>>> origin/main
     <link rel="stylesheet" href="css/admin-common-page.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div class="wrapper">
         <div class="upperbar">
@@ -14,6 +20,7 @@
                 <img src="img/logo.png" alt="not rendered" id="weblogoimg">
             </div>
             <div class="webnameplace">
+<<<<<<< HEAD
                 <div class="webname"><p id="temp1">Student Information System</p></div>
             </div>        
         </div>
@@ -49,24 +56,75 @@
                 </div>
                 <div class="currusername">
                     <%= admin.admin_name%>
+=======
+                <div class="webname">
+                    <p id="temp1">Student Information System</p>
+>>>>>>> origin/main
                 </div>
             </div>
         </div>
-    
-        <div class="content">
-       
-            
-     <!-- content     -->
-    </div>
+        <div class="downflex" action="/adminhome" , method="post">
+            <div class="sidenav">
+                <div class="sidenavopt">
+                    <ul>
+                        <li><a href='/adminhome' class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
+                        <li id="for-down"><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i>
+                                <select name="" id="test" onmousedown="forfocus()" onblur="forblur()" class="dropmenu"
+                                    onchange="window.location.href=this.value;">
+                                    <option value="none" selected disabled hidden class="dropitems">New Registration
+                                    </option>
+                                    <option
+                                        value="/workspaces/Student_Information_System/SW_Project/Views/Student/feereceipt.ejs"
+                                        class="dropitmes">Student Registration</option>
+                                    <option
+                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                        class="dropitmes">Faculty Registration</option>
+                                </select>
+                            </a></li>
 
-    
-    <!-- downflex -->
-    </div>
+                        <li><a href="/viewcourse"><i class="fa-solid fa-clipboard"></i>&nbsp;Course Management </a>
+                        </li>
+                        <li><a href="/viewdegree"><i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;Degree
+                                Management </a></li>
+                        <li><a href="/viewbranch"><i class="fa-solid fa-clipboard"></i>&nbsp;branch Management </a>
+                        </li>
+                        <li><a href="/viewprogram"><i class="fa-solid fa-clipboard"></i>&nbsp;Programme Management
+                            </a></li>
+                        <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Semester </a></li>
 
-    <!-- wrapper -->
+                        <li><a href="#"><i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;Announcement </a></li>
+
+                        <li><a href="#"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>&nbsp;Fees </a></li>
+                        <li><a href="../Student/changepwdstudent.ejs"><i class="fa-solid fa-key"></i> Change Password
+                            </a></li>
+                        <li><a href="../user-choice.ejs"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
+                    </ul>
+                </div>
+                <div class="sidenavdown">
+                    <div class="curruserlogo">
+
+                    </div>
+                    <div class="currusername"> </div> 
+                </div>
+            </div>
+
+            <div class="content">
+                <!-- content     -->
+            </div>
+
+            <!-- downflex -->
+        </div>
+
+        <!-- wrapper -->
     </div>
+<<<<<<< HEAD
 <script src="js/admin-common-page.js"></script>
+=======
+    <script src="admin-common-page.js"></script>
+>>>>>>> origin/main
 </body>
+
 </html>
 </body>
+
 </html>
