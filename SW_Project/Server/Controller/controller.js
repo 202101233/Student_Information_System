@@ -5,6 +5,11 @@ const multer = require("multer");
 const upload = multer({ dest: 'uploads/' });
 const path = require("path");
 
+const jwt = require("jsonwebtoken");
+var cookieParser = require('cookie-parser');  
+const express = require("express");
+const app = express();
+app.use(cookieParser());
 
 
 exports.homepage = (req, res) => {
@@ -35,9 +40,35 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
             const result = req.body.a_password === user.Password;
             if (result) {
                 console.log("nik");
-                // res.render("../views/Admin/adminhome.ejs",{admin : user});
-                res.redirect('/adminhome');
-                console.log("nik");
+                //res.render("Admin/adminhome.ejs",{admin : user});
+                //res.redirect('/adminhome');
+                // JWT 
+                // console.log("KKK");
+                // console.log(user.admin_name);
+                // console.log(user.Email_id);
+                // console.log("UUU");
+
+                const secret = "sagar";
+                const token = await jwt.sign({"name":user.admin_name,"email_id":user.Email_id},secret);
+                console.log("YYY");
+                console.log(token);
+                console.log("TTT");
+                res.cookie("jwtoken",token,{
+                    expires: new Date(Date.now()+25892000000),
+                    httpOnly:true
+                });
+
+                console.log("HHH");
+
+                const stored_token = req.cookies.jwtoken;
+
+                console.log(stored_token);
+                console.log("KK");
+                const verify_one = jwt.verify(token,secret);
+                console.log(verify_one);
+                // console.log(jwt.verify())
+                res.redirect("/adminhome");
+                //console.log("nik");
                 
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
@@ -102,10 +133,12 @@ exports.p_studentlogin = async (req, res) => {
 
 exports.g_adminhome = (isLoggedInadmin, async (req, res) => {
     try {
-        console.log(req);
-        const admin = await Admin.findOne({ _id: req.user });
-        console.log("nik");
-        res.render("../views/Admin/adminhome.ejs", { admin });
+        console.log("jay");
+        console.log(req.body);
+        console.log("jay");
+        const adm = await Admin.findOne({ _id: req.user });
+        // console.log(adm);
+        res.render("Admin/adminhome.ejs", { admin:adm });
     } catch (err) {
         console.log("nikErr");
         console.error(err);
@@ -136,7 +169,7 @@ exports.g_studenthome = (isLoggedInstudent, async (req, res) => {
 // Admin Functionality
 
 exports.g_studentregistration = (isLoggedInstudent, (req, res) => {
-    res.render("studentregistration.ejs");
+    res.render("Admin/studentregistration.ejs");
 })
 
 exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  mail valu baki
@@ -239,7 +272,7 @@ function generatePass(){
 exports.g_viewcourse = async (req, res) => {
     try {
         const courses = await Course.find({}).exec();
-        res.render("../Views/Admin/viewcourse.ejs", { course: courses });
+        res.render("Admin/viewcourse.ejs", { course: courses });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching course data");
@@ -282,7 +315,7 @@ exports.p_updatecourse = async (req, res) => {
 }
 
 exports.g_addcourse = (req, res) => {
-    res.render("addcourse.ejs");
+    res.render("Admin/addcourse.ejs");
 }
 
 exports.p_addcourse = async (req, res) => {
@@ -306,7 +339,7 @@ exports.p_addcourse = async (req, res) => {
 exports.g_viewdegree = async (req, res) => {
     try {
         const degrees = await Degree.find({}).exec();
-        res.render("viewdegree.ejs", { degree: degrees });
+        res.render("Admin/viewdegree.ejs", { degree: degrees });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching degree data");
@@ -346,7 +379,7 @@ exports.p_updatedegree = async (req, res) => {
 }
 
 exports.g_adddegree = async (req, res) => {
-    res.render("viewdegree.ejs");
+    res.render("Admin/adddegree.ejs");
 }
 
 exports.p_adddegree = async (req, res) => {
@@ -368,7 +401,7 @@ exports.p_adddegree = async (req, res) => {
 exports.g_viewbranch = async (req, res) => {
     try {
         const branches = await Branch.find({}).exec();
-        res.render("viewbranch.ejs", { branch: branches });
+        res.render("Admin/viewbranch.ejs", { branch: branches });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching branch data");
@@ -408,7 +441,7 @@ exports.p_updatebranch = async (req, res) => {
 }
 
 exports.g_addbranch = async (req, res) => {
-    res.render("viewbranch.ejs");
+    res.render("Admin/addbranch.ejs");
 }
 
 exports.p_addbranch = async (req, res) => {
@@ -433,7 +466,7 @@ exports.g_viewprogram = async (req, res) => {
             .populate('DegreeOffered Branchoffered Courseoffered')
             .exec();
 
-        res.render("../views/Admin/viewprogram.ejs", { program: programs });
+        res.render("Admin/viewprogram.ejs", { program: programs });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching program data");
@@ -448,7 +481,7 @@ exports.p_viewprogram = async (req, res) => {
         //.populate('DegreeOffered Branchoffered Courseoffered') 
         //.exec();
 
-        res.redirect("/viewprogram");
+        res.redirect("viewprogram");
 
     } catch (err) {
         console.error(err);
@@ -461,7 +494,7 @@ exports.g_addprogram = async (req, res) => {
         const degrees = await Degree.find({}).exec();
         const branch = await Branch.find({}).exec();
         const courses = await Course.find({}).exec();
-        res.render("../views/Admin/addprogram.ejs", { degrees, branch, courses });
+        res.render("Admin/addprogram.ejs", { degrees, branch, courses });
 
     } catch (err) {
         console.error(err);
@@ -598,7 +631,7 @@ exports.p_addmin_announcement = async (req, res) => {
 exports.g_changepwdadmin = async (req, res) => {
     try {
         const admin = await Admin.findOne({ _id: req.user });
-        res.render("changepwdadmin.ejs", { admin });
+        res.render("Admin/changepwdadmin", { admin });
     } catch (err) {
         res.status(500).send("Internal Server Error");
     }

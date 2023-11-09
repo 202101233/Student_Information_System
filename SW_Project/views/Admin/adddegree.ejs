@@ -25,9 +25,7 @@
                     <li id="for-down"><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i>
                         <select name="" id="test" onmousedown="forfocus()" onblur="forblur()" class="dropmenu" onchange="window.location.href=this.value;">
                             <option value="none" selected disabled hidden class="dropitems">New Registration</option>
-                            <option value="/admin-student-registration" class="dropitmes">Student Registration</option>
-                            <option value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands." class="dropitmes">Faculty Registration</option>
-                          </select>
+                            <option value="/admin-student-registration" class="dropitmes">Student Registration</option>                          </select>
                     </a></li>
                    
                     <li><a href="/viewcourse"><i class="fa-solid fa-clipboard"></i>&nbsp;Course Management </a></li>
@@ -40,7 +38,7 @@
                     
                     <li><a href="#"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>&nbsp;Fees </a></li>
                     <li><a href="/changepwdadmin"><i class="fa-solid fa-key"></i> Change Password </a></li>
-                    <li><a  href="/user-choice"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
+                    <li><a  href="/adminlogin"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
                   </ul>
             </div>
             <div class="sidenavdown">
@@ -48,7 +46,7 @@
                     
                 </div>
                 <div class="currusername">
-                    <%= admin.admin_name%>
+                    nothing
                 </div>
             </div>
         </div>
@@ -70,7 +68,9 @@
             </div>
             
             <div class="btn-place">
+                <a href="/viewdegree">
                     <button type="button" class="btn">ADD</button>
+                </a>
             </div>
 
 

@@ -1,5 +1,11 @@
 const express = require("express");
+const app = express();
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 const route = express.Router()
+
+
+route.use(cookieParser());
 
 const controller = require('../Controller/controller');
 const { model } = require("mongoose");
