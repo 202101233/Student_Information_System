@@ -56,7 +56,7 @@
         <div class="content">
             
             <div class="btn-place">
-                <a href="/viewprogram">
+                <a href="/addprogram">
                 <button type="button" class="btn"><b>Add Programme</b></button>
             </a>
             </div>
@@ -87,7 +87,7 @@
                                     <option value="none" selected disabled hidden class="dropitems">Select Course</option>
 
                                     <% for(var j=0;j<program.CourseOffered.length;j++) { %>
-                                    <option value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands." class="dropitmes"><%= program[i].CourseOffered[j].Course_Name</option>
+                                    <option value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands." class="dropitmes"><%= program[i].CourseOffered[j].Course_Name %></option>
                                     <% } %>
                                   </select>
 

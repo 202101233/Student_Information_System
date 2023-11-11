@@ -78,8 +78,26 @@
                         <tr>
                             <td class="leftpad" style="width: 20%;"><%= i+1%></td>
                             <td class="leftpad" style="width: 40%;"><%= branch[i].Branch_name%></td>
-                            <td class="center" style="width: 20%;"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
-                            <td class="center" style="width: 20%;"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                            <!-- <td class="center" style="width: 20%;"><center><a href="#"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center" style="width: 20%;"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td> -->
+                            <td class="center">
+                                <center>
+                                    <form action="/viewbranch" method="post">
+                                        <button type="submit" name="edit" value="<%= branch[i].id %>">
+                                            <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </center>
+                            </td>
+                            <td class="center">
+                                <center>
+                                    <form action="/viewbranch" method="post">
+                                        <button type="submit" name="delete" value="<%= branch[i].id %>">
+                                            <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </center>
+                            </td>
                         </tr>
                         <% } %>
                         </div>

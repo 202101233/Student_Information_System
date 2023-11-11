@@ -50,8 +50,8 @@ route.post('/updatebranch', controller.p_updatebranch);
 route.get('/addbranch', controller.g_addbranch);
 route.post('/addbranch', controller.p_addbranch);
 
-route.get('/viewprogram',controller.g_addprogram);
-route.post('/viewprogram',controller.p_addprogram);
+route.get('/viewprogram',controller.g_viewprogram);
+route.post('/viewprogram',controller.p_viewprogram);
 
 route.get('/addprogram', controller.g_addprogram);
 route.post('/addprogram', controller.p_addprogram);

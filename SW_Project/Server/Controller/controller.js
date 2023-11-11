@@ -1,12 +1,12 @@
 var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Announcement,
-    Course_Allotment, Attendance,Grade,Course_Enrollment, Result } = require('../Model/model');
+    Course_Allotment, Attendance, Grade, Course_Enrollment, Result } = require('../Model/model');
 const { proppatch, use } = require('../Routes/router');
 const multer = require("multer");
 const upload = multer({ dest: 'uploads/' });
 const path = require("path");
 
 const jwt = require("jsonwebtoken");
-var cookieParser = require('cookie-parser');  
+var cookieParser = require('cookie-parser');
 const express = require("express");
 const app = express();
 app.use(cookieParser());
@@ -49,13 +49,13 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
                 // console.log("UUU");
 
                 const secret = "sagar";
-                const token = await jwt.sign({"name":user.admin_name,"email_id":user.Email_id},secret);
+                const token = await jwt.sign({ "name": user.admin_name, "email_id": user.Email_id }, secret);
                 console.log("YYY");
                 console.log(token);
                 console.log("TTT");
-                res.cookie("jwtoken",token,{
-                    expires: new Date(Date.now()+25892000000),
-                    httpOnly:true
+                res.cookie("jwtoken", token, {
+                    expires: new Date(Date.now() + 25892000000),
+                    httpOnly: true
                 });
 
                 console.log("HHH");
@@ -64,19 +64,19 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
 
                 console.log(stored_token);
                 console.log("KK");
-                const verify_one = jwt.verify(token,secret);
+                const verify_one = jwt.verify(token, secret);
                 console.log(verify_one);
                 // console.log(jwt.verify())
                 res.redirect("/adminhome");
                 //console.log("nik");
-                
+
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
                 console.log("nik");
             }
         } else {
             console.log(req.body);
-            res.status(400).json({ error: "User doesn't exist"});
+            res.status(400).json({ error: "User doesn't exist" });
         }
     } catch (err) {
         res.status(400).json({ err });
@@ -91,7 +91,7 @@ exports.p_facultylogin = async (req, res) => {
             //check if password matches
             const result = req.body.f_password === user.Password;
             if (result) {
-                res.render("Faculty/facultyhome.ejs", {faculty : user});
+                res.render("Faculty/facultyhome.ejs", { faculty: user });
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -108,7 +108,7 @@ exports.p_studentlogin = async (req, res) => {
         // check if the user exists
         console.log("XXX");
         const data = req.body;
-        const email_student=data.s_email;
+        const email_student = data.s_email;
         const pass = data.s_password;
         console.log(email_student);
         console.log(pass)
@@ -117,9 +117,11 @@ exports.p_studentlogin = async (req, res) => {
         console.log(user);
         if (user) {
             //check if password matches
-            
+
             if (req.body.s_password === user.Password) {
-                res.render("Student/studenthome.ejs",{student : user});
+
+                // res.redirect("/studenthome"); 
+                res.render("Student/studenthome.ejs", { student: user });
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -138,7 +140,7 @@ exports.g_adminhome = (isLoggedInadmin, async (req, res) => {
         console.log("jay");
         const adm = await Admin.findOne({ _id: req.user });
         // console.log(adm);
-        res.render("Admin/adminhome.ejs", { admin:adm });
+        res.render("Admin/adminhome.ejs", { admin: adm });
     } catch (err) {
         console.log("nikErr");
         console.error(err);
@@ -175,7 +177,7 @@ exports.g_studentregistration = (isLoggedInstudent, (req, res) => {
 exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  mail valu baki
     try {
 
-        if(req.body.email.split("@")[1]!="daiict.ac.in"){
+        if (req.body.email.split("@")[1] != "daiict.ac.in") {
             const title = "ERROR";
             const message = "Invalid Email";
             const icon = "error";
@@ -185,11 +187,11 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
         }
 
         const ID = req.body.email.split("@")[0];
-        const Batch = req.body.email.substr(0,4);
+        const Batch = req.body.email.substr(0, 4);
 
-        const student = await Student.findOne({ email : req.body.email});
+        const student = await Student.findOne({ email: req.body.email });
 
-        if(!student){
+        if (!student) {
             const title = "ERROR";
             const message = "Student Email already exists";
             const icon = "error";
@@ -198,7 +200,7 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
         }
         else {
             const randompass = generatePass();
-            const hashedPassward = await bcrypt.hash(randompass,saltRounds);
+            const hashedPassward = await bcrypt.hash(randompass, saltRounds);
 
             const newstudent = new Student({
                 firstname: req.body.name.split(" ")[0],
@@ -210,25 +212,25 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
             await newstudent.save();
 
             const transporter = nodemailer.createTransport({
-                service : "gmail",
-                host : "smtp.gmail.com",
-                port : "587",
-                tls : {
-                    ciphers : "SSLv3",
-                    rejectUnauthorized : false,
+                service: "gmail",
+                host: "smtp.gmail.com",
+                port: "587",
+                tls: {
+                    ciphers: "SSLv3",
+                    rejectUnauthorized: false,
                 },
-                auth : {
-                    user : "e-campus-daiict@gmail.com",
-                    pass : process.env.GMAILPASSWORD,                    // env file?????????
+                auth: {
+                    user: "e-campus-daiict@gmail.com",
+                    pass: process.env.GMAILPASSWORD,                    // env file?????????
                 }
             });
 
 
             const mailoption = {
-                from : "e-campus-daiict@gmail.com",
-                to : req.body.email,
-                Subject : "Account Created",
-                html : `
+                from: "e-campus-daiict@gmail.com",
+                to: req.body.email,
+                Subject: "Account Created",
+                html: `
                 <h2> Your student account has been created. </h2>
                 <p> Here are information : </p>
                 <p> <b> Email ID : </b> ${req.body.email} </p>
@@ -256,13 +258,13 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
 })
 
 
-function generatePass(){
+function generatePass() {
     var pass = " ";
-    var str= "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789@#$";
+    var str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789@#$";
 
-    for(let i=1;i<=10;i++){
+    for (let i = 1; i <= 10; i++) {
         var char = Math.floor(Math.random() + str.length() + 1);
-        pass+=str.charAt(char);
+        pass += str.charAt(char);
     }
     return pass;
 
@@ -272,6 +274,7 @@ function generatePass(){
 exports.g_viewcourse = async (req, res) => {
     try {
         const courses = await Course.find({}).exec();
+        console.log(courses);
         res.render("Admin/viewcourse.ejs", { course: courses });
     } catch (err) {
         console.error(err);
@@ -282,7 +285,7 @@ exports.g_viewcourse = async (req, res) => {
 exports.p_viewcourse = async (req, res) => {
     try {
         if (req.body.edit) {
-            const course = await Course.findOne({ _id: req.body.edit }).exac();
+            const course = await Course.findOne({ _id: req.body.edit }).exec();
             res.render("updatecourse.ejs", { course });
         }
         else {
@@ -300,7 +303,7 @@ exports.p_updatecourse = async (req, res) => {
     try {
         const filter = { _id: req.body.edit };
         const update = {
-            Course_name: req.body.name,
+            Course_Name: req.body.name,
             Course_credit: req.body.credit,
             Course_code: req.body.code
         };
@@ -319,11 +322,13 @@ exports.g_addcourse = (req, res) => {
 }
 
 exports.p_addcourse = async (req, res) => {
+    // res.send("helloo");
     try {
+
         const newcourse = new Course({
-            Course_name: req.body.name,
+            Course_Name: req.body.name,
+            Course_code: req.body.code,
             Course_credit: req.body.credit,
-            Course_code: req.body.code
         })
 
         await newcourse.save();
@@ -522,34 +527,34 @@ exports.p_addprogram = async (req, res) => {
 
 // Admin Semester Manegement
 
-exports.g_viewsemester = async (req,res) => {
-    try{
+exports.g_viewsemester = async (req, res) => {
+    try {
         res.render("semesterdetails.ejs");
-    } catch(err){
+    } catch (err) {
         res.status(500).send("Internal Server Error");
     }
 }
 
-exports.p_viewsemester = async (req,res) => {
-    try{
+exports.p_viewsemester = async (req, res) => {
+    try {
         await Course_Allotment.deleteOne({ _id: req.body.delete }).exec();
         //const course = await Course.find({});
         res.redirect("viewsemester");
-    } catch(err) {
+    } catch (err) {
         res.status(500).send("Internal Server Error");
     }
 }
 
-exports.g_addsemester = async (req,res) => {
-    try{
+exports.g_addsemester = async (req, res) => {
+    try {
         res.render("addsemester.ejs");
-    } catch(err){
+    } catch (err) {
         res.status(500).send("Internal Server Error");
     }
 }
 
-exports.p_addsemester = (upload.single('excelfile'), async (req,res) => {
-    try{
+exports.p_addsemester = (upload.single('excelfile'), async (req, res) => {
+    try {
         const filepath = req.file.path;
         const semsester = await processExcelFile(filepath);
 
@@ -557,41 +562,41 @@ exports.p_addsemester = (upload.single('excelfile'), async (req,res) => {
 
         req.session.semsester = semsester;
 
-    } catch(err){
+    } catch (err) {
         console.err("Error occured while proccesing and uploading semester data");
         res.status(500).send("Error occured while proccesing and uploading semester data");
     }
 });
 
-async function processExcelFile(filepath){
+async function processExcelFile(filepath) {
     const workbook = new Excel.workbook();
     await workbook.xlsx.readfile(filepath);
 
     const workshhet = workbook.getWorksheet(1);
-    const sem_data= [];
-    
+    const sem_data = [];
+
     const batch = req.body.Batch;
     const program = req.body.Program;
     const Semester_n = req.body.S_name;
 
-    workshhet.eachRow(async (row,rownumber) => {
+    workshhet.eachRow(async (row, rownumber) => {
 
-        if(rownumber>1){
+        if (rownumber > 1) {
             const course_id = row.getCell(1).value;
             const course_type = row.getCell(2).value;
             const faculty_assign = row.getCell(3).value;
 
-            const obj1 = await Course.find({ Course_code : course_id});
-            const obj2 = await Faculty.find({ fullname : faculty_assign});
+            const obj1 = await Course.find({ Course_code: course_id });
+            const obj2 = await Faculty.find({ fullname: faculty_assign });
 
             sem_data.push({
-                Program_associate : program,
-                Batch : batch,
-                Date_created : new Date(),
-                Course_code : obj1._id,
-                Course_type : course_type,
-                Faculty_Assigned : obj2._id,
-                Semester_name : Semester_n,
+                Program_associate: program,
+                Batch: batch,
+                Date_created: new Date(),
+                Course_code: obj1._id,
+                Course_type: course_type,
+                Faculty_Assigned: obj2._id,
+                Semester_name: Semester_n,
             });
         }
     });
@@ -617,7 +622,7 @@ exports.p_addmin_announcement = async (req, res) => {
         const newannouncement = {
             Title: title,
             Description: description,
-            Due_date : due_date,
+            Due_date: due_date,
         }
 
         await newannouncement.save();
@@ -639,45 +644,48 @@ exports.g_changepwdadmin = async (req, res) => {
 
 exports.p_changepwdadmin = async (req, res) => {
     try {
-        const ID = req.Admin.id;           //user here means admin or not?
-        const { oldpwd, newpwd, confirmpwd } = req.body;
+        const ID = req.user.id;
+        console.log("ID:", ID);
+        console.log("user:", user);
 
-        if (newpwd != confirmpwd)                   //new password  check strong
-        {
-            const title = "ERROR";
-            const message = "New password and confirm password do not match!";
-            const icon = "error";
-            const href = "/changepwdadmin";
-            res.render("alert.ejs", { title, message, icon, href });
+        // const { oldpwd, newpwd, confirmpwd } = req.body;
 
-            return res.status(400).send("New password and confirm password do not match!");
-        }
-        const user = await Admin.findById(ID);
+        // if (newpwd != confirmpwd)                   //new password  check strong
+        // {
+        //     const title = "ERROR";
+        //     const message = "New password and confirm password do not match!";
+        //     const icon = "error";
+        //     const href = "/changepwdadmin";
+        //     res.render("alert.ejs", { title, message, icon, href });
 
-        const pwdvalid = await bcrypt.compare(oldpwd, user.Password);
+        //     return res.status(400).send("New password and confirm password do not match!");
+        // }
+        // const user = await Admin.findById(ID);
 
-        if (!pwdvalid) {
-            const title = "ERROR";
-            const message = "Old Passward is incorrect!";
-            const icon = "error";
-            const href = "/changepwdadmin";
-            res.render("alert.ejs", { title, message, icon, href });
+        // const pwdvalid = await bcrypt.compare(oldpwd, user.Password);
 
-            return res.status(401).send("Old password is incorrect!");
-        }
+        // if (!pwdvalid) {
+        //     const title = "ERROR";
+        //     const message = "Old Passward is incorrect!";
+        //     const icon = "error";
+        //     const href = "/changepwdadmin";
+        //     res.render("alert.ejs", { title, message, icon, href });
 
-        const hashedpwd = await bcrypt.hash(newpwd, saltRounds);
-        user.Password = hashedpwd;
-        await user.save();
+        //     return res.status(401).send("Old password is incorrect!");
+        // }
 
-        const title = "SUCCESS";
-        const message = "Password changed successfully!";
-        const icon = "success";
-        const href = "/adminhome";
-        res.render("alert.ejs", { title, message, icon, href });
+        // const hashedpwd = await bcrypt.hash(newpwd, saltRounds);
+        // user.Password = hashedpwd;
+        // await user.save();
+
+        // const title = "SUCCESS";
+        // const message = "Password changed successfully!";
+        // const icon = "success";
+        // const href = "/adminhome";
+        // res.render("alert.ejs", { title, message, icon, href });
 
 
-        res.status(200).send("Password changed successfully!");
+        // res.status(200).send("Password changed successfully!");
 
     } catch (err) {
         console.error(err);
@@ -769,9 +777,9 @@ exports.p_updatefaculty = async (req, res) => {
     }
 }
 
-exports.g_coursegrade = async (req,res) => {
-    try{
-        const last_sem = await Course_Allotment.find().sort({Date_created:-1}).limit(1);
+exports.g_coursegrade = async (req, res) => {
+    try {
+        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
         const semester_name = last_sem.Semester_name;
 
         const f_name = req.Faculty.id;
@@ -794,25 +802,25 @@ exports.g_coursegrade = async (req,res) => {
             }
         ]);
 
-        res.render("coursegrade.ejs", { coursesTaught , semester_name});
-    } catch(err){
+        res.render("coursegrade.ejs", { coursesTaught, semester_name });
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding grade data");
     }
 }
 
-exports.p_coursegrade = async (req,res) => {
-    try{
-        const course =await Course.findOne({ _id :req.body.mycheckbox });
-        res.render("addgrade.ejs", {course}); 
-    } catch(err) {
+exports.p_coursegrade = async (req, res) => {
+    try {
+        const course = await Course.findOne({ _id: req.body.mycheckbox });
+        res.render("addgrade.ejs", { course });
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding grade data");
     }
 }
 
-exports.p_addgrade = (upload.single('excelfile'), async (req,res) => {
-    try{
+exports.p_addgrade = (upload.single('excelfile'), async (req, res) => {
+    try {
         const filepath = req.file.path;
         const grade = await processExcelFile(filepath);
 
@@ -820,44 +828,44 @@ exports.p_addgrade = (upload.single('excelfile'), async (req,res) => {
 
         req.session.grade = grade;
 
-    } catch(err){
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding grade data");
     }
 })
 
-async function processExcelFile(filepath){
+async function processExcelFile(filepath) {
     const workbook = new Excel.workbook();
     await workbook.xlsx.readfile(filepath);
 
     const workshhet = workbook.getWorksheet(1);
-    const grade_data= [];
+    const grade_data = [];
     // const obj = req.body._id;
 
     // const course_name = obj.course_name;             // Optional
     // const course_code = obj.course_code;
 
-    workshhet.eachRow(async (row,rownumber) => {
+    workshhet.eachRow(async (row, rownumber) => {
 
-        if(rownumber>1){
+        if (rownumber > 1) {
             const student_id = row.getCell(1).value;
             const marks = row.getCell(2).value;
 
-            const obj = await Student.find({ stud_id : student_id});
+            const obj = await Student.find({ stud_id: student_id });
 
             grade_data.push({
-                courseEnrolled : course_code,
-                stud_id : obj._id,
-                grade : marks
+                courseEnrolled: course_code,
+                stud_id: obj._id,
+                grade: marks
             });
         }
     });
     return grade_data;
 }
 
-exports.g_courseattendence = async (req,res) => {
-    try{
-        const last_sem = await Course_Allotment.find().sort({Date_created:-1}).limit(1);
+exports.g_courseattendence = async (req, res) => {
+    try {
+        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
         const semester_name = last_sem.Semester_name;
 
         const f_name = req.Faculty.id;
@@ -880,25 +888,25 @@ exports.g_courseattendence = async (req,res) => {
             }
         ]);
 
-        res.render("courseattendence.ejs", { coursesTaught , semester_name});
-    } catch(err){
+        res.render("courseattendence.ejs", { coursesTaught, semester_name });
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding attendence data");
     }
 }
 
-exports.p_courseattendence = async (req,res) => {
-    try{
-        const course =await Course.findOne({ _id :req.body.mycheckbox });
-        res.render("addattendence.ejs", {course}); 
-    } catch(err) {
+exports.p_courseattendence = async (req, res) => {
+    try {
+        const course = await Course.findOne({ _id: req.body.mycheckbox });
+        res.render("addattendence.ejs", { course });
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding attendence data");
     }
 }
 
-exports.p_addattendence = (upload.single('excelfile'), async (req,res) => {
-    try{
+exports.p_addattendence = (upload.single('excelfile'), async (req, res) => {
+    try {
         const filepath = req.file.path;
         const attendance = await processExcelFile(filepath);
 
@@ -906,36 +914,36 @@ exports.p_addattendence = (upload.single('excelfile'), async (req,res) => {
 
         req.session.attendance = attendance;
 
-    } catch(err){
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding attendence data");
     }
 })
 
-async function processExcelFile(filepath){
+async function processExcelFile(filepath) {
     const workbook = new Excel.workbook();
     await workbook.xlsx.readfile(filepath);
 
     const workshhet = workbook.getWorksheet(1);
-    const attendance_data= [];
-    
+    const attendance_data = [];
+
     // const course_name = req.body.course_name;             // Optional
     const course_code = req.body.course_code;
 
-    workshhet.eachRow(async (row,rownumber) => {
+    workshhet.eachRow(async (row, rownumber) => {
 
-        if(rownumber>1){
+        if (rownumber > 1) {
             const student_id = row.getCell(1).value;
             const present_days = row.getCell(2).value;
             const total_days = row.getCell(3).value;
 
-            const obj = await Student.find({ stud_id : student_id});
+            const obj = await Student.find({ stud_id: student_id });
 
             attendance_data.push({
-                courseEnrolled : course_code,
-                stud_id : obj._id,
-                Present_days : present_days,
-                Total_days : total_days 
+                courseEnrolled: course_code,
+                stud_id: obj._id,
+                Present_days: present_days,
+                Total_days: total_days
             });
         }
     });
@@ -1092,9 +1100,9 @@ exports.p_updatestudent = async (req, res) => {
 
 // Course Registration
 
-exports.g_courseregistration = async (req,res) => {
-    try{
-        const last_sem = await Course_Allotment.find().sort({Date_created : -1}).limit(1);
+exports.g_courseregistration = async (req, res) => {
+    try {
+        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
         const sem_name = last_sem.Semester_name;
 
         const ID = res.Student.id;
@@ -1105,7 +1113,7 @@ exports.g_courseregistration = async (req,res) => {
 
         const coursesTaught = await Course_Allotment.aggregate([
             {
-                $match: { Semester_name: sem_name, Program_associate : p_name, Batch : batch } // Match the documents with the specified semester name
+                $match: { Semester_name: sem_name, Program_associate: p_name, Batch: batch } // Match the documents with the specified semester name
             },
             {
                 $unwind: "$Courseallocate" // Deconstruct the Courseallocate array
@@ -1114,20 +1122,20 @@ exports.g_courseregistration = async (req,res) => {
                 $project: {
                     _id: 0, // Exclude the _id field from the result
                     Course_upload: "$Courseallocate.Course_upload",
-                    Course_type : "$Courseallocate.Course_type"// Include the Course_upload field from Courseallocate
+                    Course_type: "$Courseallocate.Course_type"// Include the Course_upload field from Courseallocate
                 }
             }
         ]);
 
-        res.render("courseregistration.ejs", { coursesTaught , sem_name, p_name, batch});
-    } catch(err){
+        res.render("courseregistration.ejs", { coursesTaught, sem_name, p_name, batch });
+    } catch (err) {
         res.status(500).send("An error occured while registering course");
     }
 }
 
-exports.p_courseregistration = async (req,res) => {
-    try{
-        if(req.body.register.length!==6) {
+exports.p_courseregistration = async (req, res) => {
+    try {
+        if (req.body.register.length !== 6) {
             const title = "ERROR";
             const message = "Please select only 6 courses!";
             const icon = "error";
@@ -1141,11 +1149,11 @@ exports.p_courseregistration = async (req,res) => {
         const courses = req.body.register;
 
         const newCourseEnrollment = new Course_Enrollment({
-            studentEnrolled : student,
-            semesterEnrolled : semester,
-            courseEnrolled : courses
+            studentEnrolled: student,
+            semesterEnrolled: semester,
+            courseEnrolled: courses
         })
- 
+
         await newCourseEnrollment.save();
         const title = "SUCCESS";
         const message = "Course Registration completed!";
@@ -1153,15 +1161,15 @@ exports.p_courseregistration = async (req,res) => {
         const href = "/studenthome";
         res.render("alert.ejs", { title, message, icon, href });
 
-    } catch(err) {
+    } catch (err) {
         res.status(500).send("An error occured while course registration");
     }
 }
 
 // See grade
 
-exports.g_viewgrade = async (req,res) => {
-    try{
+exports.g_viewgrade = async (req, res) => {
+    try {
         const ID = req.Student.id;
 
         const user = await Student.findById(ID);
@@ -1170,23 +1178,23 @@ exports.g_viewgrade = async (req,res) => {
 
         const sem_enroll = await Course_Enrollment.aggregate([
             {
-                $match : {Program_associate : p_name, studentenrolled : user}     // batch or student????
+                $match: { Program_associate: p_name, studentenrolled: user }     // batch or student????
             },
             {
                 $project: {
-                _id: 0, // Exclude the _id field from the result
-                Semester_name : "Semester_name"
-                }   
+                    _id: 0, // Exclude the _id field from the result
+                    Semester_name: "Semester_name"
+                }
             }
         ])
         res.render("viewgrade.ejs", { sem_enroll });
-    } catch(err){
+    } catch (err) {
         res.status(500).send("An error occured while fetching semester data");
     }
 }
 
-exports.g_viewattendence = async (req,res) => {
-    try{
+exports.g_viewattendence = async (req, res) => {
+    try {
         const ID = req.Student.id;
 
         const user = await Student.findById(ID);
@@ -1195,17 +1203,17 @@ exports.g_viewattendence = async (req,res) => {
 
         const sem_enroll = await Course_Allotment.aggregate([
             {
-                $match : {Program_associate : p_name, Batch : batch}
+                $match: { Program_associate: p_name, Batch: batch }
             },
             {
                 $project: {
-                _id: 0, // Exclude the _id field from the result
-                Semester_name : "Semester_name"
-                }   
+                    _id: 0, // Exclude the _id field from the result
+                    Semester_name: "Semester_name"
+                }
             }
         ])
         res.render("viewattendence.ejs", { sem_enroll });
-    } catch(err){
+    } catch (err) {
         res.status(500).send("An error occured while fetching semester data");
     }
 }
@@ -1252,24 +1260,24 @@ exports.g_viewattendence = async (req,res) => {
 
 // View Announcement
 
-exports.g_student_announcement = async (req,res) => {
-    try{
+exports.g_student_announcement = async (req, res) => {
+    try {
         const announcements = await Announcement.find({}).exec();
 
         const Curr_date = new Date();
 
         const valid_announcement = [];
 
-        for(const announcement of announcements){
-            if(announcement.Due_data > Curr_date){
+        for (const announcement of announcements) {
+            if (announcement.Due_data > Curr_date) {
                 valid_announcement.push(announcement);
             }
-            else{ 
-                await Announcement.deleteOne({ _id : announcement._id});
+            else {
+                await Announcement.deleteOne({ _id: announcement._id });
             }
         }
-        res.render("student-announcement.ejs", {announcements : valid_announcement});
-    } catch (err){
+        res.render("student-announcement.ejs", { announcements: valid_announcement });
+    } catch (err) {
         res.status(500).send("An error occured while fetching announcement data");
     }
 }

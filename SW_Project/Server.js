@@ -26,7 +26,7 @@ const connectDB=require("./Server/Database/connection");
 dotenv.config({path : 'config.env'});
 const app=express();
 
-const PORT = 8100;
+const PORT = 8010;
 
 //log request
 app.use(morgan('tiny'));
@@ -92,6 +92,21 @@ app.use('/Student',express.static(path.resolve(__dirname + '/views/Student')));
 
 // app.use(passport.initialize());
 // app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+  
+  passport.deserializeUser((id, done) => {
+    User.findById(id, (err, user) => {
+      done(err, user);
+    });
+  });
+
+  // Ensure that this middleware runs before the route where you access req.user._id
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 const saltRounds = 10;
 
