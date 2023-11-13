@@ -63,7 +63,7 @@ route.get('/addsemester', controller.g_addsemester);
 route.post('/addsemester', controller.p_addsemester);
 
 route.get('/admin-announcement', controller.g_admin_announcement);
-route.post('/add_announcement', controller.p_addmin_announcement);
+route.post('/admin-announcement', controller.p_addmin_announcement);
 
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);

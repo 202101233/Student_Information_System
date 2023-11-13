@@ -79,20 +79,31 @@
                             <% for(var i=0;i<program.length;i++) { %>
                         <tr>
                             <td class="leftpad"><%= i+1%></td>
-                            <td class="leftpad">program[i].DegreeOffered.Degree_name</td>
-                            <td class="center-items"><center>program[i].BranchOffered.Branch_name</center></td>
+                            <td class="leftpad"><%= program[i].DegreeOffered.Degree_name %></td>
+                            <td class="center-items"><center><%= program[i].BranchOffered.Branch_name%></center></td>
                             <td class="center-items" id="drop-1"><center>
 
-                                <select name="" id="course-dropdown" class="dropmenu" onchange="window.location.href=this.value;">
-                                    <option value="none" selected disabled hidden class="dropitems">Select Course</option>
+                                <select name="courses" id="course-dropdown" class="dropmenu">
+                                    <option value="none" selected disabled hidden class="dropitems">View courses</option>
 
-                                    <% for(var j=0;j<program.CourseOffered.length;j++) { %>
-                                    <option value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands." class="dropitmes"><%= program[i].CourseOffered[j].Course_Name %></option>
+                                    <% for(var j=0;j<program[i].CourseOffered.length;j++) { %>
+                                        <option value="<%= program[i].CourseOffered[j].id %>">
+                                            <%= program[i].CourseOffered[j].Course_Name %>
+                                        </option>
                                     <% } %>
                                   </select>
 
                             </center></td>
-                            <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td>
+                            <td class="center">
+                                <center>
+                                    <form action="/viewprogram" method="post">
+                                        <button type="submit" name="delete" value="<%= program[i].id %>">
+                                            <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                </center>
+                            </td>
+                            <!-- <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td> -->
                         </tr>
 
                         <% } %>
