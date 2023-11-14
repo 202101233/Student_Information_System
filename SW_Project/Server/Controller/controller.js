@@ -91,7 +91,25 @@ exports.p_facultylogin = async (req, res) => {
             //check if password matches
             const result = req.body.f_password === user.Password;
             if (result) {
-                res.render("Faculty/facultyhome.ejs", { faculty: user });
+                const secret = "sagar";
+                const token = await jwt.sign({ "name": user.name, "email_id": user.Email_id }, secret);
+                console.log("YYY");
+                console.log(token);
+                console.log("TTT");
+                res.cookie("f_jwtoken", token, {
+                    expires: new Date(Date.now() + 25892000000),
+                    httpOnly: true
+                });
+
+                console.log("HHH");
+
+                const stored_token = req.cookies.f_jwtoken;
+
+                console.log(stored_token);
+                console.log("KK");
+                const verify_one = jwt.verify(token, secret);
+                console.log(verify_one);
+                res.redirect("facultyhome");
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -717,30 +735,39 @@ exports.logoutadmin = async (req, res, next) => {
 
 exports.g_viewfaculty = async (req, res) => {
     try {
-        const ID = req.Faculty.id;
-        const user = await Faculty.findById(ID);
-
-        res.render("viewfaculty.ejs", { user });
+        console.log("hellloooo");
+        const stored_token = req.cookies.f_jwtoken;
+        // console.log(stored_token);
+        const verify_one = jwt.verify(stored_token, "sagar");
+        // console.log(verify_one);
+        const email = verify_one.email_id;
+        const user = await Faculty.find({ Email_id :email})
+        
+        //console.log(ID);
+        console.log(user);
+        res.render("Faculty/viewfaculty.ejs", { user });
     } catch (err) {
         console.error(err);
-        res.status(500).send("An error occured while fetching degree data");
+        res.status(500).send("An error occured while fetching faculty data");
     }
 }
 
-exports.g_updatefaculty = async (req, res) => {
-    try {
-        const ID = req.Faculty.id;
-        const user = await Faculty.findById(ID);
+// exports.g_updatefaculty = async (req, res) => {
+//     try {
+//         const stored_token = req.cookies.f_jwtoken;
+//         const verify_one = jwt.verify(stored_token, "sagar");
+//         const email = verify_one.email_id;
+//         const user = await Faculty.find({ Email_id :email});
 
-        res.render("updatefaculty.ejs", { user });
+//         res.render("updatefaculty.ejs", { user });
 
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("An error occured while fetching degree data");
-    }
-}
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("An error occured while updating faculty data");
+//     }
+// }
 
-exports.p_updatefaculty = async (req, res) => {
+exports.p_viewfaculty = async (req, res) => {
     try {
         const validphone = validatePhoneNumber.validate(req.body.mobileNO)
         if (!validphone) {
@@ -760,7 +787,11 @@ exports.p_updatefaculty = async (req, res) => {
             res.status(401).render("alert.ejs", { title, message, icon, href });
         }
 
-        const ID = req.Faculty.id;
+        const stored_token = req.cookies.f_jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Faculty.find({ Email_id :email});
+
         const update = {
             fullname: req.body.fullname,
             phoneNo: req.body.mobileNO,
@@ -771,8 +802,8 @@ exports.p_updatefaculty = async (req, res) => {
         }
 
 
-        await Faculty.updateOne({ ID, update }).exec();
-
+        await Faculty.updateOne({ user , update }).exec();
+        
         const title = "SUCCESS";
         const message = "Faculty details updated!";
         const icon = "success";
@@ -782,7 +813,7 @@ exports.p_updatefaculty = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).send("An error occured while fetching degree data");
+        res.status(500).send("An error occured while updating faculty data");
     }
 }
 
@@ -791,7 +822,13 @@ exports.g_coursegrade = async (req, res) => {
         const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
         const semester_name = last_sem.Semester_name;
 
-        const f_name = req.Faculty.id;
+        // const f_name = req.Faculty.id;
+
+        const stored_token = req.cookies.f_jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Faculty.find({ Email_id :email});
+        const f_name = user.fullname;
 
         const coursesTaught = await Course_Allotment.aggregate([
             {
@@ -811,17 +848,17 @@ exports.g_coursegrade = async (req, res) => {
             }
         ]);
 
-        res.render("coursegrade.ejs", { coursesTaught, semester_name });
+        res.render("Faculty/coursegrade.ejs", { coursesTaught, semester_name });
     } catch (err) {
         console.error(err);
-        res.status(500).send("An error occured while adding grade data");
+        res.status(500).send("An error occured while fetching data");
     }
 }
 
 exports.p_coursegrade = async (req, res) => {
     try {
         const course = await Course.findOne({ _id: req.body.mycheckbox });
-        res.render("addgrade.ejs", { course });
+        res.render("Faculty/addgrade.ejs", { course });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding grade data");
@@ -877,7 +914,13 @@ exports.g_courseattendence = async (req, res) => {
         const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
         const semester_name = last_sem.Semester_name;
 
-        const f_name = req.Faculty.id;
+        // const f_name = req.Faculty.id;
+        const stored_token = req.cookies.f_jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Faculty.find({ Email_id :email});
+
+        const f_name = user.fullname;
 
         const coursesTaught = await Course_Allotment.aggregate([
             {
@@ -897,17 +940,17 @@ exports.g_courseattendence = async (req, res) => {
             }
         ]);
 
-        res.render("courseattendence.ejs", { coursesTaught, semester_name });
+        res.render("Faculty/courseattendence.ejs", { coursesTaught, semester_name });
     } catch (err) {
         console.error(err);
-        res.status(500).send("An error occured while adding attendence data");
+        res.status(500).send("An error occured while fetching data");
     }
 }
 
 exports.p_courseattendence = async (req, res) => {
     try {
         const course = await Course.findOne({ _id: req.body.mycheckbox });
-        res.render("addattendence.ejs", { course });
+        res.render("Faculty/addattendence.ejs", { course });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding attendence data");
@@ -962,8 +1005,13 @@ async function processExcelFile(filepath) {
 
 exports.g_changepwdfaculty = async (req, res) => {
     try {
-        const faculty = await Faculty.findOne({ _id: req.user });
-        res.render("changepwdfaculty.ejs", { faculty });
+        const stored_token = req.cookies.f_jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Faculty.find({ Email_id :email});
+        console.log(user);
+        // const faculty = await Faculty.findOne({ _id: req.user });
+        res.render("Faculty/changepwdfaculty.ejs", { user });
     } catch (err) {
         res.status(500).send("Internal Server Error");
     }
@@ -971,8 +1019,14 @@ exports.g_changepwdfaculty = async (req, res) => {
 
 exports.p_changepwdfaculty = async (req, res) => {
     try {
-        const ID = req.Faculty.id;           //user here means fsculty or not?
+        const stored_token = req.cookies.f_jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Faculty.find({ Email_id :email});
+        
+        // const ID = req.Faculty.id;           //user here means fsculty or not?
         const { oldpwd, newpwd, confirmpwd } = req.body;
+        console.log(newpwd);
 
         if (newpwd != confirmpwd) {
             const title = "ERROR";
@@ -983,7 +1037,7 @@ exports.p_changepwdfaculty = async (req, res) => {
 
             return res.status(400).send("New password and confirm password do not match!");
         }
-        const user = await Faculty.findById(ID);
+        // const user = await Faculty.findById(ID);
 
         const pwdvalid = await bcrypt.compare(oldpwd, user.Password);
 

@@ -76,18 +76,18 @@ route.delete('/logoutadmin', controller.logoutadmin);
 
 route.get('/viewfaculty', controller.g_viewfaculty);
 
-route.get('/updatefaculty', controller.g_updatefaculty);
-route.post('/updatefaculty', controller.p_updatefaculty);
+// route.get('/updatefaculty', controller.g_updatefaculty);
+route.post('/viewfaculty', controller.p_viewfaculty);
 
-route.get('coursegrade', controller.g_coursegrade);
-route.post('coursegrade', controller.p_coursegrade);
+route.get('/coursegrade', controller.g_coursegrade);
+route.post('/coursegrade', controller.p_coursegrade);
 
-route.post('addgrade', controller.p_addgrade);
+route.post('/addgrade', controller.p_addgrade);
 
-route.get('courseattendence', controller.g_courseattendence);
-route.post('courseattendence', controller.p_courseattendence);
+route.get('/courseattendence', controller.g_courseattendence);
+route.post('/courseattendence', controller.p_courseattendence);
 
-route.post('addattendence', controller.p_addattendence);
+route.post('/addattendence', controller.p_addattendence);
 
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
