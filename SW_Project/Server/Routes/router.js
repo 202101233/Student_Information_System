@@ -56,8 +56,8 @@ route.post('/viewprogram',controller.p_viewprogram);
 route.get('/addprogram', controller.g_addprogram);
 route.post('/addprogram', controller.p_addprogram);
 
-route.get('/viewsemester', controller.g_viewsemester);
-route.post('/viewsemester', controller.p_viewsemester);
+// route.get('/viewsemester', controller.g_viewsemester);
+// route.post('/viewsemester', controller.p_viewsemester);
 
 route.get('/addsemester', controller.g_addsemester);
 route.post('/addsemester', controller.p_addsemester);

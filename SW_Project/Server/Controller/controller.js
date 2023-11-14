@@ -4,6 +4,7 @@ const { proppatch, use } = require('../Routes/router');
 const multer = require("multer");
 const upload = multer({ dest: 'uploads/' });
 const path = require("path");
+const bcrypt=require("bcryptjs");
 
 const jwt = require("jsonwebtoken");
 var cookieParser = require('cookie-parser');
@@ -11,6 +12,8 @@ const express = require("express");
 const app = express();
 app.use(cookieParser());
 
+
+const saltRounds = 10;
 
 exports.homepage = (req, res) => {
     res.render("user-choice");
@@ -531,29 +534,34 @@ exports.p_addprogram = async (req, res) => {
 
 // Admin Semester Manegement
 
-exports.g_viewsemester = async (req, res) => {
-    try {
-        res.render("semesterdetails.ejs");
-    } catch (err) {
-        res.status(500).send("Internal Server Error");
-    }
-}
+// exports.g_viewsemester = async (req, res) => {
+//     try {
+//         res.render("Admin/admin-semester.ejs");
+//     } catch (err) {
+//         res.status(500).send("Internal Server Error");
+//     }
+// }
 
-exports.p_viewsemester = async (req, res) => {
-    try {
-        await Course_Allotment.deleteOne({ _id: req.body.delete }).exec();
-        //const course = await Course.find({});
-        res.redirect("viewsemester");
-    } catch (err) {
-        res.status(500).send("Internal Server Error");
-    }
-}
+// exports.p_viewsemester = async (req, res) => {
+//     try {
+//         await Course_Allotment.deleteOne({ _id: req.body.delete }).exec();
+//         //const course = await Course.find({});
+//         res.redirect("viewsemester");
+//     } catch (err) {
+//         res.status(500).send("Internal Server Error");
+//     }
+// }
 
 exports.g_addsemester = async (req, res) => {
     try {
-        res.render("addsemester.ejs");
+        const programs = await Program.find({})
+            .populate('DegreeOffered BranchOffered CourseOffered')
+            .exec();
+
+        res.render("Admin/addsemester.ejs", { program: programs });
     } catch (err) {
-        res.status(500).send("Internal Server Error");
+        console.error(err);
+        res.status(500).send("An error occured while fetching program data .....");
     }
 }
 
@@ -626,9 +634,9 @@ exports.p_addmin_announcement = async (req, res) => {
         const newannouncement = new Announcement({
             Title: title,
             Description: description,
-            Due_Date: due_date,
+            Due_Date: due_date
         });
-       console.log(req.body);
+    //    console.log(req.body);
      
 
 
@@ -652,9 +660,11 @@ exports.g_changepwdadmin = async (req, res) => {
 
 exports.p_changepwdadmin = async (req, res) => {
     try {
-        const ID = req.user._id;
-        // console.log("ID:", ID);
-        // console.log("user:", user);
+       const stored_token = req.cookies.jwtoken;
+       console.log(stored_token);
+       const verify_one = jwt.verify(stored_token, "sagar");
+       console.log(verify_one);
+       const email = verify_one.email_id;
 
         const { oldpwd, newpwd, confirmpwd } = req.body;
         console.log(req.body);
@@ -669,11 +679,14 @@ exports.p_changepwdadmin = async (req, res) => {
 
             return res.status(400).send("New password and confirm password do not match!");
         }
-        const user = await Admin.findById(ID);
+        const user = await Admin.findOne({Email_id : email});
+        // console.log(user);
+        // console.log(oldpwd);
+        // console.log(user.Password);
 
-        const pwdvalid = await bcrypt.compare(oldpwd, user.Password);
-
-        if (!pwdvalid) {
+        const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
+        // console.log(pwdvalid);
+        if (pwdinvalid) {
             const title = "ERROR";
             const message = "Old Passward is incorrect!";
             const icon = "error";
