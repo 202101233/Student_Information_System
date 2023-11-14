@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5d461ad7b58cd6de64a83342eb3b8e8d985dde2b
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +11,10 @@
     <link rel="stylesheet" href="css/admin-semster.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
 </head>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5d461ad7b58cd6de64a83342eb3b8e8d985dde2b
 <body>
     <div class="wrapper">
         <div class="upperbar">
@@ -14,6 +22,7 @@
                 <img src="logo.png" alt="not rendered" id="weblogoimg">
             </div>
             <div class="webnameplace">
+<<<<<<< HEAD
                 <div class="webname"><p id="temp1">Student Information System</p></div>
             </div>        
         </div>
@@ -247,3 +256,491 @@
 </html>
 
 
+=======
+                <div class="webname">
+                    <p id="temp1">Student Information System</p>
+                </div>
+            </div>
+        </div>
+        <div class="downflex">
+            <div class="sidenav">
+                <div class="sidenavopt">
+                    <ul>
+                        <li><a href="#" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
+                        <li id="for-down"><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i>
+                                <select name="" id="test" onmousedown="forfocus()" onblur="forblur()" class="dropmenu"
+                                    onchange="window.location.href=this.value;">
+                                    <option value="none" selected disabled hidden class="dropitems">New Registration
+                                    </option>
+                                    <option value="/admin-student-registration" class="dropitmes">Student Registration
+                                    </option>
+                                </select>
+                            </a></li>
+
+                        <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Course Management </a></li>
+                        <li><a href="#"><i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;Degree Management
+                            </a></li>
+                        <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;branch Management </a></li>
+                        <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Programme Management </a></li>
+                        <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Semester </a></li>
+
+                        <li><a href="#"><i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;Announcement </a></li>
+
+                        <li><a href="#"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>&nbsp;Fees </a></li>
+                        <li><a href="#"><i class="fa-solid fa-key"></i> Change Password </a></li>
+                        <li><a href="#"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
+                    </ul>
+                </div>
+                <div class="sidenavdown">
+                    <div class="curruserlogo">
+
+                    </div>
+                    <div class="currusername">
+                        Prof Saurbh Tiwari
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+
+                <form action="/addsemester" method="post">
+
+                    <div class="table-wrapper">
+
+                        <div class="maintag-place">
+                            <h1>Add New Semester</h1>
+                        </div>
+
+                        <div class="temp-wrapper">
+                            <div class="tag-place">
+                                <p class="tag-text"><b>Enter Semester Name :-</b></p>
+                            </div>
+                            <div class="inputbox-place">
+                                <input type="text" name="name" class="ip-box" id="ip-name">
+                                <hr>
+                            </div>
+                        </div>
+
+
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                   
+                                    <th style="width: 10%;">Sr No.</th>
+                                    <th style="width: 15%;">Degree</th>
+                                    <th style="width: 20%;">Branch</th>
+                                    <th style="width: 20%;">Batch</th>
+                                    <th style="width: 35%;">Upload</th>
+                                </thead>
+
+
+                                <tbody>
+                                    <div class="temp-div">
+
+                                        <% for(var i=0;i<program.length;i++) { %>
+                                            <tr>
+                                                <td class="leftpad">
+                                                    <%= i+1%>
+                                                </td>
+                                                <td class="leftpad">
+                                                    <%= program[i].DegreeOffered.Degree_name %>
+                                                </td>
+                                                <td class="center-items">
+                                                    <center>
+                                                        <%= program[i].BranchOffered.Branch_name%>
+                                                    </center>
+                                                </td>
+                                                <td class="center-items" id="drop-1">
+                                                    <center>
+
+                                                        <select name="courses" id="course-dropdown" class="dropmenu">
+                                                            <option value="none" selected disabled hidden
+                                                                class="dropitems">Select Batch</option>
+                                                            <option class="dropitmes">2021</option>
+                                                            <option class="dropitmes">2022</option>
+                                                            <option class="dropitmes">2023</option>
+
+
+                                                            <!-- <% for(var j=0;j<program[i].CourseOffered.length;j++) { %>
+                                                    <option value="<%= program[i].CourseOffered[j].id %>">
+                                                        <%= program[i].CourseOffered[j].Course_Name %>
+                                                    </option>
+                                                <% } %> -->
+                                                        </select>
+
+                                                    </center>
+                                                </td>
+                                                <td class="center">
+                                                    <center><input type="file" class="file-ip"></center>
+                                                </td>
+                                                <!-- <td class="center">
+                                                    <center>
+                                                        <form action="/viewprogram" method="post">
+                                                            <button type="submit" name="delete"
+                                                                value="<%= program[i].id %>">
+                                                                <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+                                                            </button>
+                                                        </form>
+                                                    </center>
+                                                </td> -->
+                                                <!-- <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td> -->
+                                            </tr>
+
+                                            <% } %>
+                                    </div>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="btn-place">
+                            <button type="submit" class="btn"><b>Submit</b></button>
+                        </div>
+                </form>
+
+                <!-- <table>
+                            <thead>
+                                <th style="width: 10%;">Sr No.</th>
+                                <th style="width: 15%;">Programme</th>
+                                <th style="width: 20%;">Batch</th>
+                                <th style="width: 35%;">Upload</th>
+                            </thead>
+
+
+                            <tbody>
+                                <div class="temp-div">
+
+
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="leftpad">1</td>
+                                        <td class="leftpad">B-Tech ICT</td>
+                                        <td class="center-items" id="drop-1">
+                                            <center>
+
+                                                <select name="" id="course-dropdown" class="dropmenu"
+                                                    onchange="window.location.href=this.value;">
+                                                    <option value="none" selected disabled hidden class="dropitems">
+                                                        Select
+                                                        Batch</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2021</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2020</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2022</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2023</option>
+                                                    <option
+                                                        value="https://www.nationalgeographic.com/environment/article/deserts#:~:text=What%20is%20a%20desert%3F,class%20of%20regions%20called%20drylands."
+                                                        class="dropitmes">2019</option>
+                                                </select>
+
+                                            </center>
+                                        </td>
+                                        <td class="center">
+                                            <center><input type="file" class="file-ip"></center>
+                                        </td>
+                                    </tr>
+                                </div>
+                            </tbody> -->
+                <!-- </table> -->
+                <!-- </div> -->
+
+                <!-- <div class="btn-place">
+                    <button type="button" class="btn"><b>Submit</b></button>
+                </div>
+                </form> -->
+
+
+
+                <!-- content     -->
+            </div>
+
+
+            <!-- downflex -->
+        </div>
+
+        <!-- wrapper -->
+    </div>
+    <script src="../../Assets/css/admin-semester.js"></script>
+</body>
+
+</html>
+</body>
+
+</html>
+>>>>>>> 5d461ad7b58cd6de64a83342eb3b8e8d985dde2b
