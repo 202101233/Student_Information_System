@@ -21,7 +21,7 @@
         <div class="sidenav">
             <div class="sidenavopt">
                 <ul>
-                    <li><a href="#" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
+                    <li><a href="adminhome" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
                     <li id="for-down"><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i>
                         <select name="" id="test" onmousedown="forfocus()" onblur="forblur()" class="dropmenu" onchange="window.location.href=this.value;">
                             <option value="none" selected disabled hidden class="dropitems">New Registration</option>
@@ -48,7 +48,7 @@
     
                 </div>
                 <div class="currusername">
-                    Prof Saurbh Tiwari
+                   Admin
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
        
 
             <div class="announcement-box">
-                <form>
+                <form action="/admin-announcement" method="post">
                   <label>
                      <br>
                      <div class="announcement-title">
@@ -70,25 +70,26 @@
                     <div class="announcement-detail">
                       <h2>Announcement detail : </h2>
                       <br>
-                      <textarea id="detail" rows="8" cols="50" name="comment" form="usrform" placeholder="Enter text here..."></textarea>
+                      <textarea id="detail" rows="8" cols="50" name="description"  placeholder="Enter text here..."></textarea>
                     </div>  
                   </label>
     
-              </form>
+              <!-- </form> -->
             
                 <div class="closing-date">
                   
                   <p><h2>Select the last date :  </h2></p>
-                  <input type="date" id="last-date" >
+                  <input type="date" id="last-date" name="due_date" >
     
     
                 </div>
     
                 <div class="add-button">
-                  <button>
+                  <button type="submit">
                     Add
                   </button>
                 </div>
+              </form>
     
             </div>
             

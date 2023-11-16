@@ -38,6 +38,12 @@ app.use(bodyparser.urlencoded({extended : true}))
 //set view engine
 app.set("view engine", "ejs")
 
+app.use(session({
+  secret: 'your-secret-key', // Change this to a secure random key
+  resave: false,
+  saveUninitialized: true
+}));
+
 // app.use(methodOverride("_method"));
 
 //load assets
