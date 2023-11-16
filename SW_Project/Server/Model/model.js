@@ -247,21 +247,6 @@ const Course_AllotmentSchema = new mongoose.Schema({
         ref: "Program",
         required: true,
     },
-    // CourseAssigned: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Course",
-    //     required: true,
-    // },
-    // FacultyAssigned: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Faculty",
-    //     required: true,
-    // },
-    // SemesterAssigned: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Semester",
-    //     required: true,
-    // },
     Semester_name : {
         type : String,
         required : true
@@ -347,7 +332,7 @@ const Course_EnrollmentSchema = new mongoose.Schema({
     },
     semesterEnrolled: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "CourseAllotment",
+        ref: "Course_Allotment",
         required: true,
     },
 

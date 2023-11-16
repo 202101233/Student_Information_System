@@ -19,8 +19,6 @@ const mongoose = require('mongoose');
 
 const model = require('./Server/Model/model');
 
-
-
 const connectDB=require("./Server/Database/connection");
 
 dotenv.config({path : 'config.env'});

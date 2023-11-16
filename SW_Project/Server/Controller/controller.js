@@ -106,23 +106,49 @@ exports.p_facultylogin = async (req, res) => {
 exports.p_studentlogin = async (req, res) => {
     try {
         // check if the user exists
-        console.log("XXX");
-        const data = req.body;
-        const email_student = data.s_email;
-        const pass = data.s_password;
-        console.log(email_student);
-        console.log(pass)
+        // console.log("XXX");
+        // const data = req.body;
+        // const email_student = data.s_email;
+        // const pass = data.s_password;
+        // console.log(email_student);
+        // console.log(pass)
         const user = await Student.findOne({ Email_id: req.body.s_email });
+
+       
         console.log("YYY");
         console.log(user);
         if (user) {
             //check if password matches
 
-            if (req.body.s_password === user.Password) {
+            const loggedstudent = req.body.s_password === user.Password;
+            console.log("tttrrr");
+            console.log(loggedstudent);
+                if(loggedstudent)
+                {
+                    const secret = "sagar1";
+                const token = await jwt.sign({ "name": user.firstname, "email_id": user.Email_id}, secret);
+                //console.log("YYY");
+                console.log(token);
+                console.log("TTT");
+                res.cookie("jwtokenstudent", token, {
+                    expires: new Date(Date.now() + 25892000000),
+                    httpOnly: true
+                });
 
-                // res.redirect("/studenthome"); 
-                res.render("Student/studenthome.ejs", { student: user });
-            } else {
+                console.log("HHH");
+
+                const stored_token = req.cookies.jwtokenstudent;
+
+                console.log(stored_token);
+                console.log("KK");
+                const verify_one = jwt.verify(stored_token, secret);
+                console.log(verify_one);
+                // console.log(jwt.verify())
+                res.redirect("/viewstudent");
+                //res.render("Student/studenthome.ejs",{student: user});
+                //console.log("nik");
+                }
+                 else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
         } else {
@@ -1021,25 +1047,41 @@ exports.logoutfaculty = async (req, res, next) => {
 
 exports.g_viewstudent = async (req, res) => {
     try {
-        const ID = req.Student.id;     //Student as a schema name?
-        const user = await Student.findById(ID).populate('ProgramRegistered');
+        //const ID = req.body.stud_id;     //Student as a schema name?.populate('ProgramRegistered')
+        //const student = await Student.findOne(_id = req.user);
+        const Student_token = req.cookies.jwtokenstudent;
+        const verified_student = jwt.verify(Student_token, "sagar1");
+        const email = verified_student.email_id;
+        const student = await Student.find({Email_id: email});
+        
 
-        const program = await Program.findById(user.ProgramRegistered).populate('DegreeOffered BranchOffered');
-        res.render("viewstudent.ejs", { user, program });
-
-
-    } catch (err) {
-        console.error('Error:', error);
+        // const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
+        // console.log("ssssss");
+        // console.log(program);
+        // console.log("eeeee");
+        res.render("Student/studenthome.ejs", {student});
+          }catch (err) {
+        console.error(err);
         res.status(500).send('Internal Server Error');
-    }
+          }
 }
 
 exports.g_updatestudent = async (req, res) => {
     try {
-        const ID = req.Student.id;
-        const user = await Student.findById(ID);
+        //const ID = req.user;
+        const Student_token = req.cookies.jwtokenstudent;
+        const verified_student = jwt.verify(Student_token, "sagar1");
+        const email = verified_student.email_id;
+        const student = await Student.find({Email_id: email});
+        console.log("start");
+        console.log(student);
+        console.log("end");
+        const program = await Program.findById(student[0].ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
+        console.log("ssssss");
+        console.log(program);
+        console.log("eeeee");
 
-        res.render("updatestudent.ejs", { user });
+        res.render("Student/student-profile.ejs", { student,program});
 
     } catch (err) {
         console.error(err);
@@ -1067,7 +1109,7 @@ exports.p_updatestudent = async (req, res) => {
             res.status(401).render("alert.ejs", { title, message, icon, href });
         }
 
-        const ID = req.Student.id;
+        const ID = req.student.id;
         const update = {
             firstname: req.body.firstname,
             middlename: req.body.middlename,
@@ -1105,11 +1147,11 @@ exports.g_courseregistration = async (req, res) => {
         const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
         const sem_name = last_sem.Semester_name;
 
-        const ID = res.Student.id;
+        //const ID = res.Student.id;
 
-        const user = await Student.findnyId(ID);
-        const p_name = user.ProgramRegistered;
-        const batch = user.Batch;
+        const student = await Student.findOne(_id = req.user);
+        const p_name = student.ProgramRegistered;
+        const batch = student.Batch;
 
         const coursesTaught = await Course_Allotment.aggregate([
             {
@@ -1127,7 +1169,7 @@ exports.g_courseregistration = async (req, res) => {
             }
         ]);
 
-        res.render("courseregistration.ejs", { coursesTaught, sem_name, p_name, batch });
+        res.render("Student/student-course-registration.ejs", { coursesTaught, sem_name, p_name, batch });
     } catch (err) {
         res.status(500).send("An error occured while registering course");
     }
@@ -1158,7 +1200,7 @@ exports.p_courseregistration = async (req, res) => {
         const title = "SUCCESS";
         const message = "Course Registration completed!";
         const icon = "success";
-        const href = "/studenthome";
+        const href = "/viewstudent";
         res.render("alert.ejs", { title, message, icon, href });
 
     } catch (err) {
@@ -1170,24 +1212,29 @@ exports.p_courseregistration = async (req, res) => {
 
 exports.g_viewgrade = async (req, res) => {
     try {
-        const ID = req.Student.id;
+        //const ID = req.user;
 
-        const user = await Student.findById(ID);
-        const p_name = user.ProgramRegistered;
+        const student = await Student.findOne(_id = req.user);
+        const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
+        const p_name = student.ProgramRegistered;
         // const batch = user.Batch;
 
         const sem_enroll = await Course_Enrollment.aggregate([
             {
-                $match: { Program_associate: p_name, studentenrolled: user }     // batch or student????
+                $match: { Program_associate: p_name, studentenrolled: student , batch: Batch}     // batch or student????
             },
             {
                 $project: {
                     _id: 0, // Exclude the _id field from the result
-                    Semester_name: "Semester_name"
+                    Semester_name: Course_Allotment.find().sort({ Date_created: -1 }).limit(1)
                 }
             }
         ])
-        res.render("viewgrade.ejs", { sem_enroll });
+
+        console.log("eeee");
+        console.log(sem_enroll);
+        console.log("eeee");
+        res.render("Student/result.ejs", {student, sem_enroll, program});
     } catch (err) {
         res.status(500).send("An error occured while fetching semester data");
     }
@@ -1195,11 +1242,11 @@ exports.g_viewgrade = async (req, res) => {
 
 exports.g_viewattendence = async (req, res) => {
     try {
-        const ID = req.Student.id;
+        //const ID = req.Student.id;
 
-        const user = await Student.findById(ID);
-        const p_name = user.ProgramRegistered;
-        const batch = user.Batch;
+        const student = await Student.findOne(_id = req.user);
+        const p_name = student.ProgramRegistered;
+        const batch = student.Batch;
 
         const sem_enroll = await Course_Allotment.aggregate([
             {
@@ -1212,7 +1259,7 @@ exports.g_viewattendence = async (req, res) => {
                 }
             }
         ])
-        res.render("viewattendence.ejs", { sem_enroll });
+        res.render("Student/student-attendance.ejs", { sem_enroll });
     } catch (err) {
         res.status(500).send("An error occured while fetching semester data");
     }
@@ -1262,6 +1309,7 @@ exports.g_viewattendence = async (req, res) => {
 
 exports.g_student_announcement = async (req, res) => {
     try {
+        const student = await Student.findOne(_id = req.user);
         const announcements = await Announcement.find({}).exec();
 
         const Curr_date = new Date();
@@ -1269,14 +1317,17 @@ exports.g_student_announcement = async (req, res) => {
         const valid_announcement = [];
 
         for (const announcement of announcements) {
-            if (announcement.Due_data > Curr_date) {
+            if (announcement.Due_Date > Curr_date) {
                 valid_announcement.push(announcement);
             }
             else {
                 await Announcement.deleteOne({ _id: announcement._id });
             }
         }
-        res.render("student-announcement.ejs", { announcements: valid_announcement });
+        console.log("eeeee");
+        console.log(valid_announcement);
+        console.log("eeeee");
+        res.render("Student/student-announcement.ejs", {student, valid_announcement });
     } catch (err) {
         res.status(500).send("An error occured while fetching announcement data");
     }
@@ -1286,7 +1337,7 @@ exports.g_student_announcement = async (req, res) => {
 exports.g_changepwdstudent = async (req, res) => {
     try {
         const student = await Student.findOne({ _id: req.user });
-        res.render("changepwdstudent.ejs", { student });
+        res.render("Student/changepwdstudent.ejs", { student });
     } catch (err) {
         res.status(500).send("Internal Server Error");
     }
@@ -1327,7 +1378,7 @@ exports.p_changepwdstudent = async (req, res) => {
         const title = "SUCCESS";
         const message = "Password changed successfully!";
         const icon = "success";
-        const href = "/studenthome";
+        const href = "/viewstudent";
         res.render("alert.ejs", { title, message, icon, href });
 
 

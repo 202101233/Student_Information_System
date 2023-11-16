@@ -4,34 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../Assets/css/student-profile.css">
+    <link rel="stylesheet" href="css/student-common-page.css">
+    <link rel="stylesheet" href="css/student-profile.css">
+    <label for="css/student-profile.css"></label>
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="wrapper">
         <div class="upperbar">
             <div class="weblogoplace">
-                <img src="logo.png" alt="not rendered" id="weblogoimg">
+                <img src="img/logo.png" alt="not rendered" id="weblogoimg">
             </div>
             <div class="webnameplace">
                 <div class="webname"><p id="temp1">Student Information System</p></div>
             </div>        
         </div>
         <div class="downflex">
-        <div class="sidenav">
+        <div class="sidenav" action="/studenthome" , method="post">
             <div class="sidenavopt">
                 <ul>
-                    <li><a href="#" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
-                    <li><a href="#" class="bcolor"><i class="fa-solid fa-user"></i> Student Details </a></li>
-                    <li><a href="#" class="bcolor"><i class="fa-solid fa-file"></i>&nbsp;Grade Reports</a></li>
-                    <li><a href="#"><i class="fa-solid fa-clipboard"></i>&nbsp;Attendence </a></li>
-                    <li><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i>&nbsp;Course Registration </a></li>
-                    <li><a href="#" class="bcolor"><i class="fa-solid fa-file"></i>&nbsp;Fee Receipt</a></li>
-                  
-                    <li><a href="#"><i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;Announcement </a></li>
-                    <li><a href="#" class="bcolor"><i class="fa-solid fa-file"></i>&nbsp;Transcript</a></li>
-                    <li><a href="#"><i class="fa-solid fa-key"></i> Change Password </a></li>
-                    <li><a  href="#"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
+                    <li><a href="/viewstudent" class="bcolor"><i class="fa-solid fa-house"></i> Home </a></li>
+                    <li><a href="/updatestudent" class="bcolor"><i class="fa-solid fa-user"></i> Student Details </a></li>
+                    <li><a href="/viewgrade" class="bcolor"><i class="fa-solid fa-file"></i>&nbsp;Grade Reports</a></li>
+                    <li><a href="/viewattendence"><i class="fa-solid fa-clipboard"></i>&nbsp;Attendence </a></li>
+                    <li><a href="/courseregistration"><i class="fa fa-list-alt" aria-hidden="true"></i>&nbsp;Course Registration </a></li>
+                    <li><a href="/student-announcement"><i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;Announcement </a></li>
+                    <li><a href="/changepwdstudent"><i class="fa-solid fa-key"></i> Change Password </a></li>
+                    <li><a  href="/logoutstudent"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
                   </ul>
             </div>
             <div class="sidenavdown">
@@ -39,11 +38,10 @@
     
                 </div>
                 <div class="currusername">
-                    Prof Saurbh Tiwari
+                    <%= student[0].firstname%>
                 </div>
             </div>
         </div>
-    
         <div class="content">
 
             <div class="temp-wrapper">
@@ -58,7 +56,7 @@
                 </div>
     
                 <div class="student-name">
-                  Sundar Pichai
+                  <%= student[0].firstname%>
                 </div>
     
             </div>
@@ -77,7 +75,7 @@
                     <td style="width: 25%;">First Name</td>
                     <td style="width: 2%;">:</td>
                     <td style="width: 68%;"> 
-                      <input readonly type="text" class="ip-boxes-editable" value="Ram" id="first-name">
+                      <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].firstname%>" id="first-name">
                     </td>
                 </tr>
     
@@ -85,7 +83,7 @@
                   <td>Middle Name</td>
                   <td>:</td>
                   <td>
-                    <input readonly type="text" class="ip-boxes-editable" value="Vijaybhai" id="middle-name">
+                    <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].middlename%>" id="middle-name">
                    </td>
               </tr>
     
@@ -93,7 +91,7 @@
                   <td>Last Name</td>
                   <td>:</td>
                   <td>
-                    <input readonly type="text" class="ip-boxes-editable" value="Agarwal" id="last-name">
+                    <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].lastname%>" id="last-name">
                   </td>
               </tr>
     
@@ -101,7 +99,7 @@
                     <td>Student ID</td>
                     <td>:</td>
                     <td>
-                      <input readonly type="text" class="ip-boxes-editable" value="202101011" id="student-id">
+                      <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].stud_id%>" id="student-id">
                     </td> 
               </tr>
                 
@@ -109,7 +107,7 @@
                 <td>Mobile Number</td>
                 <td>:</td>
                 <td>
-                  <input readonly type="text" class="ip-boxes-editable" value="999999999" id="mobile-no">
+                  <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].phoneNo%>" id="mobile-no">
                 </td>
             </tr>
     
@@ -118,7 +116,7 @@
               <td>Gender</td>
               <td>:</td>
               <td>
-                <input readonly type="text" class="ip-boxes-editable" value="Ram" id="gender">
+                <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].Gender%>" id="gender">
               </td>
             </tr>
     
@@ -126,7 +124,7 @@
               <td>Date Of Birth</td>
               <td>:</td>
               <td>
-                <input readonly type="date" class="ip-boxes-editable" value="20-01-1999" id="dob">
+                <input readonly type="date" class="ip-boxes-editable" value="<%= student[0].DOB%>" id="dob">
                  </td>
             </tr>
     
@@ -134,7 +132,7 @@
                 <td>Email Address</td>
                 <td>:</td>
                 <td>
-                  <input readonly type="email" class="ip-boxes-editable" value="adnbcd@gmail,com" id="emailaddr">  
+                  <input readonly type="email" class="ip-boxes-editable" value="<%= student[0].Email_id%>" id="emailaddr">  
                 </td>
               </tr>
                 
@@ -143,7 +141,7 @@
                 <td>:</td>
                 <td>
                   
-                  <input readonly type="text" class="ip-boxes-editable" value="G-road, krushnanagar - delhi delhi, delhi- 123456 " id="homeaddr">
+                  <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].Address%>" id="homeaddr">
                 </td>
             </tr>  
                 
@@ -152,7 +150,7 @@
               <td>Parent Email Address</td>
               <td>:</td>
               <td>
-                <input readonly type="email" class="ip-boxes-editable" value="adnbcd@gmail,com" id="parentmailaddr">  
+                <input readonly type="email" class="ip-boxes-editable" value="<%= student[0].Parent_Email_Id%>" id="parentmailaddr">  
               </td>
             </tr>
     
@@ -162,7 +160,7 @@
               <td>Batch</td>
               <td>:</td>
               <td>
-                <input readonly type="text" class="ip-boxes-editable" value="B.Tech-2021" id="batch">
+                <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].Batch%>" id="batch">
               </td>
             </tr>
     
@@ -171,7 +169,7 @@
               <td>Blood-group</td>
               <td>:</td>
               <td>
-                <input readonly type="text" class="ip-boxes-editable" value="A-positive" id="bloodgroup">
+                <input readonly type="text" class="ip-boxes-editable" value="<%= student[0].Blood_Group%>" id="bloodgroup">
               </td>
             </tr>
     
@@ -180,7 +178,7 @@
               <td>ProgramRegistered</td>
               <td>:</td>
               <td>
-                <input readonly type="text" class="ip-boxes-editable" value="ICT-CS" id="programme">
+                <input readonly type="text" class="ip-boxes-editable" value="<%= program.DegreeOffered.Degree_name + ' (' + program.BranchOffered.Branch_name + ')' %>" id="programme">
               </td>
             </tr>
     
@@ -214,7 +212,7 @@
     <!-- wrapper -->
     </div>
 
-    <script src="../../Assets/js/student-profile.js"></script>
+    <script src="js/student-profile.js"></script>
 </body>
 </html>
 </body>
