@@ -2,7 +2,35 @@ var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Anno
     Course_Allotment, Attendance, Grade, Course_Enrollment, Result } = require('../Model/model');
 const { proppatch, use } = require('../Routes/router');
 const multer = require("multer");
-const upload = multer({ dest: '../../uploads' });
+const Storage = multer.diskStorage({
+    //destination for file
+    destination: function (request, file, callback) {
+      if(file){
+        callback(null, './asserts/uploads/');
+      }
+    },
+
+    // destination:"./asserts/uploads/",
+
+    //add back to extension
+    filename: function (request, file, callback) {
+      if(file){  
+        callback(null, Date.now() + file.originalname);
+      }
+      else
+      {
+        callback(null, "NA");
+      }
+    },
+});
+
+const upload = multer({ 
+    storage : Storage,
+    limits: { fileSize: 5000000 },
+    fileFilter: (req, file, cb) => {
+        validation_of_file(file, cb);
+      },
+});
 const path = require("path");
 const bcrypt=require("bcryptjs");
 const nodemailer = require("nodemailer");
@@ -631,7 +659,7 @@ exports.g_addsemester = async (req, res) => {
 
 exports.p_addsemester = (upload.single('excelfile'), async (req, res) => {
     try {
-        console.log(working1);
+        // console.log(working1);
         const filepath = req.file.path;
         const semester = await processExcelFile(filepath, req);
         // console.log(working1);
@@ -641,6 +669,7 @@ exports.p_addsemester = (upload.single('excelfile'), async (req, res) => {
         req.session.semester = semester;
 
     } catch (err) {
+        console.log(err);
         console.error("Error occured while proccesing and uploading semester data");
         res.status(500).send("Error occured while proccesing and uploading semester data");
     }
