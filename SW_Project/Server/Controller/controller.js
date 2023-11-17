@@ -2,10 +2,10 @@ var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Anno
     Course_Allotment, Attendance, Grade, Course_Enrollment, Result } = require('../Model/model');
 const { proppatch, use } = require('../Routes/router');
 const multer = require("multer");
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: '../../uploads' });
 const path = require("path");
 const bcrypt=require("bcryptjs");
-
+const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 var cookieParser = require('cookie-parser');
 const express = require("express");
@@ -234,11 +234,16 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
         }
 
         const ID = req.body.email.split("@")[0];
-        const Batch = req.body.email.substr(0, 4);
+        const batch = req.body.email.substr(0, 4);
+        // console.log(ID);
+        // console.log(batch);
+        // console.log(req.body.email)
+        const student = await Student.findOne({ Email_id: req.body.email });
+        // console.log(student);
 
-        const student = await Student.findOne({ email: req.body.email });
-
-        if (!student) {
+        if (student) {
+            // console.log(student)
+            // res.send("student already exist");
             const title = "ERROR";
             const message = "Student Email already exists";
             const icon = "error";
@@ -246,6 +251,7 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
             res.render("Admin/alert.ejs", { title, message, icon, href });
         }
         else {
+            console.log("hiiii");
             const randompass = generatePass();
             const hashedPassward = await bcrypt.hash(randompass, saltRounds);
 
@@ -253,48 +259,60 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
                 firstname: req.body.name.split(" ")[0],
                 middlename: req.body.name.split(" ")[1],
                 lastname: req.body.name.split(" ")[2],
+                stud_id: ID,
                 Email_id: req.body.email,
+                Password: hashedPassward,
+                Batch: batch
             })
-
+            // console.log(newstudent);
             await newstudent.save();
+            // res.send("save sucecssfully");
 
-            const transporter = nodemailer.createTransport({
-                service: "gmail",
-                host: "smtp.gmail.com",
-                port: "587",
-                tls: {
-                    ciphers: "SSLv3",
-                    rejectUnauthorized: false,
-                },
-                auth: {
-                    user: "e-campus-daiict@gmail.com",
-                    pass: process.env.GMAILPASSWORD,                    // env file?????????
-                }
-            });
+            // console.log(newstudent);
+
+            // const transporter = nodemailer.createTransport({
+            //     service: "gmail",
+            //     host: "smtp.gmail.com",
+            //     port: "587",
+            //     secure: false,
+            //     // tls: {
+            //     //     ciphers: "SSLv3",
+            //     //     rejectUnauthorized: false,
+            //     // },
+            //     auth: {
+            //         user: "ecampus9daiict@gmail.com",
+            //         pass: "ecdaiict321",                    // env file?????????
+            //     }
+            // });
+            // console.log("mail continue");
 
 
-            const mailoption = {
-                from: "e-campus-daiict@gmail.com",
-                to: req.body.email,
-                subject: "Account Created",
-                html: `
-                <h2> Your student account has been created. </h2>
-                <p> Here are information : </p>
-                <p> <b> Email ID : </b> ${req.body.email} </p>
-                <p> <b> Password : </b> ${randomPass} </p> 
-                <a href= >Click here to login</a>       
-                `,                                                          // change link
-            }
+            // const mailoption = {
+            //     from: "ecampus9daiict@gmail.com",
+            //     to: req.body.email,
+            //     subject: "Account Created",
+            //     html: `
+            //     <h2> Your student account has been created. </h2>
+            //     <p> Here are information : </p>
+            //     <p> <b> Email ID : </b> ${req.body.email} </p>
+            //     <p> <b> Password : </b> ${hashedPassward} </p> 
+            //     <a href= "http://localhost:8010/studentlogin">Click here to login</a>       
+            //     `,                                                          // change link
+            // }
+            // // <a href= >Click here to login</a>       
+            //     // `,  
+            //     console.log("mail continue again");
 
-            await transporter.sendMail(mailoption);
+            // await transporter.sendMail(mailoption);
             console.log("student add sucessfully");
-            // res.redirect("viewcourse");
+            // res.redirect("adminhome");
 
             const title = "SUCCESS";
             const message = "Student added successfully!";
             const icon = "success";
             const href = "/adminHome";
             res.render("Admin/alert.ejs", { title, message, icon, href });
+            res.redirect("adminhome");
         }
     } catch (err) {
         console.error(err);
@@ -602,6 +620,8 @@ exports.g_addsemester = async (req, res) => {
             .populate('DegreeOffered BranchOffered CourseOffered')
             .exec();
 
+            // console.log(programs);
+
         res.render("Admin/addsemester.ejs", { program: programs });
     } catch (err) {
         console.error(err);
@@ -611,29 +631,41 @@ exports.g_addsemester = async (req, res) => {
 
 exports.p_addsemester = (upload.single('excelfile'), async (req, res) => {
     try {
+        console.log(working1);
         const filepath = req.file.path;
-        const semsester = await processExcelFile(filepath);
+        const semester = await processExcelFile(filepath, req);
+        // console.log(working1);
 
-        await Course_Allotment.insertMany(semsester);
+        await Course_Allotment.insertMany(semester);
 
-        req.session.semsester = semsester;
+        req.session.semester = semester;
 
     } catch (err) {
-        console.err("Error occured while proccesing and uploading semester data");
+        console.error("Error occured while proccesing and uploading semester data");
         res.status(500).send("Error occured while proccesing and uploading semester data");
     }
 });
 
-async function processExcelFile(filepath) {
-    const workbook = new Excel.workbook();
-    await workbook.xlsx.readfile(filepath);
+async function processExcelFile(filepath, req) {
+    const workbook = new Excel.Workbook();     //??workbook or Workbook??
+    await workbook.xlsx.readFile(filepath);
 
     const workshhet = workbook.getWorksheet(1);
     const sem_data = [];
 
-    const batch = req.body.Batch;
-    const program = req.body.Program;
-    const Semester_n = req.body.S_name;
+    const batch = req.body.batch;
+    const degree = req.body.degree;
+    const branch = req.body.branch;
+    const Semester_n = req.body.name;
+    const existingProgram = await Program.findOne({
+        DegreeOffered: { name: degree },
+        BranchOffered: { name: branch },
+    });
+    if (!existingProgram) {
+        // Handle the case when the Program does not exist
+        console.error('Program not found based on degree and branch names.');
+        return sem_data; // or throw an error, depending on your use case
+    }
 
     workshhet.eachRow(async (row, rownumber) => {
 
@@ -646,12 +678,15 @@ async function processExcelFile(filepath) {
             const obj2 = await Faculty.find({ fullname: faculty_assign });
 
             sem_data.push({
-                Program_associate: program,
+                Program_associate: existingProgram._id,
                 Batch: batch,
                 Date_created: new Date(),
-                Course_code: obj1._id,
-                Course_type: course_type,
-                Faculty_Assigned: obj2._id,
+                Courseallocate: {
+                    Course_upload: obj1._id,
+                    Course_type: course_type,
+                    Faculty_assigned:  obj2._id,
+                },
+                
                 Semester_name: Semester_n,
             });
         }

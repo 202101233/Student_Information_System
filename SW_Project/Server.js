@@ -13,6 +13,7 @@ const Excel = require("exceljs");
 const ejs = require('ejs');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const nodemailer = require("nodemailer");
 
 // mongoose.connect("mongodb+srv://admin:sis_it304@cluster0.7fcnw1p.mongodb.net/?retryWrites=true&w=majority")
 
