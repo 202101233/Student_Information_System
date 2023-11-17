@@ -68,7 +68,7 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
             console.log(user)
             console.log(user.admin_name)
             //check if password matches
-            const result = req.body.a_password === user.Password;
+            const result = await bcrypt.compare(req.body.a_password, user.Password);
             if (result) {
                 console.log("nik");
                 //res.render("Admin/adminhome.ejs",{admin : user});
@@ -1176,7 +1176,7 @@ exports.p_changepwdfaculty = async (req, res) => {
 exports.logoutfaculty = async (req, res, next) => {
     try {
         req.logOut(req.user);
-        res.redirect('/facultylogin.ejs');
+        res.redirect('/facultylogin');
     } catch (err) {
         next(err);
     }
