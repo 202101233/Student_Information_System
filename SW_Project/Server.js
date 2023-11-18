@@ -25,7 +25,7 @@ const connectDB=require("./Server/Database/connection");
 dotenv.config({path : 'config.env'});
 const app=express();
 
-const PORT = 8010;
+const PORT = 8000;
 
 //log request
 app.use(morgan('tiny'));

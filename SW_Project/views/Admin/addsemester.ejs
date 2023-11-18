@@ -65,7 +65,7 @@
 
             <div class="content">
 
-                <form action="/addsemester" method="post">
+                <form action="/addsemester" method="post" enctype="multipart/form-data">
 
                     <div class="table-wrapper">
 
@@ -104,14 +104,24 @@
                                                 <td class="leftpad">
                                                     <%= i+1%>
                                                 </td>
-                                                <td class="leftpad" name="degree">
+                                                <td class="leftpad">
+                                                    <input type="hidden" name="degree" value="<%= program[i].DegreeOffered.Degree_name %>">
                                                     <%= program[i].DegreeOffered.Degree_name %>
                                                 </td>
-                                                <td class="center-items" name="branch">
+                                                
+                                                <!-- <td class="leftpad" name="degree">
+                                                    <%= program[i].DegreeOffered.Degree_name %>
+                                                </td> -->
+                                                <td class="center-items">
+                                                    <input type="hidden" name="branch" value="<%= program[i].BranchOffered.Branch %>">
+                                                    <%= program[i].BranchOffered.Branch_name %>
+                                                </td>
+                                                
+                                                <!-- <td class="center-items" name="branch">
                                                     <center >
                                                         <%= program[i].BranchOffered.Branch_name%>
                                                     </center>
-                                                </td>
+                                                </td> -->
                                                 <td class="center-items" id="drop-1">
                                                     <center>
 
