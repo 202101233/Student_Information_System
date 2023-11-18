@@ -35,6 +35,7 @@ const path = require("path");
 const bcrypt=require("bcryptjs");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+//const nodemailer = require('nodemailer');
 var cookieParser = require('cookie-parser');
 const express = require("express");
 const app = express();
@@ -140,7 +141,7 @@ exports.p_facultylogin = async (req, res) => {
                 console.log("KK");
                 const verify_one = jwt.verify(token, secret);
                 console.log(verify_one);
-                res.redirect("facultyhome");
+                res.redirect("/facultyhome");
             } else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
@@ -193,7 +194,7 @@ exports.p_studentlogin = async (req, res) => {
                 const verify_one = jwt.verify(stored_token, secret);
                 console.log(verify_one);
                 // console.log(jwt.verify())
-                res.redirect("/viewstudent");
+                res.redirect("/studenthome");
                 //res.render("Student/studenthome.ejs",{student: user});
                 //console.log("nik");
                 }
@@ -239,7 +240,10 @@ exports.g_facultyhome = (isLoggedInfaculty, async (req, res) => {
 
 exports.g_studenthome = (isLoggedInstudent, async (req, res) => {
     try {
-        const student = await Student.findOne({ _id: req.user });
+        const Student_token = req.cookies.jwtokenstudent;
+        const verified_student = jwt.verify(Student_token, "sagar1");
+        const email = verified_student.email_id;
+        const student = await Student.find({Email_id: email});
         res.render("Student/studenthome.ejs", { student });
     } catch (err) {
         console.error(err);
@@ -300,40 +304,45 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
             await newstudent.save();
             // res.send("save sucecssfully");
 
-            // console.log(newstudent);
+            let transporter = nodemailer.createTransport({
+                service: "gmail",
+                host: "smtp.gmail.com",
+                port: 587,
+                auth:{
+                    user:'202101234@daiict.ac.in',
+                    pass:'jhluwxctbddwqruz'
+                },
+                tls:{
+                    rejectUnauthorized:false
+                }
+            });
+    
+            const mailOptions = {
+                from: '202101234@daiict.ac.in', // Sender's email address
+                to: req.body.email,//'202101234@daiict.ac.in', // Recipient's email address
+                subject: "Account Created", // Subject of the email
+                text: 'This is a test email sent from Node.js using Nodemailer.',
+                html: `
+                    <h2> Your student account has been created. </h2>
+                    <p> Here are information : </p>
+                    <p> <b> Email ID : </b> ${req.body.email} </p>
+                    <p> <b> Password : </b> ${hashedPassward} </p> 
+                    <a href= "http://localhost:8010/studentlogin">Click here to login</a>       
+                    `, 
+              };
 
-            // const transporter = nodemailer.createTransport({
-            //     service: "gmail",
-            //     host: "smtp.gmail.com",
-            //     port: "587",
-            //     secure: false,
-            //     // tls: {
-            //     //     ciphers: "SSLv3",
-            //     //     rejectUnauthorized: false,
-            //     // },
-            //     auth: {
-            //         user: "ecampus9daiict@gmail.com",
-            //         pass: "ecdaiict321",                    // env file?????????
-            //     }
-            // });
-            // console.log("mail continue");
-
-
-            // const mailoption = {
-            //     from: "ecampus9daiict@gmail.com",
-            //     to: req.body.email,
-            //     subject: "Account Created",
-            //     html: `
-            //     <h2> Your student account has been created. </h2>
-            //     <p> Here are information : </p>
-            //     <p> <b> Email ID : </b> ${req.body.email} </p>
-            //     <p> <b> Password : </b> ${hashedPassward} </p> 
-            //     <a href= "http://localhost:8010/studentlogin">Click here to login</a>       
-            //     `,                                                          // change link
-            // }
-            // // <a href= >Click here to login</a>       
-            //     // `,  
-            //     console.log("mail continue again");
+              console.log("mail continue again");
+    
+              transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                  console.error('Error:', error);
+                } else {
+                  console.log('Email sent:', info.response);
+                }
+                
+                // Close the transporter after sending the email
+                //transporter.close();
+              });
 
             // await transporter.sendMail(mailoption);
             console.log("student add sucessfully");
@@ -1200,13 +1209,55 @@ exports.g_viewstudent = async (req, res) => {
         const verified_student = jwt.verify(Student_token, "sagar1");
         const email = verified_student.email_id;
         const student = await Student.find({Email_id: email});
-        
+        const program = await Program.findById(student[0].ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
 
         // const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
         // console.log("ssssss");
         // console.log(program);
         // console.log("eeeee");
-        res.render("Student/studenthome.ejs", {student});
+        res.render("Student/student-profile.ejs", {student, program});
+        
+        //mail code
+
+        // const output = `<p>student profile has viewed</p>
+        // <h3>student details</h3>
+        // <ul>
+        // <li>name:${student.firstname}</li>
+        // <li>ID:${student.stud_id}</li>
+        // </ul>`;
+
+        // let transporter = nodemailer.createTransport({
+        //     service: "gmail",
+        //     host: "smtp.gmail.com",
+        //     port: 587,
+        //     auth:{
+        //         user:'ecampus1daiict@gmail.com',
+        //         pass:'lyftuuucvamuuoye'
+        //     },
+        //     tls:{
+        //         rejectUnauthorized:false
+        //     }
+        // });
+
+        // const mailOptions = {
+        //     from: 'ecampus1daiict@gmail.com', // Sender's email address
+        //     to: '202101234@daiict.ac.in', // Recipient's email address
+        //     subject: 'Test Email', // Subject of the email
+        //     text: 'This is a test email sent from Node.js using Nodemailer.',
+        //     html: output // Email body
+        //   };
+
+        //   transporter.sendMail(mailOptions, (error, info) => {
+        //     if (error) {
+        //       console.error('Error:', error);
+        //     } else {
+        //       console.log('Email sent:', info.response);
+        //     }
+            
+        //     // Close the transporter after sending the email
+        //     transporter.close();
+        //   });
+
           }catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -1361,31 +1412,38 @@ exports.g_viewgrade = async (req, res) => {
     try {
         //const ID = req.user;
 
-        const student = await Student.findOne(_id = req.user);
-        const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
-        const p_name = student.ProgramRegistered;
+        //const student = await Student.findOne(_id = req.user);
+        const Student_token = req.cookies.jwtokenstudent;
+        const verified_student = jwt.verify(Student_token, "sagar1");
+        const email = verified_student.email_id;
+        const student = await Student.find({Email_id: email});
+        // const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
+        const p_name =await Program.findById(student[0].ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');;
         // const batch = user.Batch;
-
+        console.log("hello");
+        console.log(p_name);
+        console.log("by");
         const sem_enroll = await Course_Enrollment.aggregate([
             {
-                $match: { Program_associate: p_name, studentenrolled: student , batch: Batch}     // batch or student????
-            },
-            {
-                $project: {
-                    _id: 0, // Exclude the _id field from the result
-                    Semester_name: Course_Allotment.find().sort({ Date_created: -1 }).limit(1)
-                }
+                $match: {studentenrolled: student[0]._id}     // batch or student????Program_associate: p_name,batch: Batch
             }
+            // {
+            //     $project: {
+            //         _id: 0, // Exclude the _id field from the result
+            //         Semester_name: Course_Allotment.find().sort({ Date_created: -1 }).limit(1)
+            //     }
+            // }
         ])
 
         console.log("eeee");
         console.log(sem_enroll);
         console.log("eeee");
-        res.render("Student/result.ejs", {student, sem_enroll, program});
+        res.render("Student/result.ejs", {student, sem_enroll});
     } catch (err) {
         res.status(500).send("An error occured while fetching semester data");
     }
 }
+
 
 exports.g_viewattendence = async (req, res) => {
     try {
