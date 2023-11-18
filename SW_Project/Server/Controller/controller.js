@@ -384,8 +384,8 @@ exports.g_viewcourse = async (req, res) => {
 exports.p_viewcourse = async (req, res) => {
     try {
         if (req.body.edit) {
-            const course = await Course.findOne({ _id: req.body.edit }).exec();
-            res.render("updatecourse.ejs", { course });
+            const course = await Course.findOne({ _id: req.body.edit });
+            res.render("Admin/updatecourse.ejs", { course });
         }
         else {
             await Course.deleteOne({ _id: req.body.delete }).exec();
@@ -400,7 +400,7 @@ exports.p_viewcourse = async (req, res) => {
 
 exports.p_updatecourse = async (req, res) => {
     try {
-        const filter = { _id: req.body.edit };
+        const filter = { _id: req.body.id };
         const update = {
             Course_Name: req.body.name,
             Course_credit: req.body.credit,
@@ -453,8 +453,8 @@ exports.g_viewdegree = async (req, res) => {
 exports.p_viewdegree = async (req, res) => {
     try {
         if (req.body.edit) {
-            const degree = await Degree.findOne({ _id: req.body.edit }).exac();
-            res.render("updatedegree.ejs", { degree });
+            const degree = await Degree.findOne({ _id: req.body.edit });
+            res.render("Admin/updatedegree.ejs", { degree });
         }
         else {
             await Degree.deleteOne({ _id: req.body.delete }).exec();
@@ -469,13 +469,13 @@ exports.p_viewdegree = async (req, res) => {
 
 exports.p_updatedegree = async (req, res) => {
     try {
-        const filter = { _id: req.body.edit };
+        const filter = { _id: req.body.id };
         const update = {
             Degree_name: req.body.name
         };
 
         await Degree.updateOne(filter, update);
-        res.redirect("viewdegree");
+        res.redirect("/viewdegree");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while updating degree data");
@@ -493,7 +493,7 @@ exports.p_adddegree = async (req, res) => {
         });
 
         await newdegree.save();
-        res.redirect("viewdegree");
+        res.redirect("/viewdegree");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding degree data");
@@ -515,13 +515,15 @@ exports.g_viewbranch = async (req, res) => {
 exports.p_viewbranch = async (req, res) => {
     try {
         if (req.body.edit) {
-            const branch = await Branch.findOne({ _id: req.body.edit }).exac();
-            res.render("updatebranch.ejs", { branch });
+            console.log("Branchhhh");
+            const branch = await Branch.findOne({ _id: req.body.edit });
+            console.log(branch);
+            res.render("Admin/updatebranch.ejs", { branch });
         }
         else {
             await Branch.deleteOne({ _id: req.body.delete }).exec();
             //const branch = await Branch.find({});
-            res.redirect("viewbranch");
+            res.redirect("/viewbranch");
         }
     } catch (err) {
         console.error(err);
@@ -531,13 +533,14 @@ exports.p_viewbranch = async (req, res) => {
 
 exports.p_updatebranch = async (req, res) => {
     try {
-        const filter = { _id: req.body.edit };
+        const filter = { _id: req.body.id };
         const update = {
             Branch_name: req.body.name
         };
-
+        console.log(filter);
+        console.log(update);
         await Branch.updateOne(filter, update);
-        res.redirect("viewbrach");
+        res.redirect("/viewbranch");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while updating branch data");

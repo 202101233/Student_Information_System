@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/admin-common-page.css">
-    <link rel="stylesheet" href="css/admin-branch.css">
-    <link rel="stylesheet" href="css/editbranch.css">
+    <link rel="stylesheet" href="css/editdegree.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
 </head>
 
@@ -69,24 +68,24 @@
 
             <div class="content">
 
-                <div class="editbranch-wrapper">
+                <div class="editdegree-wrapper">
                     <div class="maintag-place">
-                        <h1>Edit Branch</h1>
+                        <h1>Edit Degree</h1>
                     </div>
-                    <form action="/addbranch" method="post">
+                    <form action="/updatedegree" method="post">
                         <div class="temp-wrapper">
                             <div class="tag-place">
-                                <p class="tag-text"><b>Branch Name :-</b></p>
+                                <p class="tag-text"><b>Degree Name :-</b></p>
                             </div>
                             <div class="inputbox-place">
-                                <input type="text" name="name" class="ip-box" id="ip-name">
+                                <input type="text" name="name" class="ip-box" id="ip-name" value="<%= degree.Degree_name%>">
                                 <hr>
                             </div>
                         </div>
-
+                        <input type="hidden" id="custId" name="id" value="<%= degree._id%>">
                         <div class="btn-place">
-                            <!-- <a href="/viewbranch"> -->
-                            <button type="submit" class="btn"><b>Save</b></button>
+                            <!-- <a href="/viewdegree"> -->
+                                <button type="submit" class="btn">Save</button>
                             <!-- </a> -->
                         </div>
                     </form>
@@ -103,7 +102,7 @@
 
         <!-- wrapper -->
     </div>
-    <script src="js/admin-branch.js"></script>
+    <script src="js/admin-degree.js"></script>
 </body>
 
 </html>

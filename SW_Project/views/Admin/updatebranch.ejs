@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="css/admin-common-page.css">
-    <link rel="stylesheet" href="css/editcourse.css">
+    <link rel="stylesheet" href="css/admin-branch.css">
+    <link rel="stylesheet" href="css/editbranch.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
 </head>
 
@@ -68,42 +69,24 @@
 
             <div class="content">
 
-                <div class="editcourse-wrapper">
+                <div class="editbranch-wrapper">
                     <div class="maintag-place">
-                        <h1>Edit Course</h1>
+                        <h1>Edit Branch</h1>
                     </div>
-
-                    <form action="/editcourse" method="post">
+                    <form action="/updatebranch" method="post">
                         <div class="temp-wrapper">
                             <div class="tag-place">
-                                <p class="tag-text"><b>Course Name :-</b></p>
+                                <p class="tag-text"><b>Branch Name :-</b></p>
                             </div>
                             <div class="inputbox-place">
-                                <input type="text" name="name" class="ip-box" id="ip-name">
+                                <input type="text" name="name" class="ip-box" id="ip-name" value="<%= branch.Branch_name%>">
                                 <hr>
                             </div>
                         </div>
-                        <div class="temp-wrapper">
-                            <div class="tag-place">
-                                <p class="tag-text"><b>Course Code :-</b></p>
-                            </div>
-                            <div class="inputbox-place">
-                                <input type="text" name="code" class="ip-box" id="ip-code">
-                                <hr>
-                            </div>
-                        </div>
-                        <div class="temp-wrapper">
-                            <div class="tag-place">
-                                <p class="tag-text"><b>Credit :-</b></p>
-                            </div>
-                            <div class="inputbox-place">
-                                <input type="number" name="credit" class="ip-box" id="ip-credit">
-                                <hr>
-                            </div>
-                        </div>
+                        <input type="hidden" id="custId" name="id" value="<%= branch._id%>">
                         <div class="btn-place">
-                            <!-- <a href="/viewcourse"> -->
-                            <button type="submit" class="btn">Save</button>
+                            <!-- <a href="/viewbranch"> -->
+                            <button type="submit" class="btn"><b>Save</b></button>
                             <!-- </a> -->
                         </div>
                     </form>
@@ -120,7 +103,7 @@
 
         <!-- wrapper -->
     </div>
-    <script src="js/admin-common-page.js"></script>
+    <script src="js/admin-branch.js"></script>
 </body>
 
 </html>
