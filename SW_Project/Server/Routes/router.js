@@ -59,21 +59,21 @@ route.post('/admin-student-registration', controller.p_studentregistration);
 route.get('/viewcourse', controller.g_viewcourse);
 route.post('/viewcourse', controller.p_viewcourse);
 
-route.post('/editcourse', controller.p_updatecourse);
+route.post('/updatecourse', controller.p_updatecourse);
 route.get('/addcourse', controller.g_addcourse);
 route.post('/addcourse', controller.p_addcourse);
 
 route.get('/viewdegree' , controller.g_viewdegree);
 route.post('/viewdegree', controller.p_viewdegree);
 
-route.post('/editdegree', controller.p_updatedegree);
+route.post('/updatedegree', controller.p_updatedegree);
 route.get('/adddegree', controller.g_adddegree);
 route.post('/adddegree', controller.p_adddegree);
 
 route.get('/viewbranch' , controller.g_viewbranch);
 route.post('/viewbranch', controller.p_viewbranch);
 
-route.post('/editbranch', controller.p_updatebranch);
+route.post('/updatebranch', controller.p_updatebranch);
 route.get('/addbranch', controller.g_addbranch);
 route.post('/addbranch', controller.p_addbranch);
 
