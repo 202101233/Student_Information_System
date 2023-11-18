@@ -225,8 +225,12 @@ exports.g_adminhome = (isLoggedInadmin, async (req, res) => {
 
 exports.g_facultyhome = (isLoggedInfaculty, async (req, res) => {
     try {
-        const faculty = await Faculty.findOne({ _id: req.user });
-        res.render("Faculty/facultyhome.ejs", { faculty });
+        const stored_token = req.cookies.f_jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Faculty.find({ Email_id :email})
+
+        res.render("Faculty/facultyhome.ejs", { user });
     } catch (err) {
         console.error(err);
         // Handle the error appropriately, such as sending an error response to the client or logging it.
@@ -951,7 +955,7 @@ exports.g_coursegrade = async (req, res) => {
             }
         ]);
 
-        res.render("Faculty/coursegrade.ejs", { coursesTaught, semester_name });
+        res.render("Faculty/coursegrade.ejs", { coursesTaught, semester_name, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching data");
@@ -1043,7 +1047,7 @@ exports.g_courseattendence = async (req, res) => {
             }
         ]);
 
-        res.render("Faculty/courseattendence.ejs", { coursesTaught, semester_name });
+        res.render("Faculty/courseattendence.ejs", { coursesTaught, semester_name, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching data");
