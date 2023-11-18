@@ -1,12 +1,22 @@
 var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Announcement,
     Course_Allotment, Attendance, Grade, Course_Enrollment, Result } = require('../Model/model');
 const { proppatch, use } = require('../Routes/router');
+
+const path = require("path");
+const bcrypt=require("bcryptjs");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+var cookieParser = require('cookie-parser');
+const express = require("express");
+const app = express();
+const XLXS = require("xlsx");
+const ExcelJS = require("exceljs");
 const multer = require("multer");
 const Storage = multer.diskStorage({
     //destination for file
     destination: function (request, file, callback) {
       if(file){
-        callback(null, './asserts/uploads/');
+        callback(null, './Assets/uploads/');
       }
     },
 
@@ -26,18 +36,7 @@ const Storage = multer.diskStorage({
 
 const upload = multer({ 
     storage : Storage,
-    limits: { fileSize: 5000000 },
-    fileFilter: (req, file, cb) => {
-        validation_of_file(file, cb);
-      },
 });
-const path = require("path");
-const bcrypt=require("bcryptjs");
-const nodemailer = require("nodemailer");
-const jwt = require("jsonwebtoken");
-var cookieParser = require('cookie-parser');
-const express = require("express");
-const app = express();
 app.use(cookieParser());
 
 
@@ -68,8 +67,9 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
             console.log(user)
             console.log(user.admin_name)
             //check if password matches
-            const result = req.body.a_password === user.Password;
-            if (result) {
+            const result = await bcrypt.compare(req.body.a_password, user.Password);
+            console.log(result);
+            if (!result) {
                 console.log("nik");
                 //res.render("Admin/adminhome.ejs",{admin : user});
                 //res.redirect('/adminhome');
@@ -102,6 +102,8 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
                 //console.log("nik");
 
             } else {
+                console.log(req.body.a_password);
+                console.log(user.Password);
                 res.status(400).json({ error: "Password doesn't match" });
                 console.log("nik");
             }
@@ -657,71 +659,124 @@ exports.g_addsemester = async (req, res) => {
     }
 }
 
-exports.p_addsemester = (upload.single('excelfile'), async (req, res) => {
+async function processExcelJSFile(filepath, req) {
+    const workbook = new ExcelJS.Workbook();     //??workbook or Workbook??
+    await workbook.xlsx.readFile(filepath);
+
+    const workshhet = workbook.getWorksheet(1);
+    const sem_data = [];
+    // console.log(req.body);
+    const batch = req.body.batch;
+   
+    const degree = req.body.degree;
+    // console.log( req.body.degree);
+    const branch = req.body.branch;
+    const Semester_n = req.body.name;
+    // console.log("continueee");
+    // const existingProgram = await Program.findOne({
+    //     DegreeOffered: { name: degree },
+    //     BranchOffered: { name: branch },
+    // });
+    // if (!existingProgram) {
+    //     // Handle the case when the Program does not exist
+    //     console.error('Program not found based on degree and branch names.');
+    //     return sem_data; // or throw an error, depending on your use case
+    // }
+
+    // workshhet.eachRow(async (row, rownumber) => {
+
+    //     if (rownumber > 1) {
+    //         const course_id = row.getCell(1).value;
+    //         const course_type = row.getCell(2).value;
+    //         const faculty_assign = row.getCell(3).value;
+
+    //         const obj1 = await Course.findOne({ Course_code: course_id });
+    //         const obj2 = await Faculty.findOne({ fullname: faculty_assign });
+
+    //         sem_data.push({
+    //             Program_associate: existingProgram._id,
+    //             Batch: batch,
+    //             Date_created: new Date(),
+    //             Courseallocate: {
+    //                 Course_upload: obj1._id,
+    //                 Course_type: course_type,
+    //                 Faculty_assigned:  obj2._id,
+    //             },
+                
+    //             Semester_name: Semester_n,
+    //         });
+    //     }
+    // });
+    // return sem_data;
+}
+exports.p_addsemester = async (req, res) => {
     try {
-        // console.log(working1);
-        const filepath = req.file.path;
-        const semester = await processExcelFile(filepath, req);
-        // console.log(working1);
+        console.log(req.body);
+        console.log("continueeee");
+        console.log(req.file)
+        // console.log("complete");
+        // const filepath = req.file.path;
+        // const semester = await processExcelJSFile(filepath, req);
+        // // console.log("continueeee");
+        // await Course_Allotment.insertMany(semester);
 
-        await Course_Allotment.insertMany(semester);
-
-        req.session.semester = semester;
+        // req.session.semester = semester;
+        res.send("Yes");
 
     } catch (err) {
         console.log(err);
         console.error("Error occured while proccesing and uploading semester data");
         res.status(500).send("Error occured while proccesing and uploading semester data");
     }
-});
+};
 
-async function processExcelFile(filepath, req) {
-    const workbook = new Excel.Workbook();     //??workbook or Workbook??
-    await workbook.xlsx.readFile(filepath);
+// async function processExcelFile(filepath, req) {
+//     const workbook = new Excel.Workbook();     //??workbook or Workbook??
+//     await workbook.xlsx.readFile(filepath);
 
-    const workshhet = workbook.getWorksheet(1);
-    const sem_data = [];
+//     const workshhet = workbook.getWorksheet(1);
+//     const sem_data = [];
 
-    const batch = req.body.batch;
-    const degree = req.body.degree;
-    const branch = req.body.branch;
-    const Semester_n = req.body.name;
-    const existingProgram = await Program.findOne({
-        DegreeOffered: { name: degree },
-        BranchOffered: { name: branch },
-    });
-    if (!existingProgram) {
-        // Handle the case when the Program does not exist
-        console.error('Program not found based on degree and branch names.');
-        return sem_data; // or throw an error, depending on your use case
-    }
+//     const batch = req.body.batch;
+//     const degree = req.body.degree;
+//     const branch = req.body.branch;
+//     const Semester_n = req.body.name;
+//     const existingProgram = await Program.findOne({
+//         DegreeOffered: { name: degree },
+//         BranchOffered: { name: branch },
+//     });
+//     if (!existingProgram) {
+//         // Handle the case when the Program does not exist
+//         console.error('Program not found based on degree and branch names.');
+//         return sem_data; // or throw an error, depending on your use case
+//     }
 
-    workshhet.eachRow(async (row, rownumber) => {
+//     workshhet.eachRow(async (row, rownumber) => {
 
-        if (rownumber > 1) {
-            const course_id = row.getCell(1).value;
-            const course_type = row.getCell(2).value;
-            const faculty_assign = row.getCell(3).value;
+//         if (rownumber > 1) {
+//             const course_id = row.getCell(1).value;
+//             const course_type = row.getCell(2).value;
+//             const faculty_assign = row.getCell(3).value;
 
-            const obj1 = await Course.find({ Course_code: course_id });
-            const obj2 = await Faculty.find({ fullname: faculty_assign });
+//             const obj1 = await Course.find({ Course_code: course_id });
+//             const obj2 = await Faculty.find({ fullname: faculty_assign });
 
-            sem_data.push({
-                Program_associate: existingProgram._id,
-                Batch: batch,
-                Date_created: new Date(),
-                Courseallocate: {
-                    Course_upload: obj1._id,
-                    Course_type: course_type,
-                    Faculty_assigned:  obj2._id,
-                },
+//             sem_data.push({
+//                 Program_associate: existingProgram._id,
+//                 Batch: batch,
+//                 Date_created: new Date(),
+//                 Courseallocate: {
+//                     Course_upload: obj1._id,
+//                     Course_type: course_type,
+//                     Faculty_assigned:  obj2._id,
+//                 },
                 
-                Semester_name: Semester_n,
-            });
-        }
-    });
-    return sem_data;
-}
+//                 Semester_name: Semester_n,
+//             });
+//         }
+//     });
+//     return sem_data;
+// }
 // Admin Fee Management
 
 // Admin announcement
@@ -1176,7 +1231,7 @@ exports.p_changepwdfaculty = async (req, res) => {
 exports.logoutfaculty = async (req, res, next) => {
     try {
         req.logOut(req.user);
-        res.redirect('/facultylogin.ejs');
+        res.redirect('/facultylogin');
     } catch (err) {
         next(err);
     }
