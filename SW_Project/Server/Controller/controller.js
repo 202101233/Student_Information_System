@@ -12,6 +12,7 @@ const app = express();
 const XLXS = require("xlsx");
 const ExcelJS = require("exceljs");
 const multer = require("multer");
+const validator = require('validator');
 const Storage = multer.diskStorage({
     //destination for file
     destination: function (request, file, callback) {
@@ -919,32 +920,32 @@ exports.g_viewfaculty = async (req, res) => {
         
         //console.log(ID);
         console.log(user);
-        res.render("Faculty/viewfaculty.ejs", { user });
+        res.render("Faculty/viewprofilefaculty.ejs", { user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching faculty data");
     }
 }
 
-// exports.g_updatefaculty = async (req, res) => {
-//     try {
-//         const stored_token = req.cookies.f_jwtoken;
-//         const verify_one = jwt.verify(stored_token, "sagar");
-//         const email = verify_one.email_id;
-//         const user = await Faculty.find({ Email_id :email});
-
-//         res.render("updatefaculty.ejs", { user });
-
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send("An error occured while updating faculty data");
-//     }
-// }
-
-exports.p_viewfaculty = async (req, res) => {
+exports.g_updatefaculty = async (req, res) => {
     try {
-        const validphone = validatePhoneNumber.validate(req.body.mobileNO)
-        if (!validphone) {
+        const stored_token = req.cookies.f_jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Faculty.find({ Email_id :email});
+
+        res.render("Faculty/editprofilefaculty.ejs", { user });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occured while updating faculty data");
+    }
+}
+
+exports.p_updatefaculty = async (req, res) => {
+    try {
+        //const validphone = validatePhoneNumber.validate(req.body.mobileNO)
+        if (req.body.mobileNO.length!=10) {
             const title = "ERROR";
             const message = " Mobile no is invalid";
             const icon = "error";
@@ -952,14 +953,14 @@ exports.p_viewfaculty = async (req, res) => {
             res.status(401).render("alert.ejs", { title, message, icon, href });
         }
 
-        const validemail = validator.validate(req.body.myemail);
-        if (!validemail) {
-            const title = "ERROR";
-            const message = " Email ID is invalid";
-            const icon = "error";
-            const href = "/updatefaculty";
-            res.status(401).render("alert.ejs", { title, message, icon, href });
-        }
+        // const validemail = validator.(req.body.myemail);
+        // if (!validemail) {
+        //     const title = "ERROR";
+        //     const message = " Email ID is invalid";
+        //     const icon = "error";
+        //     const href = "/updatefaculty";
+        //     res.status(401).render("alert.ejs", { title, message, icon, href });
+        // }
 
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
@@ -972,17 +973,18 @@ exports.p_viewfaculty = async (req, res) => {
             Email_id: req.body.myemail,
             DOB: req.body.dob,
             Gender: req.body.gender,
-            Education: req.body.education
+            Education: req.body.degree,
+            Faculty_Block: req.body.fb
         }
 
 
-        await Faculty.updateOne({ user , update }).exec();
+        await Faculty.updateOne({_id:user[0]._id} , update);
         
         const title = "SUCCESS";
         const message = "Faculty details updated!";
         const icon = "success";
         const href = "/viewfaculty";
-        res.render("alert.ejs", { title, message, icon, href });
+        res.render("Admin/alert.ejs", { title, message, icon, href });
 
 
     } catch (err) {

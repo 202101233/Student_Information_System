@@ -102,8 +102,8 @@ route.delete('/logoutadmin', controller.logoutadmin);
 
 route.get('/viewfaculty', controller.g_viewfaculty);
 
-// route.get('/updatefaculty', controller.g_updatefaculty);
-route.post('/viewfaculty', controller.p_viewfaculty);
+route.get('/updatefaculty', controller.g_updatefaculty);
+route.post('/updatefaculty', controller.p_updatefaculty);
 
 route.get('/coursegrade', controller.g_coursegrade);
 route.post('/coursegrade', controller.p_coursegrade);

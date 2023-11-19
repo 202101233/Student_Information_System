@@ -96,7 +96,7 @@ const FacultySchema = new mongoose.Schema({
         unique: true,
     },
     
-    Faculty_block: {
+    Faculty_Block: {
         type: String,
         required: true,
     },
