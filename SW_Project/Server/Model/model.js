@@ -286,8 +286,8 @@ const AttendanceSchema = new mongoose.Schema({
     },
     Attendance_data : [{
         Student_enrolled: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Student",
+            type: String,
+            
             required: true
         },
         Present_days : {
@@ -329,11 +329,10 @@ const Course_EnrollmentSchema = new mongoose.Schema({
         required: true,
     },
     semesterEnrolled: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course_Allotment",
+        type: String,
         required: true,
     },
-
+    
     courseEnrolled: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Course",

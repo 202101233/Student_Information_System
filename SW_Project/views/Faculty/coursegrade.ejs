@@ -38,87 +38,85 @@
             </div>
         </div>
     </div>
-
     <div class="content">
-            
-      
+
+      <form action="/courseattendence" method="post">
+          <table>
+          <tr class="center-items" id="drop-1">
+              <td>
+                  <select name="branch" id="course-dropdown" class="dropmenu">
+
+                      <option value="none" class="dropitems">Select Course</option>
+                      <% for(var i=0;i<courses.length;i++) { %>
+                          <option class="dropitmes" value="<%= courses[i]._id %>">
+                              <%= courses[i].Course_Name %>
+                          </option>
+                          <% } %>
+                  </select>
+              </td>
+
+              <td class="center">
+                  <center><input type="file" class="file-ip" name="excelfile"></center>
+              </td>
+              <td>
+                  <div class="btn-place">
+                      <button type="submit" class="btn"><b>Submit</b></button>
+                  </div>
+              </td>
+
+          </tr>
+      </table>
+
+      </form>
+
       <div class="table-wrapper">
           <table>
               <thead>
                   <th style="width: 15%;">Sr No.</th>
                   <th style="width: 55%;">Course-Name</th>
                   <th style="width: 15%;">Code</th>
-                  <th style="width: 15%;">Select</th>
+                  <th style="width: 15%;">Credit</th>
               </thead>
-          
-          
+
+
               <tbody>
+
                   <div class="temp-div">
-                  <tr>
-                      <td class="leftpad">1</td>
-                      <td class="leftpad">Linear-Algebra</td>
-                      <td class="center-items"><center>SC-223</center></td>
-                      <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
-                  <tr>
-                    <td class="leftpad">1</td>
-                    <td class="leftpad">Linear-Algebra</td>
-                    <td class="center-items"><center>SC-223</center></td>
-                    <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
-                  <tr>
-                    <td class="leftpad">1</td>
-                    <td class="leftpad">Linear-Algebra</td>
-                    <td class="center-items"><center>SC-223</center></td>
-                    <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
-                  <tr>
-                    <td class="leftpad">1</td>
-                    <td class="leftpad">Linear-Algebra</td>
-                    <td class="center-items"><center>SC-223</center></td>
-                    <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
-                  <tr>
-                    <td class="leftpad">1</td>
-                    <td class="leftpad">Linear-Algebra</td>
-                    <td class="center-items"><center>SC-223</center></td>
-                    <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
-                  <tr>
-                    <td class="leftpad">1</td>
-                    <td class="leftpad">Linear-Algebra</td>
-                    <td class="center-items"><center>SC-223</center></td>
-                    <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
-                  <tr>
-                    <td class="leftpad">1</td>
-                    <td class="leftpad">Linear-Algebra</td>
-                    <td class="center-items"><center>SC-223</center></td>
-                    <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
-                  <tr>
-                    <td class="leftpad">1</td>
-                    <td class="leftpad">Linear-Algebra</td>
-                    <td class="center-items"><center>SC-223</center></td>
-                    <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
-                  <tr>
-                    <td class="leftpad">1</td>
-                    <td class="leftpad">Linear-Algebra</td>
-                    <td class="center-items"><center>SC-223</center></td>
-                    <td class="center"><input type="checkbox" class="check-box"></td>
-                  </tr>
+                      <% for(var i=0; i<courses.length; i++) { %>
+                          <tr>
+                              <td class="leftpad">
+                                  <%= i+1%>
+                              </td>
+                              <td class="center-items">
+                                  <center>
+                                      <%= courses[i].Course_Name%>
+                                  </center>
+                              </td>
+                              <td class="center-items">
+                                  <center>
+                                      <%= courses[i].Course_code%>
+                                  </center>
+                              </td>
+                              <td class="center-items">
+                                  <center>
+                                      <%= courses[i].Course_credit%>
+                                  </center>
+                              </td>
+                          </tr>
+                          <% } %>
+
+
                   </div>
               </tbody>
           </table>
       </div>
-      
-      <div class="btn-place">
-        <button type="button" class="btn"><b>Submit</b></button>
-    </div>
-      
-<!-- content     -->
-</div>
+
+      <!-- <div class="btn-place">
+          <button type="button" class="btn"><b>Submit</b></button>
+      </div> -->
+
+      <!-- content     -->
+  </div>
 
 
 <!-- downflex -->

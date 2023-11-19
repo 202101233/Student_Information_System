@@ -168,6 +168,8 @@ exports.p_studentlogin = async (req, res) => {
         if (user) {
             //check if password matches
             const loggedstudent = await bcrypt.compare(req.body.s_password, user.Password);
+            console.log(req.body.s_password);
+            console.log(user.Password);
             // const loggedstudent = req.body.s_password === user.Password;
             console.log("tttrrr");
             console.log(loggedstudent);
@@ -1006,16 +1008,19 @@ exports.p_updatefaculty = async (req, res) => {
 
 exports.g_coursegrade = async (req, res) => {
     try {
-        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
-        const semester_name = last_sem.Semester_name;
+        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
+        // console.log(last_sem[0]);
+        const semester_name = last_sem[0].Semester_name;
+        // console.log(semester_name);
 
         // const f_name = req.Faculty.id;
-
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
         const user = await Faculty.find({ Email_id: email });
-        const f_name = user.fullname;
+
+        const f_name = user[0].fullname;
+        console.log(user)
 
         const coursesTaught = await Course_Allotment.aggregate([
             {
@@ -1030,12 +1035,22 @@ exports.g_coursegrade = async (req, res) => {
             {
                 $project: {
                     _id: 0, // Exclude the _id field from the result
-                    Course_upload: "$Courseallocate.Course_upload" // Include the Course_upload field from Courseallocate
+                    Course_code: "$Courseallocate.Course_code" // Include the Course_upload field from Courseallocate
                 }
             }
         ]);
+        // console.log(coursesTaught);
+        const courses=[];
+        for(var i=0; i<coursesTaught.length;i++)
+        {
+            const x= coursesTaught[i].Course_code;
+            const obj= await Course.findOne({Course_code: x});
+            courses.push(obj);
+        }
+        console.log(courses);
+        // res.send(correct);
 
-        res.render("Faculty/coursegrade.ejs", { coursesTaught, semester_name, user });
+        res.render("Faculty/courseattendence.ejs", { courses, semester_name, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching data");
@@ -1147,59 +1162,79 @@ exports.g_courseattendence = async (req, res) => {
     }
 }
 
-exports.p_courseattendence = async (req, res) => {
+
+
+exports.p_courseattendence =  async (req, res) => {
     try {
-        const course = await Course.findOne({ _id: req.body.mycheckbox });
-        res.render("Faculty/addattendence.ejs", { course });
+        // console.log(req.body);
+        console.log("continueeee");
+        // console.log(req.file);
+        // console.log("complete");
+        const filepath = req.file.path;
+        const attendence = await processExcelJSFile(filepath, req);
+        console.log(attendence);
+
+        const course = req.body.course;
+       
+ 
+        console.log("helloo");
+        const courseattendence = {
+            A_courseEnrolled: course,
+            Attendance_data: attendence,
+            
+        }
+        console.log(courseattendence);
+        // console.log("helo complete");
+        await Attendance.insertMany(courseattendence);
+
+        // req.session.semester = semester;
+        const title = "SUCCESS";
+        const message = "New semester added Successfully!";
+        const icon = "success";
+        const href = "/adminhome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+
+        //res.send(semester);
+
     } catch (err) {
-        console.error(err);
-        res.status(500).send("An error occured while adding attendence data");
+        console.log(err);
+        console.error("Error occured while proccesing and uploading semester data");
+        res.status(500).send("Error occured while proccesing and uploading semester data");
     }
+    
 }
 
-exports.p_addattendence = (upload.single('excelfile'), async (req, res) => {
-    try {
-        const filepath = req.file.path;
-        const attendance = await processExcelFile(filepath);
-
-        await Attendance.insertMany(grade);
-
-        req.session.attendance = attendance;
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("An error occured while adding attendence data");
-    }
-})
-
-async function processExcelFile(filepath) {
-    const workbook = new Excel.workbook();
-    await workbook.xlsx.readfile(filepath);
+async function processExcelJSFile(filepath) {           //for attendence
+    const workbook = new ExcelJS.Workbook();     //??workbook or Workbook??
+    await workbook.xlsx.readFile(filepath);
 
     const workshhet = workbook.getWorksheet(1);
-    const attendance_data = [];
-
-    // const course_name = req.body.course_name;             // Optional
-    const course_code = req.body.course_code;
+    const attendence_data = [];
+    // console.log(req.body);
+    // console.log("continueee");
 
     workshhet.eachRow(async (row, rownumber) => {
 
         if (rownumber > 1) {
-            const student_id = row.getCell(1).value;
-            const present_days = row.getCell(2).value;
-            const total_days = row.getCell(3).value;
+            const stu_id = row.getCell(1).value;
+            const present_d = row.getCell(2).value;
+            const total_d = row.getCell(3).value;
 
-            const obj = await Student.find({ stud_id: student_id });
-
-            attendance_data.push({
-                courseEnrolled: course_code,
-                stud_id: obj._id,
-                Present_days: present_days,
-                Total_days: total_days
+            
+            attendence_data.push({
+                
+                Student_enrolled: stu_id,
+                Present_days: present_d,
+                Total_days: total_d,
+                
             });
+            // console.log(Student_enrolled);
+
         }
     });
-    return attendance_data;
+
+    return attendence_data;
+    
 }
 
 
@@ -1477,8 +1512,9 @@ exports.g_courseregistration = async (req, res) => {
 
 exports.p_courseregistration = async (req, res) => {
     try {
-        console.log("holloo");
-        console.log(req.body);
+        
+        // console.log(req.body);
+        
         if (req.body.register.length !== 5) {
             const title = "ERROR";
             const message = "Please select only 5 courses!";
@@ -1486,12 +1522,13 @@ exports.p_courseregistration = async (req, res) => {
             const href = "/courseregistration";
             res.render("Admin/alert.ejs", { title, message, icon, href });
         }
-
+       else{
         const stored_token = req.cookies.jwtokenstudent;
         const verify_one = jwt.verify(stored_token, "sagar1");
         const email = verify_one.email_id;
         const user = await Student.find({ Email_id: email });
-        console.log(user[0]);
+       
+        // console.log(user[0]);
 
         const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
         const sem_name = last_sem[0].Semester_name;
@@ -1499,22 +1536,25 @@ exports.p_courseregistration = async (req, res) => {
         // const semester = await Course_Allotment.findById(req.body.sem);
 
         const courses = req.body.register;
-        console.log(courses);
+        // console.log(courses);
 
         const newCourseEnrollment = new Course_Enrollment({
-            studentEnrolled: student,
-            semesterEnrolled: semester,
+            studentEnrolled: user[0]._id,
+            semesterEnrolled: sem_name,
             courseEnrolled: courses
         })
-
+        // console.log(newCourseEnrollment);
+       
         await newCourseEnrollment.save();
+        
         const title = "SUCCESS";
         const message = "Course Registration completed!";
         const icon = "success";
         const href = "/viewstudent";
-        res.render("alert.ejs", { title, message, icon, href });
-
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+    }
     } catch (err) {
+        console.error(err);
         res.status(500).send("An error occured while course registration");
     }
 }
