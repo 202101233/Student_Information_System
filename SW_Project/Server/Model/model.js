@@ -263,8 +263,7 @@ const Course_AllotmentSchema = new mongoose.Schema({
 
     Courseallocate : [{
         Course_upload: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Course",
+            type: String,
             required: true,
         },
         Course_type : {
@@ -272,8 +271,7 @@ const Course_AllotmentSchema = new mongoose.Schema({
             required : true
         },
         Faculty_assigned: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Faculty",
+            type: String,
             required: true,
         },
     }]

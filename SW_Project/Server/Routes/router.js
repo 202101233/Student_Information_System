@@ -3,7 +3,6 @@ const app = express();
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 const route = express.Router()
-
 const multer = require("multer");
 const Storage = multer.diskStorage({
     //destination for file
@@ -87,7 +86,7 @@ route.post('/addprogram', controller.p_addprogram);
 // route.post('/viewsemester', controller.p_viewsemester);
 
 route.get('/addsemester', controller.g_addsemester);
-route.post('/addsemester', controller.p_addsemester);
+route.post('/addsemester', upload.single('excelfile'), controller.p_addsemester);
 
 route.get('/admin-announcement', controller.g_admin_announcement);
 route.post('/admin-announcement', controller.p_addmin_announcement);

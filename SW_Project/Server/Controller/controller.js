@@ -1,12 +1,22 @@
 var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Announcement,
     Course_Allotment, Attendance, Grade, Course_Enrollment, Result } = require('../Model/model');
 const { proppatch, use } = require('../Routes/router');
+
+const path = require("path");
+const bcrypt=require("bcryptjs");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+var cookieParser = require('cookie-parser');
+const express = require("express");
+const app = express();
+const XLXS = require("xlsx");
+const ExcelJS = require("exceljs");
 const multer = require("multer");
 const Storage = multer.diskStorage({
     //destination for file
     destination: function (request, file, callback) {
       if(file){
-        callback(null, './asserts/uploads/');
+        callback(null, './Assets/uploads/');
       }
     },
 
@@ -26,19 +36,7 @@ const Storage = multer.diskStorage({
 
 const upload = multer({ 
     storage : Storage,
-    limits: { fileSize: 5000000 },
-    fileFilter: (req, file, cb) => {
-        validation_of_file(file, cb);
-      },
 });
-const path = require("path");
-const bcrypt=require("bcryptjs");
-const nodemailer = require("nodemailer");
-const jwt = require("jsonwebtoken");
-//const nodemailer = require('nodemailer');
-var cookieParser = require('cookie-parser');
-const express = require("express");
-const app = express();
 app.use(cookieParser());
 
 
@@ -673,38 +671,23 @@ exports.g_addsemester = async (req, res) => {
     }
 }
 
-exports.p_addsemester = (upload.single('excelfile'), async (req, res) => {
-    try {
-        // console.log(working1);
-        const filepath = req.file.path;
-        const semester = await processExcelFile(filepath, req);
-        // console.log(working1);
-
-        await Course_Allotment.insertMany(semester);
-
-        req.session.semester = semester;
-
-    } catch (err) {
-        console.log(err);
-        console.error("Error occured while proccesing and uploading semester data");
-        res.status(500).send("Error occured while proccesing and uploading semester data");
-    }
-});
-
-async function processExcelFile(filepath, req) {
-    const workbook = new Excel.Workbook();     //??workbook or Workbook??
+async function processExcelJSFile(filepath, req) {
+    const workbook = new ExcelJS.Workbook();     //??workbook or Workbook??
     await workbook.xlsx.readFile(filepath);
 
     const workshhet = workbook.getWorksheet(1);
     const sem_data = [];
-
+    // console.log(req.body);
     const batch = req.body.batch;
+   
     const degree = req.body.degree;
+    // console.log( req.body.degree);
     const branch = req.body.branch;
     const Semester_n = req.body.name;
+    // console.log("continueee");
     const existingProgram = await Program.findOne({
-        DegreeOffered: { name: degree },
-        BranchOffered: { name: branch },
+        DegreeOffered: degree ,
+        BranchOffered: branch,
     });
     if (!existingProgram) {
         // Handle the case when the Program does not exist
@@ -719,25 +702,97 @@ async function processExcelFile(filepath, req) {
             const course_type = row.getCell(2).value;
             const faculty_assign = row.getCell(3).value;
 
-            const obj1 = await Course.find({ Course_code: course_id });
-            const obj2 = await Faculty.find({ fullname: faculty_assign });
-
+            // const obj1 = await Course.findOne({ Course_code: course_id });
+            // const obj2 = await Faculty.findOne({ fullname: faculty_assign });
+            // console.log(obj1);
+            // console.log(obj2);
             sem_data.push({
                 Program_associate: existingProgram._id,
                 Batch: batch,
                 Date_created: new Date(),
                 Courseallocate: {
-                    Course_upload: obj1._id,
+                    Course_upload: course_id,
                     Course_type: course_type,
-                    Faculty_assigned:  obj2._id,
+                    Faculty_assigned:  faculty_assign,
                 },
                 
                 Semester_name: Semester_n,
             });
         }
     });
+
     return sem_data;
 }
+
+exports.p_addsemester = async (req, res) => {
+    try {
+        console.log(req.body);
+        console.log("continueeee");
+        console.log(req.file)
+        // console.log("complete");
+        const filepath = req.file.path;
+        const semester = await processExcelJSFile(filepath, req);
+        // // console.log("continueeee");
+        await Course_Allotment.insertMany(semester);
+        // console.log(semester);
+        // req.session.semester = semester;
+        res.send(semester);
+
+    } catch (err) {
+        console.log(err);
+        console.error("Error occured while proccesing and uploading semester data");
+        res.status(500).send("Error occured while proccesing and uploading semester data");
+    }
+};
+
+// async function processExcelFile(filepath, req) {
+//     const workbook = new Excel.Workbook();     //??workbook or Workbook??
+//     await workbook.xlsx.readFile(filepath);
+
+//     const workshhet = workbook.getWorksheet(1);
+//     const sem_data = [];
+
+//     const batch = req.body.batch;
+//     const degree = req.body.degree;
+//     const branch = req.body.branch;
+//     const Semester_n = req.body.name;
+//     const existingProgram = await Program.findOne({
+//         DegreeOffered: { name: degree },
+//         BranchOffered: { name: branch },
+//     });
+//     if (!existingProgram) {
+//         // Handle the case when the Program does not exist
+//         console.error('Program not found based on degree and branch names.');
+//         return sem_data; // or throw an error, depending on your use case
+//     }
+
+//     workshhet.eachRow(async (row, rownumber) => {
+
+//         if (rownumber > 1) {
+//             const course_id = row.getCell(1).value;
+//             const course_type = row.getCell(2).value;
+//             const faculty_assign = row.getCell(3).value;
+
+//             const obj1 = await Course.find({ Course_code: course_id });
+//             const obj2 = await Faculty.find({ fullname: faculty_assign });
+
+//             sem_data.push({
+//                 Program_associate: existingProgram._id,
+//                 Batch: batch,
+//                 Date_created: new Date(),
+//                 Courseallocate: {
+//                     Course_upload: obj1._id,
+//                     Course_type: course_type,
+//                     Faculty_assigned:  obj2._id,
+//                 },
+                
+//                 Semester_name: Semester_n,
+//             });
+//         }
+//     });
+//     return sem_data;
+// }
+
 // Admin Fee Management
 
 // Admin announcement

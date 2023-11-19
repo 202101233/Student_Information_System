@@ -88,40 +88,53 @@
                             <table>
                                 <thead>
                                    
-                                    <th style="width: 10%;">Sr No.</th>
+                                    <!-- <th style="width: 10%;">Sr No.</th> -->
                                     <th style="width: 15%;">Degree</th>
                                     <th style="width: 20%;">Branch</th>
                                     <th style="width: 20%;">Batch</th>
                                     <th style="width: 35%;">Upload</th>
+                                    <th style="width: 35%;"> Submit</th>
                                 </thead>
 
 
                                 <tbody>
                                     <div class="temp-div">
 
-                                        <% for(var i=0;i<program.length;i++) { %>
+                                        
+                                            
                                             <tr>
-                                                <td class="leftpad">
-                                                    <%= i+1%>
-                                                </td>
-                                                <td class="leftpad">
-                                                    <input type="hidden" name="degree" value="<%= program[i].DegreeOffered.Degree_name %>">
-                                                    <%= program[i].DegreeOffered.Degree_name %>
-                                                </td>
                                                 
-                                                <!-- <td class="leftpad" name="degree">
-                                                    <%= program[i].DegreeOffered.Degree_name %>
-                                                </td> -->
-                                                <td class="center-items">
-                                                    <input type="hidden" name="branch" value="<%= program[i].BranchOffered.Branch %>">
-                                                    <%= program[i].BranchOffered.Branch_name %>
-                                                </td>
-                                                
-                                                <!-- <td class="center-items" name="branch">
-                                                    <center >
-                                                        <%= program[i].BranchOffered.Branch_name%>
+                                                <td class="center-items" id="drop-1">
+                                                    <center>
+
+                                                        <select name="degree" id="course-dropdown" class="dropmenu">
+
+                                                            <option value="none" 
+                                                                class="dropitems">Select Degree</option>
+                                                                <% for(var i=0;i<program.length;i++) { %>
+                                                                    <option class="dropitmes" value="<%= program[i].DegreeOffered._id %>"><%= program[i].DegreeOffered.Degree_name %></option>
+                                                                    <% } %>
+                                                        </select>
+
                                                     </center>
-                                                </td> -->
+                                                </td>
+                                                
+                                                
+                                                <td class="center-items" id="drop-1">
+                                                    <center>
+
+                                                        <select name="branch" id="course-dropdown" class="dropmenu">
+
+                                                            <option value="none" 
+                                                                class="dropitems">Select Branch</option>
+                                                                <% for(var i=0;i<program.length;i++) { %>
+                                                                    <option class="dropitmes" value="<%= program[i].BranchOffered._id %>"><%= program[i].BranchOffered.Branch_name %></option>
+                                                                    <% } %>
+                                                        </select>
+                                                    </center>
+                                                </td>
+                                                
+                                               
                                                 <td class="center-items" id="drop-1">
                                                     <center>
 
@@ -132,12 +145,6 @@
                                                             <option class="dropitmes">2022</option>
                                                             <option class="dropitmes">2023</option>
 
-
-                                                            <!-- <% for(var j=0;j<program[i].CourseOffered.length;j++) { %>
-                                                    <option value="<%= program[i].CourseOffered[j].id %>">
-                                                        <%= program[i].CourseOffered[j].Course_Name %>
-                                                    </option>
-                                                <% } %> -->
                                                         </select>
 
                                                     </center>
@@ -145,27 +152,22 @@
                                                 <td class="center">
                                                     <center><input type="file" class="file-ip" name="excelfile"></center>
                                                 </td>
-                                                <!-- <td class="center">
-                                                    <center>
-                                                        <form action="/viewprogram" method="post">
-                                                            <button type="submit" name="delete"
-                                                                value="<%= program[i].id %>">
-                                                                <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
-                                                            </button>
-                                                        </form>
-                                                    </center>
-                                                </td> -->
-                                                <!-- <td class="center"><center><a href="#"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></center></td> -->
-                                            </tr>
-
-                                            <% } %>
+                                                <td>
+                                                    <div class="btn-place">
+                                                        <button type="submit" class="btn"><b>Submit</b></button>
+                                                    </div>
+                                                </td>
+                                                </tr>
+                                        
+                                           
                                     </div>
+        
                                 </tbody>
                             </table>
                         </div>
-                        <div class="btn-place">
+                        <!-- <div class="btn-place">
                             <button type="submit" class="btn"><b>Submit</b></button>
-                        </div>
+                        </div> -->
                 </form>
 
                 <!-- <table>
