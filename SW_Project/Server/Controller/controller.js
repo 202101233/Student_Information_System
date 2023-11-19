@@ -119,7 +119,7 @@ exports.p_facultylogin = async (req, res) => {
         const user = await Faculty.findOne({ Email_id: req.body.f_email });
         if (user) {
             //check if password matches
-            const result = req.body.f_password === user.Password;
+            const result = await bcrypt.compare(req.body.f_password, user.Password);
             if (result) {
                 const secret = "sagar";
                 const token = await jwt.sign({ "name": user.name, "email_id": user.Email_id }, secret);
@@ -167,8 +167,8 @@ exports.p_studentlogin = async (req, res) => {
         console.log(user);
         if (user) {
             //check if password matches
-
-            const loggedstudent = req.body.s_password === user.Password;
+            const loggedstudent = await bcrypt.compare(req.body.s_password, user.Password);
+            // const loggedstudent = req.body.s_password === user.Password;
             console.log("tttrrr");
             console.log(loggedstudent);
             if (loggedstudent) {
@@ -1207,38 +1207,43 @@ exports.g_changepwdfaculty = async (req, res) => {
 exports.p_changepwdfaculty = async (req, res) => {
     try {
         const stored_token = req.cookies.f_jwtoken;
+        console.log(stored_token);
         const verify_one = jwt.verify(stored_token, "sagar");
+        console.log(verify_one);
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id: email });
 
-        // const ID = req.Faculty.id;           //user here means fsculty or not?
         const { oldpwd, newpwd, confirmpwd } = req.body;
-        console.log(newpwd);
+        console.log(req.body);
 
-        if (newpwd != confirmpwd) {
+        if (newpwd != confirmpwd)                   //new password  check strong
+        {
             const title = "ERROR";
             const message = "New password and confirm password do not match!";
             const icon = "error";
             const href = "/changepwdfaculty";
-            res.render("alert.ejs", { title, message, icon, href });
+            res.render("Admin/alert.ejs", { title, message, icon, href });
 
             return res.status(400).send("New password and confirm password do not match!");
         }
-        // const user = await Faculty.findById(ID);
+        const user = await Faculty.findOne({ Email_id: email });
+        console.log(user);
+        // console.log(oldpwd);
+        // console.log(user.Password);
 
-        const pwdvalid = await bcrypt.compare(oldpwd, user.Password);
-
-        if (!pwdvalid) {
+        const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
+        console.log("PWD");
+        if (pwdinvalid) {
             const title = "ERROR";
-            const message = "Old Password is incorrect!";
+            const message = "Old Passward is incorrect!";
             const icon = "error";
             const href = "/changepwdfaculty";
-            res.render("alert.ejs", { title, message, icon, href });
+            res.render("Admin/alert.ejs", { title, message, icon, href });
 
             return res.status(401).send("Old password is incorrect!");
         }
 
         const hashedpwd = await bcrypt.hash(newpwd, saltRounds);
+        
         user.Password = hashedpwd;
         await user.save();
 
@@ -1246,10 +1251,10 @@ exports.p_changepwdfaculty = async (req, res) => {
         const message = "Password changed successfully!";
         const icon = "success";
         const href = "/facultyhome";
-        res.render("alert.ejs", { title, message, icon, href });
+        res.render("Admin/alert.ejs", { title, message, icon, href });
 
 
-        res.status(200).send("Password changed successfully");
+        res.status(200).send("Password changed successfully!");
 
     } catch (err) {
         console.error(err);
@@ -1618,28 +1623,36 @@ exports.g_changepwdstudent = async (req, res) => {
 
 exports.p_changepwdstudent = async (req, res) => {
     try {
-        const ID = req.Student.id;           //user here means student or not?
+        const stored_token = req.cookies.jwtokenstudent;
+        console.log(stored_token);
+        const verify_one = jwt.verify(stored_token, "sagar1");
+        console.log(verify_one);
+        const email = verify_one.email_id;
+
         const { oldpwd, newpwd, confirmpwd } = req.body;
+        console.log(req.body);
 
-        if (newpwd != confirmpwd) {
+        if (newpwd != confirmpwd)                   //new password  check strong
+        {
             const title = "ERROR";
-            const message = "New password and confirm password do not mathch!";
+            const message = "New password and confirm password do not match!";
             const icon = "error";
             const href = "/changepwdstudent";
-            res.render("alert.ejs", { title, message, icon, href });
+            res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return res.status(400).send("New password and confirm password do not mathch!");
+            return res.status(400).send("New password and confirm password do not match!");
         }
-        const user = await Admin.findById(ID);
+        const user = await Student.findOne({ Email_id: email });
+        console.log(user);
 
-        const pwdvalid = await bcrypt.compare(oldpwd, user.Password);
+        const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
 
-        if (!pwdvalid) {
+        if (pwdinvalid) {
             const title = "ERROR";
-            const message = "Old Password is incorrect!";
+            const message = "Old Passward is incorrect!";
             const icon = "error";
             const href = "/changepwdstudent";
-            res.render("alert.ejs", { title, message, icon, href });
+            res.render("Admin/alert.ejs", { title, message, icon, href });
 
             return res.status(401).send("Old password is incorrect!");
         }
@@ -1651,12 +1664,8 @@ exports.p_changepwdstudent = async (req, res) => {
         const title = "SUCCESS";
         const message = "Password changed successfully!";
         const icon = "success";
-        const href = "/viewstudent";
-        res.render("alert.ejs", { title, message, icon, href });
-
-
-        res.status(200).send("Password changed successfully");
-
+        const href = "/studenthome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while changing password!");
