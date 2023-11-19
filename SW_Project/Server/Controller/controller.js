@@ -1098,8 +1098,10 @@ async function processExcelFile(filepath) {
 
 exports.g_courseattendence = async (req, res) => {
     try {
-        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
-        const semester_name = last_sem.Semester_name;
+        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
+        // console.log(last_sem[0]);
+        const semester_name = last_sem[0].Semester_name;
+        // console.log(semester_name);
 
         // const f_name = req.Faculty.id;
         const stored_token = req.cookies.f_jwtoken;
@@ -1107,7 +1109,8 @@ exports.g_courseattendence = async (req, res) => {
         const email = verify_one.email_id;
         const user = await Faculty.find({ Email_id: email });
 
-        const f_name = user.fullname;
+        const f_name = user[0].fullname;
+        console.log(user)
 
         const coursesTaught = await Course_Allotment.aggregate([
             {
@@ -1122,12 +1125,22 @@ exports.g_courseattendence = async (req, res) => {
             {
                 $project: {
                     _id: 0, // Exclude the _id field from the result
-                    Course_upload: "$Courseallocate.Course_upload" // Include the Course_upload field from Courseallocate
+                    Course_code: "$Courseallocate.Course_code" // Include the Course_upload field from Courseallocate
                 }
             }
         ]);
+        // console.log(coursesTaught);
+        const courses=[];
+        for(var i=0; i<coursesTaught.length;i++)
+        {
+            const x= coursesTaught[i].Course_code;
+            const obj= await Course.findOne({Course_code: x});
+            courses.push(obj);
+        }
+        console.log(courses);
+        // res.send(correct);
 
-        res.render("Faculty/courseattendence.ejs", { coursesTaught, semester_name, user });
+        res.render("Faculty/courseattendence.ejs", { courses, semester_name, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching data");
@@ -1415,18 +1428,25 @@ exports.p_updatestudent = async (req, res) => {
 
 exports.g_courseregistration = async (req, res) => {
     try {
-        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 }).limit(1);
-        const sem_name = last_sem.Semester_name;
+        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
+        const sem_name = last_sem[0].Semester_name;
 
         //const ID = res.Student.id;
-
-        const student = await Student.findOne(_id = req.user);
-        const p_name = student.ProgramRegistered;
-        const batch = student.Batch;
+        const stored_token = req.cookies.jwtokenstudent;
+        const verify_one = jwt.verify(stored_token, "sagar1");
+        const email = verify_one.email_id;
+        const user = await Student.find({ Email_id: email });
+        // console.log(user[0]);
+ 
+       
+        const p_name = user[0].ProgramRegistered;
+        const batch = user[0].Batch;
+        // console.log(p_name);
+        // console.log(batch);
 
         const coursesTaught = await Course_Allotment.aggregate([
             {
-                $match: { Semester_name: sem_name, Program_associate: p_name, Batch: batch } // Match the documents with the specified semester name
+                $match: { Semester_name: sem_name, Program_associate: p_name._id, Batch: batch } // Match the documents with the specified semester name
             },
             {
                 $unwind: "$Courseallocate" // Deconstruct the Courseallocate array
@@ -1434,13 +1454,22 @@ exports.g_courseregistration = async (req, res) => {
             {
                 $project: {
                     _id: 0, // Exclude the _id field from the result
-                    Course_upload: "$Courseallocate.Course_upload",
+                    Course_code: "$Courseallocate.Course_code",
                     Course_type: "$Courseallocate.Course_type"// Include the Course_upload field from Courseallocate
                 }
             }
         ]);
+        const courses=[];
+        for(var i=0; i<coursesTaught.length;i++)
+        {
+            const x= coursesTaught[i].Course_code;
+            const obj= await Course.findOne({Course_code: x});
+            courses.push(obj);
+        }
+        // console.log(courses);
+        // console.log(coursesTaught);
 
-        res.render("Student/student-course-registration.ejs", { coursesTaught, sem_name, p_name, batch });
+        res.render("Student/student-course-registration.ejs", { courses, sem_name, p_name, batch, coursesTaught  });
     } catch (err) {
         res.status(500).send("An error occured while registering course");
     }
@@ -1448,18 +1477,29 @@ exports.g_courseregistration = async (req, res) => {
 
 exports.p_courseregistration = async (req, res) => {
     try {
-        if (req.body.register.length !== 6) {
+        console.log("holloo");
+        console.log(req.body);
+        if (req.body.register.length !== 5) {
             const title = "ERROR";
-            const message = "Please select only 6 courses!";
+            const message = "Please select only 5 courses!";
             const icon = "error";
             const href = "/courseregistration";
-            res.render("alert.ejs", { title, message, icon, href });
+            res.render("Admin/alert.ejs", { title, message, icon, href });
         }
 
-        const student = await Student.findById(req.user);
-        const semester = await Course_Allotment.findById(req.body.sem);
+        const stored_token = req.cookies.jwtokenstudent;
+        const verify_one = jwt.verify(stored_token, "sagar1");
+        const email = verify_one.email_id;
+        const user = await Student.find({ Email_id: email });
+        console.log(user[0]);
+
+        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
+        const sem_name = last_sem[0].Semester_name;
+
+        // const semester = await Course_Allotment.findById(req.body.sem);
 
         const courses = req.body.register;
+        console.log(courses);
 
         const newCourseEnrollment = new Course_Enrollment({
             studentEnrolled: student,
