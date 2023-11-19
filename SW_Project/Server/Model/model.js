@@ -262,7 +262,7 @@ const Course_AllotmentSchema = new mongoose.Schema({
     },
 
     Courseallocate : [{
-        Course_upload: {
+        Course_code: {
             type: String,
             required: true,
         },
@@ -270,7 +270,7 @@ const Course_AllotmentSchema = new mongoose.Schema({
             type : Boolean,
             required : true
         },
-        Faculty_assigned: {
+        Faculty_assigned : {
             type: String,
             required: true,
         },

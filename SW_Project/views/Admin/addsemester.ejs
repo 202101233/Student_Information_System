@@ -111,8 +111,8 @@
 
                                                             <option value="none" 
                                                                 class="dropitems">Select Degree</option>
-                                                                <% for(var i=0;i<program.length;i++) { %>
-                                                                    <option class="dropitmes" value="<%= program[i].DegreeOffered._id %>"><%= program[i].DegreeOffered.Degree_name %></option>
+                                                                <% for(var i=0;i<degree.length;i++) { %>
+                                                                    <option class="dropitmes" value="<%= degree[i]._id %>"><%= degree[i].Degree_name %></option>
                                                                     <% } %>
                                                         </select>
 
@@ -127,8 +127,8 @@
 
                                                             <option value="none" 
                                                                 class="dropitems">Select Branch</option>
-                                                                <% for(var i=0;i<program.length;i++) { %>
-                                                                    <option class="dropitmes" value="<%= program[i].BranchOffered._id %>"><%= program[i].BranchOffered.Branch_name %></option>
+                                                                <% for(var i=0;i<branch.length;i++) { %>
+                                                                    <option class="dropitmes" value="<%= branch[i]._id %>"><%= branch[i].Branch_name %></option>
                                                                     <% } %>
                                                         </select>
                                                     </center>
@@ -141,9 +141,9 @@
                                                         <select name="batch" id="course-dropdown" class="dropmenu">
                                                             <option value="none" selected disabled hidden
                                                                 class="dropitems">Select Batch</option>
+                                                            <option class="dropitmes">2020</option>
                                                             <option class="dropitmes">2021</option>
                                                             <option class="dropitmes">2022</option>
-                                                            <option class="dropitmes">2023</option>
 
                                                         </select>
 

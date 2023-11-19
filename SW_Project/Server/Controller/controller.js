@@ -3,7 +3,7 @@ var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Anno
 const { proppatch, use } = require('../Routes/router');
 
 const path = require("path");
-const bcrypt=require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 var cookieParser = require('cookie-parser');
@@ -15,27 +15,26 @@ const multer = require("multer");
 const Storage = multer.diskStorage({
     //destination for file
     destination: function (request, file, callback) {
-      if(file){
-        callback(null, './Assets/uploads/');
-      }
+        if (file) {
+            callback(null, './Assets/uploads/');
+        }
     },
 
     // destination:"./asserts/uploads/",
 
     //add back to extension
     filename: function (request, file, callback) {
-      if(file){  
-        callback(null, Date.now() + file.originalname);
-      }
-      else
-      {
-        callback(null, "NA");
-      }
+        if (file) {
+            callback(null, Date.now() + file.originalname);
+        }
+        else {
+            callback(null, "NA");
+        }
     },
 });
 
-const upload = multer({ 
-    storage : Storage,
+const upload = multer({
+    storage: Storage,
 });
 app.use(cookieParser());
 
@@ -162,7 +161,7 @@ exports.p_studentlogin = async (req, res) => {
         // console.log(pass)
         const user = await Student.findOne({ Email_id: req.body.s_email });
 
-       
+
         console.log("YYY");
         console.log(user);
         if (user) {
@@ -171,10 +170,9 @@ exports.p_studentlogin = async (req, res) => {
             const loggedstudent = req.body.s_password === user.Password;
             console.log("tttrrr");
             console.log(loggedstudent);
-                if(loggedstudent)
-                {
-                    const secret = "sagar1";
-                const token = await jwt.sign({ "name": user.firstname, "email_id": user.Email_id}, secret);
+            if (loggedstudent) {
+                const secret = "sagar1";
+                const token = await jwt.sign({ "name": user.firstname, "email_id": user.Email_id }, secret);
                 //console.log("YYY");
                 console.log(token);
                 console.log("TTT");
@@ -195,8 +193,8 @@ exports.p_studentlogin = async (req, res) => {
                 res.redirect("/studenthome");
                 //res.render("Student/studenthome.ejs",{student: user});
                 //console.log("nik");
-                }
-                 else {
+            }
+            else {
                 res.status(400).json({ error: "Password doesn't match" });
             }
         } else {
@@ -227,7 +225,7 @@ exports.g_facultyhome = (isLoggedInfaculty, async (req, res) => {
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id :email})
+        const user = await Faculty.find({ Email_id: email })
 
         res.render("Faculty/facultyhome.ejs", { user });
     } catch (err) {
@@ -241,7 +239,7 @@ exports.g_studenthome = (isLoggedInstudent, async (req, res) => {
         const Student_token = req.cookies.jwtokenstudent;
         const verified_student = jwt.verify(Student_token, "sagar1");
         const email = verified_student.email_id;
-        const student = await Student.find({Email_id: email});
+        const student = await Student.find({ Email_id: email });
         res.render("Student/studenthome.ejs", { student });
     } catch (err) {
         console.error(err);
@@ -306,15 +304,15 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
                 service: "gmail",
                 host: "smtp.gmail.com",
                 port: 587,
-                auth:{
-                    user:'202101234@daiict.ac.in',
-                    pass:'jhluwxctbddwqruz'
+                auth: {
+                    user: '202101234@daiict.ac.in',
+                    pass: 'jhluwxctbddwqruz'
                 },
-                tls:{
-                    rejectUnauthorized:false
+                tls: {
+                    rejectUnauthorized: false
                 }
             });
-    
+
             const mailOptions = {
                 from: '202101234@daiict.ac.in', // Sender's email address
                 to: req.body.email,//'202101234@daiict.ac.in', // Recipient's email address
@@ -326,21 +324,21 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
                     <p> <b> Email ID : </b> ${req.body.email} </p>
                     <p> <b> Password : </b> ${hashedPassward} </p> 
                     <a href= "http://localhost:8010/studentlogin">Click here to login</a>       
-                    `, 
-              };
+                    `,
+            };
 
-              console.log("mail continue again");
-    
-              transporter.sendMail(mailOptions, (error, info) => {
+            console.log("mail continue again");
+
+            transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                  console.error('Error:', error);
+                    console.error('Error:', error);
                 } else {
-                  console.log('Email sent:', info.response);
+                    console.log('Email sent:', info.response);
                 }
-                
+
                 // Close the transporter after sending the email
                 //transporter.close();
-              });
+            });
 
             // await transporter.sendMail(mailoption);
             console.log("student add sucessfully");
@@ -658,13 +656,10 @@ exports.p_addprogram = async (req, res) => {
 
 exports.g_addsemester = async (req, res) => {
     try {
-        const programs = await Program.find({})
-            .populate('DegreeOffered BranchOffered CourseOffered')
-            .exec();
+        const degree = await Degree.find({}).exec();
+        const branch = await Branch.find({}).exec();
 
-            // console.log(programs);
-
-        res.render("Admin/addsemester.ejs", { program: programs });
+        res.render("Admin/addsemester.ejs", { degree, branch });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching program data .....");
@@ -676,29 +671,14 @@ async function processExcelJSFile(filepath, req) {
     await workbook.xlsx.readFile(filepath);
 
     const workshhet = workbook.getWorksheet(1);
-    const sem_data = [];
+    const course_data = [];
     // console.log(req.body);
-    const batch = req.body.batch;
-   
-    const degree = req.body.degree;
-    // console.log( req.body.degree);
-    const branch = req.body.branch;
-    const Semester_n = req.body.name;
     // console.log("continueee");
-    const existingProgram = await Program.findOne({
-        DegreeOffered: degree ,
-        BranchOffered: branch,
-    });
-    if (!existingProgram) {
-        // Handle the case when the Program does not exist
-        console.error('Program not found based on degree and branch names.');
-        return sem_data; // or throw an error, depending on your use case
-    }
 
     workshhet.eachRow(async (row, rownumber) => {
 
         if (rownumber > 1) {
-            const course_id = row.getCell(1).value;
+            const course_code = row.getCell(1).value;
             const course_type = row.getCell(2).value;
             const faculty_assign = row.getCell(3).value;
 
@@ -706,22 +686,21 @@ async function processExcelJSFile(filepath, req) {
             // const obj2 = await Faculty.findOne({ fullname: faculty_assign });
             // console.log(obj1);
             // console.log(obj2);
-            sem_data.push({
-                Program_associate: existingProgram._id,
-                Batch: batch,
-                Date_created: new Date(),
-                Courseallocate: {
-                    Course_upload: course_id,
-                    Course_type: course_type,
-                    Faculty_assigned:  faculty_assign,
-                },
-                
-                Semester_name: Semester_n,
+            course_data.push({
+                // Program_associate: existingProgram._id,
+                // Batch: batch,
+                // Date_created: new Date(),
+                // Courseallocate: {
+                Course_code: course_code,
+                Course_type: course_type,
+                Faculty_assigned: faculty_assign,
+                // },
+                // Semester_name: Semester_n,
             });
         }
     });
 
-    return sem_data;
+    return course_data;
 }
 
 exports.p_addsemester = async (req, res) => {
@@ -731,12 +710,44 @@ exports.p_addsemester = async (req, res) => {
         console.log(req.file)
         // console.log("complete");
         const filepath = req.file.path;
-        const semester = await processExcelJSFile(filepath, req);
+        const course = await processExcelJSFile(filepath, req);
         // // console.log("continueeee");
+
+        const degree = req.body.degree;
+        const branch = req.body.branch;
+        const batch = req.body.batch;
+        const Semester_n = req.body.name;
+
+        const existingProgram = await Program.findOne({
+            DegreeOffered: degree,
+            BranchOffered: branch,
+        });
+
+        if (!existingProgram) {
+            // Handle the case when the Program does not exist
+            console.error('Program not found based on degree and branch names.');
+            return course; // or throw an error, depending on your use case
+        }
+
+        console.log(course);
+        const semester = {
+            Program_associate: existingProgram._id,
+            Batch: batch,
+            Date_created: new Date(),
+            Semester_name: Semester_n,
+            Courseallocate: course
+        }
+        console.log(semester);
         await Course_Allotment.insertMany(semester);
-        // console.log(semester);
+
         // req.session.semester = semester;
-        res.send(semester);
+        const title = "SUCCESS";
+        const message = "New semester added Successfully!";
+        const icon = "success";
+        const href = "/adminhome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+
+        //res.send(semester);
 
     } catch (err) {
         console.log(err);
@@ -785,7 +796,7 @@ exports.p_addsemester = async (req, res) => {
 //                     Course_type: course_type,
 //                     Faculty_assigned:  obj2._id,
 //                 },
-                
+
 //                 Semester_name: Semester_n,
 //             });
 //         }
@@ -815,8 +826,8 @@ exports.p_addmin_announcement = async (req, res) => {
             Description: description,
             Due_Date: due_date
         });
-    //    console.log(req.body);
-     
+        //    console.log(req.body);
+
 
 
         await newannouncement.save();
@@ -839,11 +850,11 @@ exports.g_changepwdadmin = async (req, res) => {
 
 exports.p_changepwdadmin = async (req, res) => {
     try {
-       const stored_token = req.cookies.jwtoken;
-       console.log(stored_token);
-       const verify_one = jwt.verify(stored_token, "sagar");
-       console.log(verify_one);
-       const email = verify_one.email_id;
+        const stored_token = req.cookies.jwtoken;
+        console.log(stored_token);
+        const verify_one = jwt.verify(stored_token, "sagar");
+        console.log(verify_one);
+        const email = verify_one.email_id;
 
         const { oldpwd, newpwd, confirmpwd } = req.body;
         console.log(req.body);
@@ -858,7 +869,7 @@ exports.p_changepwdadmin = async (req, res) => {
 
             return res.status(400).send("New password and confirm password do not match!");
         }
-        const user = await Admin.findOne({Email_id : email});
+        const user = await Admin.findOne({ Email_id: email });
         // console.log(user);
         // console.log(oldpwd);
         // console.log(user.Password);
@@ -915,8 +926,8 @@ exports.g_viewfaculty = async (req, res) => {
         const verify_one = jwt.verify(stored_token, "sagar");
         // console.log(verify_one);
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id :email})
-        
+        const user = await Faculty.find({ Email_id: email })
+
         //console.log(ID);
         console.log(user);
         res.render("Faculty/viewfaculty.ejs", { user });
@@ -964,7 +975,7 @@ exports.p_viewfaculty = async (req, res) => {
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id :email});
+        const user = await Faculty.find({ Email_id: email });
 
         const update = {
             fullname: req.body.fullname,
@@ -976,8 +987,8 @@ exports.p_viewfaculty = async (req, res) => {
         }
 
 
-        await Faculty.updateOne({ user , update }).exec();
-        
+        await Faculty.updateOne({ user, update }).exec();
+
         const title = "SUCCESS";
         const message = "Faculty details updated!";
         const icon = "success";
@@ -1001,7 +1012,7 @@ exports.g_coursegrade = async (req, res) => {
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id :email});
+        const user = await Faculty.find({ Email_id: email });
         const f_name = user.fullname;
 
         const coursesTaught = await Course_Allotment.aggregate([
@@ -1092,7 +1103,7 @@ exports.g_courseattendence = async (req, res) => {
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id :email});
+        const user = await Faculty.find({ Email_id: email });
 
         const f_name = user.fullname;
 
@@ -1182,7 +1193,7 @@ exports.g_changepwdfaculty = async (req, res) => {
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id :email});
+        const user = await Faculty.find({ Email_id: email });
         console.log(user);
         // const faculty = await Faculty.findOne({ _id: req.user });
         res.render("Faculty/changepwdfaculty.ejs", { user });
@@ -1196,8 +1207,8 @@ exports.p_changepwdfaculty = async (req, res) => {
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id :email});
-        
+        const user = await Faculty.find({ Email_id: email });
+
         // const ID = req.Faculty.id;           //user here means fsculty or not?
         const { oldpwd, newpwd, confirmpwd } = req.body;
         console.log(newpwd);
@@ -1263,15 +1274,15 @@ exports.g_viewstudent = async (req, res) => {
         const Student_token = req.cookies.jwtokenstudent;
         const verified_student = jwt.verify(Student_token, "sagar1");
         const email = verified_student.email_id;
-        const student = await Student.find({Email_id: email});
+        const student = await Student.find({ Email_id: email });
         const program = await Program.findById(student[0].ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
 
         // const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
         // console.log("ssssss");
         // console.log(program);
         // console.log("eeeee");
-        res.render("Student/student-profile.ejs", {student, program});
-        
+        res.render("Student/student-profile.ejs", { student, program });
+
         //mail code
 
         // const output = `<p>student profile has viewed</p>
@@ -1308,15 +1319,15 @@ exports.g_viewstudent = async (req, res) => {
         //     } else {
         //       console.log('Email sent:', info.response);
         //     }
-            
+
         //     // Close the transporter after sending the email
         //     transporter.close();
         //   });
 
-          }catch (err) {
+    } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
-          }
+    }
 }
 
 exports.g_updatestudent = async (req, res) => {
@@ -1325,7 +1336,7 @@ exports.g_updatestudent = async (req, res) => {
         const Student_token = req.cookies.jwtokenstudent;
         const verified_student = jwt.verify(Student_token, "sagar1");
         const email = verified_student.email_id;
-        const student = await Student.find({Email_id: email});
+        const student = await Student.find({ Email_id: email });
         console.log("start");
         console.log(student);
         console.log("end");
@@ -1334,7 +1345,7 @@ exports.g_updatestudent = async (req, res) => {
         console.log(program);
         console.log("eeeee");
 
-        res.render("Student/student-profile.ejs", { student,program});
+        res.render("Student/student-profile.ejs", { student, program });
 
     } catch (err) {
         console.error(err);
@@ -1471,16 +1482,16 @@ exports.g_viewgrade = async (req, res) => {
         const Student_token = req.cookies.jwtokenstudent;
         const verified_student = jwt.verify(Student_token, "sagar1");
         const email = verified_student.email_id;
-        const student = await Student.find({Email_id: email});
+        const student = await Student.find({ Email_id: email });
         // const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
-        const p_name =await Program.findById(student[0].ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');;
+        const p_name = await Program.findById(student[0].ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');;
         // const batch = user.Batch;
         console.log("hello");
         console.log(p_name);
         console.log("by");
         const sem_enroll = await Course_Enrollment.aggregate([
             {
-                $match: {studentenrolled: student[0]._id}     // batch or student????Program_associate: p_name,batch: Batch
+                $match: { studentenrolled: student[0]._id }     // batch or student????Program_associate: p_name,batch: Batch
             }
             // {
             //     $project: {
@@ -1493,7 +1504,7 @@ exports.g_viewgrade = async (req, res) => {
         console.log("eeee");
         console.log(sem_enroll);
         console.log("eeee");
-        res.render("Student/result.ejs", {student, sem_enroll});
+        res.render("Student/result.ejs", { student, sem_enroll });
     } catch (err) {
         res.status(500).send("An error occured while fetching semester data");
     }
@@ -1587,7 +1598,7 @@ exports.g_student_announcement = async (req, res) => {
         console.log("eeeee");
         console.log(valid_announcement);
         console.log("eeeee");
-        res.render("Student/student-announcement.ejs", {student, valid_announcement });
+        res.render("Student/student-announcement.ejs", { student, valid_announcement });
     } catch (err) {
         res.status(500).send("An error occured while fetching announcement data");
     }
