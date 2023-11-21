@@ -1060,7 +1060,45 @@ exports.g_coursegrade = async (req, res) => {
 }
 
 
-async function processExcelJSFile(filepath) {           //for attendence
+exports.p_coursegrade = async (req, res) => {
+    try {
+        console.log("AAAAAAAAAAAAAAA00");
+        console.log(req.file);
+        const filepath = req.file.path;
+        console.log(filepath);
+        // console.log("BBBBBBBBBBBBBBBBBBBBBB");
+        const grade = await processExcelJFile(filepath,req);
+        console.log(grade);
+        //await Grade.insertMany(grade);
+
+        const course = req.body.course;
+
+        console.log("helloo");
+        const coursegrade = {
+            G_courseEnrolled: course,
+            Grade_data : grade,
+            
+        }
+        console.log(coursegrade);
+        await Grade.insertMany(coursegrade);
+
+        // req.session.semester = semester;
+        const title = "SUCCESS";
+        const message = "Grade uploaded successfully!";
+        const icon = "success";
+        const href = "/facultyhome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+        //req.session.grade = grade;
+
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occured while adding grade data");
+    }
+}
+
+
+async function processExcelJFile(filepath) {           //for attendence
     const workbook = new ExcelJS.Workbook();     //??workbook or Workbook??
     await workbook.xlsx.readFile(filepath);
 
@@ -1078,7 +1116,7 @@ async function processExcelJSFile(filepath) {           //for attendence
             grade_data.push({
                 
                 Student_enrolled: stu_id,
-                Grade_data: grade,
+                Grade: grade,
             });
             // console.log(Student_enrolled);
 
@@ -1087,47 +1125,6 @@ async function processExcelJSFile(filepath) {           //for attendence
 
     return grade_data;
     
-}
-
-
-
-exports.p_coursegrade = async (req, res) => {
-    try {
-        console.log("AAAAAAAAAAAAAAA00");
-        console.log(req.file);
-        const filepath = req.file.path;
-        console.log(filepath);
-        // console.log("BBBBBBBBBBBBBBBBBBBBBB");
-        const grade = await processExcelJSFile(filepath,req);
-        console.log(grade);
-        //await Grade.insertMany(grade);
-
-        const course = req.body.course;
-
-        console.log("helloo");
-        const coursegrade = {
-            G_courseEnrolled: course,
-            Grade_data: grade,
-            
-        }
-        console.log(coursegrade);
-        // console.log("helo complete");
-        //await Grade.insertMany(coursegrade);
-
-        // req.session.semester = semester;
-        const title = "SUCCESS";
-        const message = "Grade uploaded successfully!";
-        const icon = "success";
-        const href = "/facultyhome";
-        res.render("Admin/alert.ejs", { title, message, icon, href });
-        //req.session.grade = grade;
-
-        //res.render("Faculty/coursegrade.ejs", { courses, semester_name, user });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("An error occured while adding grade data");
-    }
 }
 
 exports.g_courseattendence = async (req, res) => {
