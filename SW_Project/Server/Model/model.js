@@ -309,8 +309,7 @@ const GradeSchema = new mongoose.Schema({
     },
     Grade_data : [{
         Student_enrolled: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Student",
+            type: String,
             required: true
         },
         Grade : {

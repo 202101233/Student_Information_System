@@ -106,9 +106,9 @@ route.get('/updatefaculty', controller.g_updatefaculty);
 route.post('/updatefaculty', controller.p_updatefaculty);
 
 route.get('/coursegrade', controller.g_coursegrade);
-route.post('/coursegrade', controller.p_coursegrade);
+route.post('/coursegrade', upload.single('excelfile'), controller.p_coursegrade);
 
-route.post('/addgrade', controller.p_addgrade);
+//route.post('/addgrade', controller.p_addgrade);
 
 route.get('/courseattendence', controller.g_courseattendence);
 route.post('/courseattendence', upload.single('excelfile'), controller.p_courseattendence);
