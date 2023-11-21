@@ -1060,11 +1060,43 @@ exports.g_coursegrade = async (req, res) => {
 }
 
 
+async function processExcelJSFile(filepath) {           //for attendence
+    const workbook = new ExcelJS.Workbook();     //??workbook or Workbook??
+    await workbook.xlsx.readFile(filepath);
+
+    const workshhet = workbook.getWorksheet(1);
+    const grade_data = [];
+    // console.log(req.body);
+    // console.log("continueee");
+
+    workshhet.eachRow(async (row, rownumber) => {
+
+        if (rownumber > 1) {
+            const stu_id = row.getCell(1).value;
+            const grade = row.getCell(2).value;
+            
+            grade_data.push({
+                
+                Student_enrolled: stu_id,
+                Grade_data: grade,
+            });
+            // console.log(Student_enrolled);
+
+        }
+    });
+
+    return grade_data;
+    
+}
+
+
 
 exports.p_coursegrade = async (req, res) => {
     try {
         console.log("AAAAAAAAAAAAAAA00");
+        console.log(req.file);
         const filepath = req.file.path;
+        console.log(filepath);
         // console.log("BBBBBBBBBBBBBBBBBBBBBB");
         const grade = await processExcelJSFile(filepath,req);
         console.log(grade);
@@ -1097,22 +1129,6 @@ exports.p_coursegrade = async (req, res) => {
         res.status(500).send("An error occured while adding grade data");
     }
 }
-
-// exports.p_addgrade = (upload.single('excelfile'), async (req, res) => {
-//     try {
-//         const filepath = req.file.path;
-//         const grade = await processExcelJSFile(filepath, req);
-//         console.log(grade);
-//         //await Grade.insertMany(grade);
-
-//         //req.session.grade = grade;
-
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send("An error occured while adding grade data");
-//     }
-// })
-
 
 exports.g_courseattendence = async (req, res) => {
     try {
@@ -1171,9 +1187,10 @@ exports.p_courseattendence =  async (req, res) => {
     try {
         // console.log(req.body);
         console.log("continueeee");
-        // console.log(req.file);
+        console.log(req.file);
         // console.log("complete");
         const filepath = req.file.path;
+        console.log(filepath);
         const attendence = await processExcelJSFile(filepath, req);
         console.log(attendence);
 
@@ -1188,7 +1205,7 @@ exports.p_courseattendence =  async (req, res) => {
         }
         console.log(courseattendence);
         // console.log("helo complete");
-        await Attendance.insertMany(courseattendence);
+        //await Attendance.insertMany(courseattendence);
 
         // req.session.semester = semester;
         const title = "SUCCESS";
