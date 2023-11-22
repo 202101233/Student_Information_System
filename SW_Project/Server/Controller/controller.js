@@ -119,8 +119,8 @@ exports.p_facultylogin = async (req, res) => {
         const user = await Faculty.findOne({ Email_id: req.body.f_email });
         if (user) {
             //check if password matches
-            const result = await bcrypt.compare(req.body.f_password, user.Password);
-            //const result = await req.body.f_password === user.Password;
+            //const result = await bcrypt.compare(req.body.f_password, user.Password);
+            const result = await req.body.f_password === user.Password;
             
             if (result) {
                 const secret = "sagar";
@@ -1587,28 +1587,63 @@ exports.g_viewgrade = async (req, res) => {
         const verified_student = jwt.verify(Student_token, "sagar1");
         const email = verified_student.email_id;
         const student = await Student.find({ Email_id: email });
-        const program = await Program.findById(student.ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
-        const p_name = await Program.findById(student[0].ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');;
-        // const batch = user.Batch;
-        console.log("hello");
-        console.log(p_name);
-        console.log("by");
-        const sem_enroll = await Course_Enrollment.aggregate([
-            {
-                $match: { studentenrolled: student[0]._id }     // batch or student????Program_associate: p_name,batch: Batch
-            }
-            // {
-            //     $project: {
-            //         _id: 0, // Exclude the _id field from the result
-            //         Semester_name: Course_Allotment.find().sort({ Date_created: -1 }).limit(1)
-            //     }
-            // }
-        ])
 
-        console.log("eeee");
-        console.log(sem_enroll);
-        console.log("eeee");
-        res.render("Student/result.ejs", { student, sem_enroll, program });
+        const p_name = await Program.findById(student[0].ProgramRegistered).populate('DegreeOffered BranchOffered CourseOffered');
+        //console.log(student);
+        // console.log(p_name);
+        console.log("hello");
+        //console.log(p_name);
+        console.log("by");
+        
+        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
+        const sem_name = last_sem[0].Semester_name;
+        
+        const courses = await Course_Enrollment.findOne({Student_enrolled : student._id, semesterEnrolled : sem_name});
+        if(!courses)
+        {
+            const title = "ERROR";
+            const message = "Student has not registered yet!";
+            const icon = "error";
+            const href = "/studenthome";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+
+            return res.status(400).send("Student has not registered yet!");
+        }
+        const enrolledcourse = courses.courseEnrolled;
+
+        const data = await Grade.aggregate([
+            {
+                $unwind :  "$Grade_data"
+            },
+            {
+                $match :{ "Grade_data.Student_enrolled" : student[0].stud_id}
+            },
+            {
+                $lookup: {
+                    from: 'enrolledcourse', // Replace 'courses' with the appropriate collection name for Course model
+                    localField: 'G_courseEnrolled',
+                    foreignField: '_id',
+                    as: 'courseDetails'
+                }
+            },
+            {
+                $project: {
+                    _id: 0, // Exclude the _id field from the result
+                    grade : '$Grade_data.Grade',  
+                }
+            }
+        ])
+        console.log("Hello");
+        console.log(data);
+
+        const Courses = [];
+        for(let i=0;i<enrolledcourse.length;i++)
+        {
+            const x = enrolledcourse[i];
+            const obj = await Course.findById(x);
+            Courses.push(obj);
+        }
+        res.render("Student/result.ejs", { student, sem_name, data, Courses , p_name});
     } catch (err) {
         res.status(500).send("An error occured while fetching semester data");
     }
