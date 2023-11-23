@@ -119,8 +119,8 @@ exports.p_facultylogin = async (req, res) => {
         const user = await Faculty.findOne({ Email_id: req.body.f_email });
         if (user) {
             //check if password matches
-            //const result = await bcrypt.compare(req.body.f_password, user.Password);
-            const result = await req.body.f_password === user.Password;
+            const result = await bcrypt.compare(req.body.f_password, user.Password);
+            //const result = await req.body.f_password === user.Password;
             
             if (result) {
                 const secret = "sagar";
