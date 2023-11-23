@@ -37,7 +37,7 @@
     
                 </div>
                 <div class="currusername">
-                    <%= student.firstname%>
+                    <%= student[0].firstname%>
                 </div>
             </div>
         </div>
@@ -88,19 +88,21 @@
                     <p class="center-and-bold">Grade-Points Earned</p>
                     <p class="center-and-bold">SPI</p>
                     <p class="center-and-bold">CPI</p>
-                    <% var spi = 0, tot_credit=0%>
+                    <% var spi = 0, total=0,  tot_credit=0%>
                     <% for (var i=0; i <Courses.length; i++) { %>
                         <% tot_credit += Courses[i].Course_credit%>
-                        <% spi += data[i].grade*Courses[i].Course_credit %>
+                        <% total += data[i].grade*Courses[i].Course_credit %>
 
                     <% } %>
 
                     
-                    <!-- <% spi = Math.round(spi*100)/100%> -->
+                    <% spi = Math.round(spi*100)/100%>
                     <p class="grid-item"><%=tot_credit%></p>
                     <p class="grid-item"><%=tot_credit%></p>
+                    <p class="grid-item"><%= total %></p>
+                    <% total /= tot_credit %>
+                    <% spi = Math.round(total*100)/100%>
                     <p class="grid-item"><%= spi %></p>
-                    <p class="grid-item"><%= spi /= tot_credit %></p>
                     <p class="grid-item">7.80</p>
 
                 </div>

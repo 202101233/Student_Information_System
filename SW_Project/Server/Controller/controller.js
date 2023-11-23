@@ -1,5 +1,5 @@
-var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Announcement,
-    Course_Allotment, Attendance, Grade, Course_Enrollment, Result } = require('../Model/model');
+var { Student, Admin, Faculty, Degree, Branch, Course, Program, Announcement,
+    Course_Allotment, Attendance, Grade, Course_Enrollment } = require('../Model/model');
 const { proppatch, use } = require('../Routes/router');
 
 const path = require("path");
@@ -1064,7 +1064,7 @@ exports.p_updatefaculty = async (req, res) => {
             const message = " Mobile no is invalid";
             const icon = "error";
             const href = "/updatefaculty";
-            res.status(401).render("alert.ejs", { title, message, icon, href });
+            res.status(401).render("Admin/alert.ejs", { title, message, icon, href });
         }
 
         // const validemail = validator.(req.body.myemail);
@@ -1080,7 +1080,7 @@ exports.p_updatefaculty = async (req, res) => {
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
         const user = await Faculty.find({ Email_id: email });
-
+      
         const update = {
             fullname: req.body.fullname,
             phoneNo: req.body.mobileNO,
@@ -1088,9 +1088,10 @@ exports.p_updatefaculty = async (req, res) => {
             DOB: req.body.dob,
             Gender: req.body.gender,
             Education: req.body.degree,
-            Faculty_Block: req.body.fb
+            Faculty_Block: req.body.fb,
+            // Biography: req.body.biography
         }
-
+       console.log(update);
 
         await Faculty.updateOne({_id:user[0]._id} , update);
         
@@ -1301,11 +1302,11 @@ exports.p_courseattendence =  async (req, res) => {
         }
         console.log(courseattendence);
         // console.log("helo complete");
-        //await Attendance.insertMany(courseattendence);
+        await Attendance.insertMany(courseattendence);
 
         // req.session.semester = semester;
         const title = "SUCCESS";
-        const message = "New semester added Successfully!";
+        const message = "Attendence uploaded Successfully!";
         const icon = "success";
         const href = "/facultyhome";
         res.render("Admin/alert.ejs", { title, message, icon, href });
@@ -1620,7 +1621,7 @@ exports.g_courseregistration = async (req, res) => {
         // console.log(courses);
         // console.log(coursesTaught);
 
-        res.render("Student/student-course-registration.ejs", { courses, sem_name, p_name, batch, coursesTaught  });
+        res.render("Student/student-course-registration.ejs", { courses, sem_name, p_name, batch, coursesTaught, user  });
     } catch (err) {
         res.status(500).send("An error occured while registering course");
     }
@@ -1883,7 +1884,10 @@ exports.g_viewattendence = async (req, res) => {
 
 exports.g_student_announcement = async (req, res) => {
     try {
-        const student = await Student.findOne(_id = req.user);
+        const Student_token = req.cookies.jwtokenstudent;
+        const verified_student = jwt.verify(Student_token, "sagar1");
+        const email = verified_student.email_id;
+        const student = await Student.find({ Email_id: email });
         const announcements = await Announcement.find({}).exec();
 
         const Curr_date = new Date();
@@ -1910,7 +1914,12 @@ exports.g_student_announcement = async (req, res) => {
 // Change Pwd Student
 exports.g_changepwdstudent = async (req, res) => {
     try {
-        const student = await Student.findOne({ _id: req.user });
+        const stored_token = req.cookies.jwtokenstudent;
+        console.log(stored_token);
+        const verify_one = jwt.verify(stored_token, "sagar1");
+        console.log(verify_one);
+        const email = verify_one.email_id;
+        const student = await Student.findOne({ Email_id: email });
         res.render("Student/changepwdstudent.ejs", { student });
     } catch (err) {
         res.status(500).send("Internal Server Error");
