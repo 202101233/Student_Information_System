@@ -134,7 +134,7 @@ body{
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
-    
+    margin-top: 2vh;
     
 }
 
@@ -145,7 +145,7 @@ table{
     border-collapse: separate;
     border-spacing: 2.4vh 2vw;
     height: 100%;
-    position: relative;
+    /* position: relative; */
     
     table-layout: fixed;
 }
@@ -217,25 +217,25 @@ tr:hover{
 
 .btn-place{
     
-    height: 6vh;
+    height: 4.5vh;
     width: 71.5%;
-    margin-bottom: 2vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 5vh;
     
-}
-
-.btn{
+    width: 100%;
+    
+  }
+  
+  .btn{
     color: white;
     background-color: rgb(3, 142, 1);
     border: 1px solid whitesmoke;
-    height: 6vh;
+    height: 100%;
     padding-left: 1vw;
     padding-right: 1vw;
     border-radius: 10px;
-    font-size: 2.5vh;
+    font-size: 2.2vh;
   
   }
   
@@ -244,3 +244,45 @@ tr:hover{
       transform: scale(1.1);
   }
 
+  /* made some changes for upper bar */
+  
+  .upper-form{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+    border: 2px solid red;
+    backdrop-filter: blur(50px);
+  }
+  
+  
+  .upper-form .up-table{
+    
+    /* box-shadow: 2px 2px 2px black;  */
+    border: 2px solid green;
+    border-radius: 10px;
+    width: 70vw; 
+    height: 1vh;
+    min-height: 0px;
+    /* padding: 1vh; */
+  }
+  
+  .upper-form .up-table .cl1{
+    height: 4vh;
+    background: transparent;
+    
+  }
+  
+  .dropmenu{
+    border: 2px solid black;
+    border-radius: 8px;
+    height: 3vh;
+    width: 10vw;
+    font-size: 1.9vh;
+  }
+  
+  .file-ip{
+    height: 90%;
+    font-size: 1.9vh;
+  }

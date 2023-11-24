@@ -144,12 +144,13 @@ option{
 /* common page ends here */
 
 .editbranch-wrapper{
-  border: 1px solid black;
-  height: 40%;
+  
+  height: 50%;
   width: 40%;
+  padding: 6vh;
   border-radius: 13px;
   backdrop-filter: blur(100px);
-  box-shadow: 2px 2px 2px gray;
+  box-shadow: 2px 2px 2px black;
 }
 
 .editbranch-wrapper:hover{
@@ -159,7 +160,7 @@ option{
 
 .maintag-place{
     
-    height: 20%;
+    height: 22%;
     width: 100%;
     margin-bottom: 5vh;
     display: flex;
@@ -174,7 +175,7 @@ option{
 
 .temp-wrapper{
     
-    height: 20%;
+    height: 7vh;
     width: 100%;
     margin-bottom: 3vh;
     display: flex;
@@ -184,22 +185,25 @@ option{
 .tag-place{
     
     height: 100%;
-    width: 30%;
+    width: 34%;
     display: flex;
     align-items: center;
+    
 }
 
 .tag-text{
     font-size: 2vh;
-    margin-left: 1vw;
+    
 }
 
 .inputbox-place{
     
     height: 100%;
     width: 70%;
+    
     display: flex;
     align-items: center;
+    
 }
 
 .ip-box{
@@ -209,6 +213,7 @@ option{
     text-decoration: none;
     border: 1px solid black;
     border-radius: 10px;
+    
 }
 
 .ip-box:focus{
@@ -218,7 +223,7 @@ option{
 }
 
 #ip-name{
-    width: 94%;
+    width: 100%;
 }
 
 #ip-code{
@@ -231,7 +236,7 @@ option{
 
 .btn-place{
      
-     height: 16%;
+     height: 6vh;
      width: 100%;
      margin-top: 8vh;
      display: flex;

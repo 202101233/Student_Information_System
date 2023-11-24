@@ -167,7 +167,7 @@ option{
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 15px;
+    font-size: 1.8vh;
     color: whitesmoke;
     border-radius: 13px;
     background-color: rgb(2, 26, 51);
@@ -176,10 +176,11 @@ option{
 
 .temp-wrapper{
     
-    height: 17%;
+    height: 6vh;
     width: 100%;
     margin-bottom: 3vh;
     display: flex;
+    
    
 }
 
@@ -233,7 +234,7 @@ option{
 
 .btn-place{
      
-     height: 15%;
+     height: 6vh;
      width: 100%;
      margin-top: 5vh;
      display: flex;

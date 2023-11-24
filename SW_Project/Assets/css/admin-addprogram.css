@@ -144,8 +144,8 @@ option{
 /* common page ends here */
 
 .addcourse-wrapper{
-  border: 1px solid black;
-  height: 70%;
+  
+  height: 75%;
   width: 40%;
   border-radius: 13px;
   padding: 6vh;
@@ -176,7 +176,7 @@ option{
 
 .temp-wrapper{
     
-    height: 10%;
+    height: 6vh;
     width: 100%;
     margin-bottom: 3vh;
     display: flex;
@@ -210,7 +210,7 @@ option{
 
 .btn-place{
      
-     height: 10%;
+     height: 6vh;
      width: 100%;
      margin-top: 8vh;
      display: flex;
@@ -249,3 +249,6 @@ option{
     background: transparent;
   }
 
+#for-long{
+    height: 10vh;
+}

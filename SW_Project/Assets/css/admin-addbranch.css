@@ -144,12 +144,13 @@ option{
 /* common page ends here */
 
 .addcourse-wrapper{
-  border: 1px solid black;
-  height: 40%;
+  
+  height: 50%;
+  padding: 6vh;
   width: 40%;
   border-radius: 13px;
   backdrop-filter: blur(100px);
-  box-shadow: 2px 2px 2px gray;
+  box-shadow: 2px 2px 2px black;
 }
 
 .addcourse-wrapper:hover{
@@ -174,7 +175,7 @@ option{
 
 .temp-wrapper{
     
-    height: 20%;
+    height: 7vh;
     width: 100%;
     margin-bottom: 3vh;
     display: flex;
@@ -184,7 +185,7 @@ option{
 .tag-place{
     
     height: 100%;
-    width: 30%;
+    width: 38%;
     display: flex;
     align-items: center;
 }
@@ -231,7 +232,7 @@ option{
 
 .btn-place{
      
-     height: 16%;
+     height: 6vh;
      width: 100%;
      margin-top: 8vh;
      display: flex;
