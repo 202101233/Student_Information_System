@@ -74,8 +74,8 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
             console.log(user)
             console.log(user.admin_name)
             //check if password matches
-            //const result = await bcrypt.compare(req.body.a_password, user.Password);
-            const result = await req.body.a_password === user.Password;
+            const result = await bcrypt.compare(req.body.a_password, user.Password);
+            // const result = await req.body.a_password === user.Password;
             console.log(req.body.a_password);
             console.log(user.Password);
             if (result) {
@@ -131,7 +131,7 @@ exports.p_facultylogin = async (req, res) => {
             //check if password matches
             const result = await bcrypt.compare(req.body.f_password, user.Password);
             //const result = await req.body.f_password === user.Password;
-            
+
             if (result) {
                 const secret = "sagar";
                 const token = await jwt.sign({ "name": user.name, "email_id": user.Email_id }, secret);
@@ -217,7 +217,7 @@ exports.g_adminhome = (async (req, res) => {
         await isLoggedInadmin(req);
         console.log("jay");
         console.log(req.body);
-        
+
         const stored_token = req.cookies.jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
@@ -265,29 +265,29 @@ exports.g_studentregistration = (isLoggedInstudent, async (req, res) => {
     const verify_one = jwt.verify(stored_token, "sagar");
     const email = verify_one.email_id;
     const user = await Admin.find({ Email_id: email })
-    res.render("Admin/studentregistration.ejs", {user});
+    res.render("Admin/studentregistration.ejs", { user });
 })
 
 exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  mail valu baki
     try {
 
-        if (req.body.email.split("@")[1] != "daiict.ac.in") {
+        if (req.body.i_email.split("@")[1] != "daiict.ac.in") {
             const title = "ERROR";
             const message = "Invalid Email";
             const icon = "error";
             const href = "/admin-student-registration";
             res.render("Admin/alert.ejs", { title, message, icon, href });
-
+            return ;
         }
 
-        const ID = req.body.email.split("@")[0];
-        const batch = req.body.email.substr(0, 4);
+        const ID = req.body.i_email.split("@")[0];
+        const batch = req.body.i_email.substr(0, 4);
         // console.log(ID);
         // console.log(batch);
         // console.log(req.body.email)
-        const student = await Student.findOne({ Email_id: req.body.email });
+        const student = await Student.findOne({ Email_id: req.body.i_email });
         console.log(student);
-        
+
 
         if (student) {
             // console.log(student)
@@ -297,11 +297,12 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
             const icon = "error";
             const href = "/admin-student-registration";
             res.render("Admin/alert.ejs", { title, message, icon, href });
-
+            return;
         }
         else {
             console.log("hiiii");
             const randompass = generatePass();
+            console.log(randompass);
             const hashedPassward = await bcrypt.hash(randompass, saltRounds);
 
             const newstudent = new Student({
@@ -309,11 +310,12 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
                 middlename: req.body.name.split(" ")[2],
                 lastname: req.body.name.split(" ")[1],
                 stud_id: ID,
-                Email_id: req.body.email,
+                Email_id: req.body.i_email,
                 Password: hashedPassward,
-                Batch: batch
+                Batch: batch,
+                Personal_Email_id : req.body.p_email
             })
-            // console.log(newstudent);
+            console.log(newstudent);
             await newstudent.save();
             // res.send("save sucecssfully");
 
@@ -332,13 +334,13 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
 
             const mailOptions = {
                 from: '202101234@daiict.ac.in', // Sender's email address
-                to: req.body.email,//'202101234@daiict.ac.in', // Recipient's email address
+                to: req.body.p_email,//'202101234@daiict.ac.in', // Recipient's email address
                 subject: "Account Created", // Subject of the email
                 text: 'This is a test email sent from Node.js using Nodemailer.',
                 html: `
                     <h2> Your student account has been created. </h2>
                     <p> Here are information : </p>
-                    <p> <b> Email ID : </b> ${req.body.email} </p>
+                    <p> <b> Email ID : </b> ${req.body.i_email} </p>
                     <p> <b> Password : </b> ${randompass} </p> 
                     <a href= "http://localhost:8010/studentlogin">Click here to login</a>       
                     `,
@@ -380,27 +382,28 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
 
 
 function generatePass() {
-    var pass = " ";
-    var str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789@#$";
-
-    for (let i = 1; i <= 10; i++) {
-        var char = Math.floor(Math.random() + str.length + 1);
-        pass += str.charAt(char);
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}|:<>?-=[];,./';
+    let password = '';
+    
+    for (let i = 0; i < 12; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      password += characters.charAt(randomIndex);
     }
-    return pass;
-
+    
+    return password;
 }
+
 // Admin Course Management
 
 exports.g_viewcourse = async (req, res) => {
     try {
         const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
         const courses = await Course.find({}).exec();
         console.log(courses);
-        res.render("Admin/viewcourse.ejs", { course: courses , user});
+        res.render("Admin/viewcourse.ejs", { course: courses, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching course data");
@@ -411,11 +414,11 @@ exports.p_viewcourse = async (req, res) => {
     try {
         if (req.body.edit) {
             const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+            const verify_one = jwt.verify(stored_token, "sagar");
+            const email = verify_one.email_id;
+            const user = await Admin.find({ Email_id: email })
             const course = await Course.findOne({ _id: req.body.edit });
-            res.render("Admin/updatecourse.ejs", { course , user});
+            res.render("Admin/updatecourse.ejs", { course, user });
         }
         else {
             await Course.deleteOne({ _id: req.body.delete }).exec();
@@ -451,21 +454,20 @@ exports.g_addcourse = async (req, res) => {
     const verify_one = jwt.verify(stored_token, "sagar");
     const email = verify_one.email_id;
     const user = await Admin.find({ Email_id: email })
-    res.render("Admin/addcourse.ejs", {user});
+    res.render("Admin/addcourse.ejs", { user });
 }
 
 exports.p_addcourse = async (req, res) => {
     // res.send("helloo");
     try {
-        const existcourse= await Course.findOne({Course_code : req.body.code});
-        if(existcourse)
-        {
+        const existcourse = await Course.findOne({ Course_code: req.body.code });
+        if (existcourse) {
             const title = "ERROR";
-        const message = "Course already exists!";
-        const icon = "error";
-        const href = "/adminHome";
-        res.render("Admin/alert.ejs", { title, message, icon, href });
-        return;
+            const message = "Course already exists!";
+            const icon = "error";
+            const href = "/adminHome";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+            return;
         }
         const newcourse = new Course({
             Course_Name: req.body.name,
@@ -491,12 +493,12 @@ exports.p_addcourse = async (req, res) => {
 exports.g_viewdegree = async (req, res) => {
     try {
         const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
 
         const degrees = await Degree.find({}).exec();
-        res.render("Admin/viewdegree.ejs", { degree: degrees , user });
+        res.render("Admin/viewdegree.ejs", { degree: degrees, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching degree data");
@@ -507,12 +509,12 @@ exports.p_viewdegree = async (req, res) => {
     try {
         if (req.body.edit) {
             const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+            const verify_one = jwt.verify(stored_token, "sagar");
+            const email = verify_one.email_id;
+            const user = await Admin.find({ Email_id: email })
 
             const degree = await Degree.findOne({ _id: req.body.edit });
-            res.render("Admin/updatedegree.ejs", { degree , user});
+            res.render("Admin/updatedegree.ejs", { degree, user });
         }
         else {
             await Degree.deleteOne({ _id: req.body.delete }).exec();
@@ -547,20 +549,19 @@ exports.g_adddegree = async (req, res) => {
     const email = verify_one.email_id;
     const user = await Admin.find({ Email_id: email })
 
-    res.render("Admin/adddegree.ejs", {user});
+    res.render("Admin/adddegree.ejs", { user });
 }
 
 exports.p_adddegree = async (req, res) => {
     try {
-        const existdegree= await Degree.findOne({Degree_name : req.body.name});
-        if(existdegree)
-        {
+        const existdegree = await Degree.findOne({ Degree_name: req.body.name });
+        if (existdegree) {
             const title = "ERROR";
-        const message = "Degree already exists!";
-        const icon = "error";
-        const href = "/adminHome";
-        res.render("Admin/alert.ejs", { title, message, icon, href });
-        return;
+            const message = "Degree already exists!";
+            const icon = "error";
+            const href = "/adminHome";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+            return;
         }
         const newdegree = new Degree({
             Degree_name: req.body.name
@@ -583,10 +584,10 @@ exports.p_adddegree = async (req, res) => {
 exports.g_viewbranch = async (req, res) => {
     try {
         const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
-        
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
+
         const branches = await Branch.find({}).exec();
         res.render("Admin/viewbranch.ejs", { branch: branches, user });
     } catch (err) {
@@ -599,10 +600,10 @@ exports.p_viewbranch = async (req, res) => {
     try {
         if (req.body.edit) {
             const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
-    
+            const verify_one = jwt.verify(stored_token, "sagar");
+            const email = verify_one.email_id;
+            const user = await Admin.find({ Email_id: email })
+
             const branch = await Branch.findOne({ _id: req.body.edit });
             console.log(branch);
             res.render("Admin/updatebranch.ejs", { branch, user });
@@ -639,20 +640,19 @@ exports.g_addbranch = async (req, res) => {
     const verify_one = jwt.verify(stored_token, "sagar");
     const email = verify_one.email_id;
     const user = await Admin.find({ Email_id: email })
-    res.render("Admin/addbranch.ejs", {user});
+    res.render("Admin/addbranch.ejs", { user });
 }
 
 exports.p_addbranch = async (req, res) => {
     try {
-        const existbranch= await Branch.findOne({Branch_name : req.body.name});
-        if(existbranch)
-        {
+        const existbranch = await Branch.findOne({ Branch_name: req.body.name });
+        if (existbranch) {
             const title = "ERROR";
-        const message = "Branch already exists!";
-        const icon = "error";
-        const href = "/adminHome";
-        res.render("Admin/alert.ejs", { title, message, icon, href });
-        return;
+            const message = "Branch already exists!";
+            const icon = "error";
+            const href = "/adminHome";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+            return;
         }
         const newbranch = new Branch({
             Branch_name: req.body.name
@@ -675,9 +675,9 @@ exports.p_addbranch = async (req, res) => {
 exports.g_viewprogram = async (req, res) => {
     try {
         const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
         const programs = await Program.find({})
             .populate('DegreeOffered BranchOffered CourseOffered')
             .exec();
@@ -708,14 +708,14 @@ exports.p_viewprogram = async (req, res) => {
 exports.g_addprogram = async (req, res) => {
     try {
         const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
         const degrees = await Degree.find({}).exec();
         const branches = await Branch.find({}).exec();
         const courses = await Course.find({}).exec();
         res.render("Admin/addprogram.ejs", { degrees, branches, courses, user });
-        
+
 
     } catch (err) {
         console.error(err);
@@ -727,20 +727,19 @@ exports.p_addprogram = async (req, res) => {
     try {
         const { degree, branch, courses } = req.body;
         console.log(degree.Degree_name);
-      
+
 
         const existingProgram = await Program.findOne({
             DegreeOffered: degree,
             BranchOffered: branch,
         });
-        if(existingProgram)
-        {
+        if (existingProgram) {
             const title = "ERROR";
-        const message = "Program already exists!";
-        const icon = "error";
-        const href = "/adminHome";
-        res.render("Admin/alert.ejs", { title, message, icon, href });
-        return;
+            const message = "Program already exists!";
+            const icon = "error";
+            const href = "/adminHome";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+            return;
         }
 
 
@@ -766,20 +765,20 @@ exports.p_addprogram = async (req, res) => {
 exports.g_addsemester = async (req, res) => {
     try {
         const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
         const degree = await Degree.find({}).exec();
         const branch = await Branch.find({}).exec();
 
-        res.render("Admin/addsemester.ejs", { degree, branch , user});
+        res.render("Admin/addsemester.ejs", { degree, branch, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching program data .....");
     }
 }
 
-async function processExcelJSFile(filepath, req) {
+async function processExcelFile(filepath, req) {
     const workbook = new ExcelJS.Workbook();     //??workbook or Workbook??
     await workbook.xlsx.readFile(filepath);
 
@@ -823,7 +822,7 @@ exports.p_addsemester = async (req, res) => {
         console.log(req.file)
         // console.log("complete");
         const filepath = req.file.path;
-        const course = await processExcelJSFile(filepath, req);
+        const course = await processExcelFile(filepath, req);
         // // console.log("continueeee");
 
         const degree = req.body.degree;
@@ -868,63 +867,14 @@ exports.p_addsemester = async (req, res) => {
     }
 };
 
-// async function processExcelFile(filepath, req) {
-//     const workbook = new Excel.Workbook();     //??workbook or Workbook??
-//     await workbook.xlsx.readFile(filepath);
-
-//     const workshhet = workbook.getWorksheet(1);
-//     const sem_data = [];
-
-//     const batch = req.body.batch;
-//     const degree = req.body.degree;
-//     const branch = req.body.branch;
-//     const Semester_n = req.body.name;
-//     const existingProgram = await Program.findOne({
-//         DegreeOffered: { name: degree },
-//         BranchOffered: { name: branch },
-//     });
-//     if (!existingProgram) {
-//         // Handle the case when the Program does not exist
-//         console.error('Program not found based on degree and branch names.');
-//         return sem_data; // or throw an error, depending on your use case
-//     }
-
-//     workshhet.eachRow(async (row, rownumber) => {
-
-//         if (rownumber > 1) {
-//             const course_id = row.getCell(1).value;
-//             const course_type = row.getCell(2).value;
-//             const faculty_assign = row.getCell(3).value;
-
-//             const obj1 = await Course.find({ Course_code: course_id });
-//             const obj2 = await Faculty.find({ fullname: faculty_assign });
-
-//             sem_data.push({
-//                 Program_associate: existingProgram._id,
-//                 Batch: batch,
-//                 Date_created: new Date(),
-//                 Courseallocate: {
-//                     Course_upload: obj1._id,
-//                     Course_type: course_type,
-//                     Faculty_assigned:  obj2._id,
-//                 },
-
-//                 Semester_name: Semester_n,
-//             });
-//         }
-//     });
-//     return sem_data;
-// }
-
-
 // Admin announcement
 
 exports.g_admin_announcement = async (req, res) => {
     try {
         const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
         const announcement = await Announcement.find({}).exec();
         res.render("Admin/admin-announcement.ejs", { announcement, user });
     } catch (err) {
@@ -935,13 +885,12 @@ exports.g_admin_announcement = async (req, res) => {
 exports.p_addmin_announcement = async (req, res) => {
     try {
         // const { description, due_date } = req.body;
-        const abc=req.body.title;
+        const abc = req.body.title;
         console.log(abc);
         const description = req.body.description;
         const due_date = req.body.due_date;
 
-        if(new Date(due_date)<=new Date())
-        {
+        if (new Date(due_date) <= new Date()) {
             // console.log("wrong date");
             res.send("Invalid Date!!");
             return;
@@ -972,9 +921,9 @@ exports.p_addmin_announcement = async (req, res) => {
 exports.g_changepwdadmin = async (req, res) => {
     try {
         const stored_token = req.cookies.jwtoken;
-    const verify_one = jwt.verify(stored_token, "sagar");
-    const email = verify_one.email_id;
-    const user = await Admin.find({ Email_id: email })
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
         res.render("Admin/changepwdadmin", { user });
     } catch (err) {
         res.status(500).send("Internal Server Error");
@@ -1006,7 +955,10 @@ exports.p_changepwdadmin = async (req, res) => {
         const user = await Admin.findOne({ Email_id: email });
 
         const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
-        if (pwdinvalid) {
+        // const pwdinvalid = oldpwd === user.Password;
+        console.log(oldpwd);
+        console.log(user.Password);
+        if (!pwdinvalid) {
             const title = "ERROR";
             const message = "Old Passward is incorrect!";
             const icon = "error";
@@ -1032,17 +984,92 @@ exports.p_changepwdadmin = async (req, res) => {
     }
 }
 
+exports.g_forgotpwdadmin = async (req,res) => {
+    try{
+        console.log("Hello");
+        res.send("heeeeeeeeee");
+    }catch(err)
+    {
+        console.error(err);
+        res.status(500).send("An error occured while changing password!");
+    }
+}
+exports.p_forgotpwdadmin = async (req, res) => {
+    try {
+        //console.log(req.body.a_email);
+        const admin = Admin.findOne({ Email_id : req.body.a_email });
+        //console.log(admin);
+        if (admin == null) {
+            const title = "ERROR";
+            const message = "No such Admin email exist";
+            const icon = "error";
+            const href = "/adminlogin";
+            res.render("alert.ejs", { title, message, icon, href });
+        }
+
+        else {
+            const randomPass = generatePass();
+
+            const hashedpwd = await bcrypt.hash(randomPass, saltRounds);
+            await Admin.findOneAndUpdate({ 'Email_id': req.body.a_email }, { 'Password': hashedpwd }, { new: true })
+
+            let transporter = nodemailer.createTransport({
+                service: "gmail",
+                host: "smtp.gmail.com",
+                port: 587,
+                auth: {
+                    user: '202101234@daiict.ac.in',
+                    pass: 'jhluwxctbddwqruz'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+            });
+
+            const mailOptions = {
+                from: '202101234@daiict.ac.in', // Sender's email address
+                to: req.body.a_email,//'202101234@daiict.ac.in', // Recipient's email address
+                subject: "Forgot Password", // Subject of the email
+                text: 'This is a test email sent from Node.js using Nodemailer.',
+                html: `
+            <h2> Here your new Password. </h2>
+            <p> <b> Email ID : </b> ${req.body.a_email} </p>
+            <p> <b> Password : </b> ${randomPass} </p> 
+            <a href= "http://localhost:8010/adminlogin">Click here to login</a>       
+            `,
+            };
+
+            console.log("mail continue again");
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error:', error);
+                } else {
+                    console.log('Email sent:', info.response);
+                }
+                const title = "SUCCESS";
+                const message = "Check your mail to access your new password";
+                const icon = "success";
+                const href = "/adminLogin";
+                res.render("Admin/alert.ejs", { title, message, icon, href });
+            })
+        }
+    } catch (err) {
+        console.error.log(err);
+    }
+};
+
 
 exports.logoutadmin = async (req, res, next) => {
     try {
         await isLoggedInadmin(req);
-           res.clearCookie("jwtoken");
-           console.log("Logout successfully!!");
-           res.redirect("/adminlogin");
-        }catch (err) {
+        res.clearCookie("jwtoken");
+        console.log("Logout successfully!!");
+        res.redirect("/adminlogin");
+    } catch (err) {
         // This block will only execute if isLoggedInstudent returns false
         res.status(500).send("first you should login and then try to logout");
-        }
+    }
 };
 
 
@@ -1073,7 +1100,7 @@ exports.g_updatefaculty = async (req, res) => {
         const stored_token = req.cookies.f_jwtoken;
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
-        const user = await Faculty.find({ Email_id :email});
+        const user = await Faculty.find({ Email_id: email });
 
         res.render("Faculty/editprofilefaculty.ejs", { user });
 
@@ -1086,7 +1113,7 @@ exports.g_updatefaculty = async (req, res) => {
 exports.p_updatefaculty = async (req, res) => {
     try {
         //const validphone = validatePhoneNumber.validate(req.body.mobileNO)
-        if (req.body.mobileNO.length!=10) {
+        if (req.body.mobileNO.length != 10) {
             const title = "ERROR";
             const message = " Mobile no is invalid";
             const icon = "error";
@@ -1107,7 +1134,7 @@ exports.p_updatefaculty = async (req, res) => {
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
         const user = await Faculty.find({ Email_id: email });
-      
+
         const update = {
             fullname: req.body.fullname,
             phoneNo: req.body.mobileNO,
@@ -1118,10 +1145,10 @@ exports.p_updatefaculty = async (req, res) => {
             Faculty_Block: req.body.fb,
             Biography: req.body.biography
         }
-       console.log(update);
+        console.log(update);
 
-        await Faculty.updateOne({_id:user[0]._id} , update);
-        
+        await Faculty.updateOne({ _id: user[0]._id }, update);
+
         const title = "SUCCESS";
         const message = "Faculty details updated!";
         const icon = "success";
@@ -1169,11 +1196,10 @@ exports.g_coursegrade = async (req, res) => {
             }
         ]);
         // console.log(coursesTaught);
-        const courses=[];
-        for(var i=0; i<coursesTaught.length;i++)
-        {
-            const x= coursesTaught[i].Course_code;
-            const obj= await Course.findOne({Course_code: x});
+        const courses = [];
+        for (var i = 0; i < coursesTaught.length; i++) {
+            const x = coursesTaught[i].Course_code;
+            const obj = await Course.findOne({ Course_code: x });
             courses.push(obj);
         }
         console.log(courses);
@@ -1194,7 +1220,7 @@ exports.p_coursegrade = async (req, res) => {
         const filepath = req.file.path;
         console.log(filepath);
         // console.log("BBBBBBBBBBBBBBBBBBBBBB");
-        const grade = await processExcelJFile(filepath,req);
+        const grade = await processExcelJFile(filepath, req);
         console.log(grade);
         //await Grade.insertMany(grade);
 
@@ -1203,8 +1229,8 @@ exports.p_coursegrade = async (req, res) => {
         console.log("helloo");
         const coursegrade = {
             G_courseEnrolled: course,
-            Grade_data : grade,
-            
+            Grade_data: grade,
+
         }
         console.log(coursegrade);
         await Grade.insertMany(coursegrade);
@@ -1239,9 +1265,9 @@ async function processExcelJFile(filepath) {           //for attendence
         if (rownumber > 1) {
             const stu_id = row.getCell(1).value;
             const grade = row.getCell(2).value;
-            
+
             grade_data.push({
-                
+
                 Student_enrolled: stu_id,
                 Grade: grade,
             });
@@ -1251,7 +1277,7 @@ async function processExcelJFile(filepath) {           //for attendence
     });
 
     return grade_data;
-    
+
 }
 
 exports.g_courseattendence = async (req, res) => {
@@ -1288,11 +1314,10 @@ exports.g_courseattendence = async (req, res) => {
             }
         ]);
         // console.log(coursesTaught);
-        const courses=[];
-        for(var i=0; i<coursesTaught.length;i++)
-        {
-            const x= coursesTaught[i].Course_code;
-            const obj= await Course.findOne({Course_code: x});
+        const courses = [];
+        for (var i = 0; i < coursesTaught.length; i++) {
+            const x = coursesTaught[i].Course_code;
+            const obj = await Course.findOne({ Course_code: x });
             courses.push(obj);
         }
         console.log(courses);
@@ -1307,7 +1332,7 @@ exports.g_courseattendence = async (req, res) => {
 
 
 
-exports.p_courseattendence =  async (req, res) => {
+exports.p_courseattendence = async (req, res) => {
     try {
         // console.log(req.body);
         console.log("continueeee");
@@ -1319,13 +1344,13 @@ exports.p_courseattendence =  async (req, res) => {
         console.log(attendence);
 
         const course = req.body.course;
-       
- 
+
+
         console.log("helloo");
         const courseattendence = {
             A_courseEnrolled: course,
             Attendance_data: attendence,
-            
+
         }
         console.log(courseattendence);
         // console.log("helo complete");
@@ -1345,7 +1370,7 @@ exports.p_courseattendence =  async (req, res) => {
         console.error("Error occured while proccesing and uploading semester data");
         res.status(500).send("Error occured while proccesing and uploading semester data");
     }
-    
+
 }
 
 async function processExcelJSFile(filepath) {           //for attendence
@@ -1364,13 +1389,13 @@ async function processExcelJSFile(filepath) {           //for attendence
             const present_d = row.getCell(2).value;
             const total_d = row.getCell(3).value;
 
-            
+
             attendence_data.push({
-                
+
                 Student_enrolled: stu_id,
                 Present_days: present_d,
                 Total_days: total_d,
-                
+
             });
             // console.log(Student_enrolled);
 
@@ -1378,7 +1403,7 @@ async function processExcelJSFile(filepath) {           //for attendence
     });
 
     return attendence_data;
-    
+
 }
 
 
@@ -1415,7 +1440,7 @@ exports.p_changepwdfaculty = async (req, res) => {
             const href = "/changepwdfaculty";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return res.status(400).send("New password and confirm password do not match!");
+            return;
         }
         const user = await Faculty.findOne({ Email_id: email });
         console.log(user);
@@ -1424,18 +1449,19 @@ exports.p_changepwdfaculty = async (req, res) => {
 
         const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
         console.log("PWD");
-        if (pwdinvalid) {
+        console.log(pwdinvalid);
+        if (!pwdinvalid) {
             const title = "ERROR";
             const message = "Old Passward is incorrect!";
             const icon = "error";
             const href = "/changepwdfaculty";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return res.status(401).send("Old password is incorrect!");
+            return;
         }
 
         const hashedpwd = await bcrypt.hash(newpwd, saltRounds);
-        
+
         user.Password = hashedpwd;
         await user.save();
 
@@ -1445,22 +1471,97 @@ exports.p_changepwdfaculty = async (req, res) => {
         const href = "/facultyhome";
         res.render("Admin/alert.ejs", { title, message, icon, href });
 
-
-        res.status(200).send("Password changed successfully!");
-
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while changing password!");
     }
 }
 
+
+
+exports.g_forgotpwdfaculty = async (req,res) => {
+    try{
+        console.log("Hello");
+        res.send("heeeeeeeeee");
+    }catch(err)
+    {
+        console.error(err);
+        res.status(500).send("An error occured while changing password!");
+    }
+}
+exports.p_forgotpwdfaculty = async (req, res) => {
+    try {
+        //console.log(req.body.a_email);
+        const faculty = Faculty.findOne({ Email_id : req.body.f_email });
+        //console.log(admin);
+        if (faculty == null) {
+            const title = "ERROR";
+            const message = "No such Faculty email exist";
+            const icon = "error";
+            const href = "/facultylogin";
+            res.render("alert.ejs", { title, message, icon, href });
+        }
+
+        else {
+            const randomPass = generatePass();
+
+            const hashedpwd = await bcrypt.hash(randomPass, saltRounds);
+            await Faculty.findOneAndUpdate({ 'Email_id': req.body.f_email }, { 'Password': hashedpwd }, { new: true })
+
+            let transporter = nodemailer.createTransport({
+                service: "gmail",
+                host: "smtp.gmail.com",
+                port: 587,
+                auth: {
+                    user: '202101234@daiict.ac.in',
+                    pass: 'jhluwxctbddwqruz'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+            });
+
+            const mailOptions = {
+                from: '202101234@daiict.ac.in', // Sender's email address
+                to: req.body.f_email,//'202101234@daiict.ac.in', // Recipient's email address
+                subject: "Forgot Password", // Subject of the email
+                text: 'This is a test email sent from Node.js using Nodemailer.',
+                html: `
+            <h2> Here your new Password. </h2>
+            <p> <b> Email ID : </b> ${req.body.f_email} </p>
+            <p> <b> Password : </b> ${randomPass} </p> 
+            <a href= "http://localhost:8010/adminlogin">Click here to login</a>       
+            `,
+            };
+
+            console.log("mail continue again");
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error:', error);
+                } else {
+                    console.log('Email sent:', info.response);
+                }
+                const title = "SUCCESS";
+                const message = "Check your mail to access your new password";
+                const icon = "success";
+                const href = "/facultyLogin";
+                res.render("Admin/alert.ejs", { title, message, icon, href });
+            })
+        }
+    } catch (err) {
+        console.error.log(err);
+    }
+};
+
+
 exports.logoutfaculty = async (req, res, next) => {
     try {
         await isLoggedInfaculty(req);
-           res.clearCookie("f_jwtoken");
-           console.log("Logout successfully!!");
-           res.redirect("/facultylogin");
-        }catch (err) {
+        res.clearCookie("f_jwtoken");
+        console.log("Logout successfully!!");
+        res.redirect("/facultylogin");
+    } catch (err) {
         // This block will only execute if isLoggedInstudent returns false
         res.status(500).send("first you should login and then try to logout");
         //res.redirect('/facultylogin');
@@ -1559,7 +1660,7 @@ exports.g_updatestudent = async (req, res) => {
 exports.p_updatestudent = async (req, res) => {
     try {
         //const validphone = validatePhoneNumber.validate(req.body.mobileNO)
-        if (req.body.mobileNO.length!=10) {
+        if (req.body.mobileNO.length != 10) {
             const title = "ERROR";
             const message = " Mobile no is invalid";
             const icon = "error";
@@ -1582,7 +1683,7 @@ exports.p_updatestudent = async (req, res) => {
         const student = await Student.find({ Email_id: email });
         //const ID = req.student.id;
         const update = {
-            stud_id : req.body.id,
+            stud_id: req.body.id,
             firstname: req.body.firstname,
             middlename: req.body.middlename,
             lastname: req.body.lastname,
@@ -1597,7 +1698,7 @@ exports.p_updatestudent = async (req, res) => {
         }
 
         console.log()
-        await Student.updateOne({_id: student[0]._id}, update );
+        await Student.updateOne({ _id: student[0]._id }, update);
 
         const title = "SUCCESS";
         const message = "Student details updated!";
@@ -1625,8 +1726,8 @@ exports.g_courseregistration = async (req, res) => {
         const email = verify_one.email_id;
         const user = await Student.find({ Email_id: email });
         // console.log(user[0]);
- 
-       
+
+
         const p_name = user[0].ProgramRegistered;
         const batch = user[0].Batch;
         // console.log(p_name);
@@ -1647,17 +1748,16 @@ exports.g_courseregistration = async (req, res) => {
                 }
             }
         ]);
-        const courses=[];
-        for(var i=0; i<coursesTaught.length;i++)
-        {
-            const x= coursesTaught[i].Course_code;
-            const obj= await Course.findOne({Course_code: x});
+        const courses = [];
+        for (var i = 0; i < coursesTaught.length; i++) {
+            const x = coursesTaught[i].Course_code;
+            const obj = await Course.findOne({ Course_code: x });
             courses.push(obj);
         }
         // console.log(courses);
         // console.log(coursesTaught);
 
-        res.render("Student/student-course-registration.ejs", { courses, sem_name, p_name, batch, coursesTaught, user  });
+        res.render("Student/student-course-registration.ejs", { courses, sem_name, p_name, batch, coursesTaught, user });
     } catch (err) {
         res.status(500).send("An error occured while registering course");
     }
@@ -1665,9 +1765,9 @@ exports.g_courseregistration = async (req, res) => {
 
 exports.p_courseregistration = async (req, res) => {
     try {
-        
+
         // console.log(req.body);
-        
+
         if (req.body.register.length !== 5) {
             const title = "ERROR";
             const message = "Please select only 5 courses!";
@@ -1675,37 +1775,37 @@ exports.p_courseregistration = async (req, res) => {
             const href = "/courseregistration";
             res.render("Admin/alert.ejs", { title, message, icon, href });
         }
-       else{
-        const stored_token = req.cookies.jwtokenstudent;
-        const verify_one = jwt.verify(stored_token, "sagar1");
-        const email = verify_one.email_id;
-        const user = await Student.find({ Email_id: email });
-       
-        // console.log(user[0]);
+        else {
+            const stored_token = req.cookies.jwtokenstudent;
+            const verify_one = jwt.verify(stored_token, "sagar1");
+            const email = verify_one.email_id;
+            const user = await Student.find({ Email_id: email });
 
-        const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
-        const sem_name = last_sem[0].Semester_name;
+            // console.log(user[0]);
 
-        // const semester = await Course_Allotment.findById(req.body.sem);
+            const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
+            const sem_name = last_sem[0].Semester_name;
 
-        const courses = req.body.register;
-        // console.log(courses);
+            // const semester = await Course_Allotment.findById(req.body.sem);
 
-        const newCourseEnrollment = new Course_Enrollment({
-            studentEnrolled: user[0]._id,
-            semesterEnrolled: sem_name,
-            courseEnrolled: courses
-        })
-        // console.log(newCourseEnrollment);
-       
-        await newCourseEnrollment.save();
-        
-        const title = "SUCCESS";
-        const message = "Course Registration completed!";
-        const icon = "success";
-        const href = "/viewstudent";
-        res.render("Admin/alert.ejs", { title, message, icon, href });
-    }
+            const courses = req.body.register;
+            // console.log(courses);
+
+            const newCourseEnrollment = new Course_Enrollment({
+                studentEnrolled: user[0]._id,
+                semesterEnrolled: sem_name,
+                courseEnrolled: courses
+            })
+            // console.log(newCourseEnrollment);
+
+            await newCourseEnrollment.save();
+
+            const title = "SUCCESS";
+            const message = "Course Registration completed!";
+            const icon = "success";
+            const href = "/viewstudent";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while course registration");
@@ -1730,13 +1830,12 @@ exports.g_viewgrade = async (req, res) => {
         console.log("hello");
         //console.log(p_name);
         console.log("by");
-        
+
         const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
         const sem_name = last_sem[0].Semester_name;
-        
-        const courses = await Course_Enrollment.findOne({Student_enrolled : student._id, semesterEnrolled : sem_name});
-        if(!courses)
-        {
+
+        const courses = await Course_Enrollment.findOne({ Student_enrolled: student._id, semesterEnrolled: sem_name });
+        if (!courses) {
             const title = "ERROR";
             const message = "Student has not registered yet!";
             const icon = "error";
@@ -1749,10 +1848,10 @@ exports.g_viewgrade = async (req, res) => {
 
         const data = await Grade.aggregate([
             {
-                $unwind :  "$Grade_data"
+                $unwind: "$Grade_data"
             },
             {
-                $match :{ "Grade_data.Student_enrolled" : student[0].stud_id}
+                $match: { "Grade_data.Student_enrolled": student[0].stud_id }
             },
             {
                 $lookup: {
@@ -1765,7 +1864,7 @@ exports.g_viewgrade = async (req, res) => {
             {
                 $project: {
                     _id: 0, // Exclude the _id field from the result
-                    grade : '$Grade_data.Grade',  
+                    grade: '$Grade_data.Grade',
                 }
             }
         ])
@@ -1773,13 +1872,12 @@ exports.g_viewgrade = async (req, res) => {
         console.log(data);
 
         const Courses = [];
-        for(let i=0;i<enrolledcourse.length;i++)
-        {
+        for (let i = 0; i < enrolledcourse.length; i++) {
             const x = enrolledcourse[i];
             const obj = await Course.findById(x);
             Courses.push(obj);
         }
-        res.render("Student/result.ejs", { student, sem_name, data, Courses , p_name});
+        res.render("Student/result.ejs", { student, sem_name, data, Courses, p_name });
     } catch (err) {
         res.status(500).send("An error occured while fetching semester data");
     }
@@ -1804,9 +1902,8 @@ exports.g_viewattendence = async (req, res) => {
         console.log(student[0].stud_id);
         // console.log(sem_name);
 
-        const courses = await Course_Enrollment.findOne({Student_enrolled : student._id, semesterEnrolled : sem_name});
-        if(!courses)
-        {
+        const courses = await Course_Enrollment.findOne({ Student_enrolled: student._id, semesterEnrolled: sem_name });
+        if (!courses) {
             const title = "ERROR";
             const message = "Student has not registered yet!";
             const icon = "error";
@@ -1822,10 +1919,10 @@ exports.g_viewattendence = async (req, res) => {
         //console.log(student.Email_id);
         const data = await Attendance.aggregate([
             {
-                $unwind :  "$Attendance_data"
+                $unwind: "$Attendance_data"
             },
             {
-                $match :{ "Attendance_data.Student_enrolled" : student[0].stud_id,}
+                $match: { "Attendance_data.Student_enrolled": student[0].stud_id, }
             },
             {
                 $lookup: {
@@ -1838,14 +1935,14 @@ exports.g_viewattendence = async (req, res) => {
             {
                 $project: {
                     _id: 0, // Exclude the _id field from the result
-                    P_days : '$Attendance_data.Present_days',
-                    T_days : '$Attendance_data.Total_days' // Include the Course_upload field from Courseallocate
+                    P_days: '$Attendance_data.Present_days',
+                    T_days: '$Attendance_data.Total_days' // Include the Course_upload field from Courseallocate
                 }
             }
         ])
         console.log("Hello");
         console.log(data);
-        
+
         // for(let i=0;i<enrolledcourse.length; i++)
         // {
         //     const courseID = enrolledcourse[i];
@@ -1862,14 +1959,13 @@ exports.g_viewattendence = async (req, res) => {
         // }
         // //console.log(data);
         const Courses = [];
-        for(let i=0;i<enrolledcourse.length;i++)
-        {
+        for (let i = 0; i < enrolledcourse.length; i++) {
             const x = enrolledcourse[i];
             const obj = await Course.findById(x);
             Courses.push(obj);
         }
-        
-        res.render("Student/student-attendance.ejs", { sem_name , data, student, Courses });
+
+        res.render("Student/student-attendance.ejs", { sem_name, data, student, Courses });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching semester data");
@@ -1981,7 +2077,7 @@ exports.p_changepwdstudent = async (req, res) => {
             const href = "/changepwdstudent";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return ;
+            return;
         }
         const user = await Student.findOne({ Email_id: email });
         console.log(user);
@@ -1995,7 +2091,7 @@ exports.p_changepwdstudent = async (req, res) => {
             const href = "/changepwdstudent";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return ;
+            return;
         }
 
         const hashedpwd = await bcrypt.hash(newpwd, saltRounds);
@@ -2013,13 +2109,156 @@ exports.p_changepwdstudent = async (req, res) => {
     }
 }
 
+
+exports.g_changepwdadmin = async (req, res) => {
+    try {
+        const stored_token = req.cookies.jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
+        res.render("Admin/changepwdadmin", { user });
+    } catch (err) {
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+exports.p_changepwdadmin = async (req, res) => {
+    try {
+        console.log("helololoo");
+        const stored_token = req.cookies.jwtoken;
+        console.log(stored_token);
+        const verify_one = jwt.verify(stored_token, "sagar");
+        console.log(verify_one);
+        const email = verify_one.email_id;
+
+        const { oldpwd, newpwd, confirmpwd } = req.body;
+        console.log(req.body);
+
+        if (newpwd != confirmpwd)                   //new password  check strong
+        {
+            const title = "ERROR";
+            const message = "New password and confirm password do not match!";
+            const icon = "error";
+            const href = "/changepwdadmin";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+
+            return;
+        }
+        const user = await Admin.findOne({ Email_id: email });
+
+        const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
+        // const pwdinvalid = oldpwd === user.Password;
+        console.log(oldpwd);
+        console.log(user.Password);
+        if (!pwdinvalid) {
+            const title = "ERROR";
+            const message = "Old Passward is incorrect!";
+            const icon = "error";
+            const href = "/changepwdadmin";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+
+            return;
+        }
+
+        const hashedpwd = await bcrypt.hash(newpwd, saltRounds);
+        user.Password = hashedpwd;
+        await user.save();
+
+        const title = "SUCCESS";
+        const message = "Password changed successfully!";
+        const icon = "success";
+        const href = "/adminhome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occured while changing password!");
+    }
+}
+
+exports.g_studentpwdadmin = async (req,res) => {
+    try{
+        console.log("Hello");
+        res.send("heeeeeeeeee");
+    }catch(err)
+    {
+        console.error(err);
+        res.status(500).send("An error occured while changing password!");
+    }
+}
+exports.p_studentpwdadmin = async (req, res) => {
+    try {
+        //console.log(req.body.a_email);
+        const student = Student.findOne({ Email_id : req.body.s_email });
+        //console.log(admin);
+        if (student == null) {
+            const title = "ERROR";
+            const message = "No such Student email exist";
+            const icon = "error";
+            const href = "/studentlogin";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+        }
+
+        else {
+            const randomPass = generatePass();
+
+            const hashedpwd = await bcrypt.hash(randomPass, saltRounds);
+            await Student.findOneAndUpdate({ 'Email_id': req.body.s_email }, { 'Password': hashedpwd }, { new: true })
+
+            let transporter = nodemailer.createTransport({
+                service: "gmail",
+                host: "smtp.gmail.com",
+                port: 587,
+                auth: {
+                    user: '202101234@daiict.ac.in',
+                    pass: 'jhluwxctbddwqruz'
+                },
+                tls: {
+                    rejectUnauthorized: false
+                }
+            });
+
+            const mailOptions = {
+                from: '202101234@daiict.ac.in', // Sender's email address
+                to: req.body.s_email,//'202101234@daiict.ac.in', // Recipient's email address
+                subject: "Forgot Password", // Subject of the email
+                text: 'This is a test email sent from Node.js using Nodemailer.',
+                html: `
+            <h2> Here your new Password. </h2>
+            <p> <b> Email ID : </b> ${req.body.s_email} </p>
+            <p> <b> Password : </b> ${randomPass} </p> 
+            <a href= "http://localhost:8010/adminlogin">Click here to login</a>       
+            `,
+            };
+
+            console.log("mail continue again");
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error:', error);
+                } else {
+                    console.log('Email sent:', info.response);
+                }
+                const title = "SUCCESS";
+                const message = "Check your mail to access your new password";
+                const icon = "success";
+                const href = "/adminLogin";
+                res.render("Admin/alert.ejs", { title, message, icon, href });
+            })
+        }
+    } catch (err) {
+        console.error.log(err);
+    }
+};
+
+
 exports.logoutstudent = (async (req, res) => {
     try {
-           await isLoggedInstudent(req);
-           res.clearCookie("jwtokenstudent");
-           console.log("Logout successfully!!");
-           res.redirect("/studentlogin");
-        }catch (err) {
+        await isLoggedInstudent(req);
+        res.clearCookie("jwtokenstudent");
+        console.log("Logout successfully!!");
+        res.redirect("/studentlogin");
+    } catch (err) {
         // This block will only execute if isLoggedInstudent returns false
         res.status(500).send("first you should login and then try to logout");
     }
@@ -2038,57 +2277,57 @@ isvalidpwd = (password) => {
 
 }
 
-async function isLoggedInstudent(req, res, next){
-    try{
-        
+async function isLoggedInstudent(req, res, next) {
+    try {
+
         const token = req.cookies.jwtokenstudent;
         console.log(token);
         const verifyuser = jwt.verify(token, "sagar1");
         console.log(verifyuser);
 
-        const student = await Student.findOne({Email_id:verifyuser.email_id});
+        const student = await Student.findOne({ Email_id: verifyuser.email_id });
         console.log(student.firstname);
 
         //next();
 
-    }catch (err) {
-            res.send(err);
+    } catch (err) {
+        res.send(err);
     }
 };
 
-async function isLoggedInfaculty(req, res, next){
-    try{
-        
+async function isLoggedInfaculty(req, res, next) {
+    try {
+
         const token = req.cookies.f_jwtoken;
         console.log(token);
         const verifyuser = jwt.verify(token, "sagar");
         console.log(verifyuser);
 
-        const faculty = await Faculty.findOne({Email_id:verifyuser.email_id});
+        const faculty = await Faculty.findOne({ Email_id: verifyuser.email_id });
         console.log(faculty.firstname);
 
         //next();
 
-    }catch (err) {
-            res.send(err);
+    } catch (err) {
+        res.send(err);
     }
 };
 
-async function isLoggedInadmin(req, res, next){
-    try{
-        
+async function isLoggedInadmin(req, res, next) {
+    try {
+
         const token = req.cookies.jwtoken;
         console.log(token);
         const verifyuser = jwt.verify(token, "sagar");
         console.log(verifyuser);
 
-        const admin = await Admin.findOne({Email_id:verifyuser.email_id});
+        const admin = await Admin.findOne({ Email_id: verifyuser.email_id });
         console.log(admin.Email_id);
 
         //next();
 
-    }catch (err) {
-            res.send(err);
+    } catch (err) {
+        res.send(err);
     }
 };
 

@@ -94,6 +94,9 @@ route.post('/admin-announcement', controller.p_addmin_announcement);
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);
 
+route.get('/forgotpwdadmin', controller.g_forgotpwdadmin);
+route.post('/forgotpwdadmin', controller.p_forgotpwdadmin);
+
 route.get('/logoutadmin', controller.logoutadmin);
 
 
@@ -118,6 +121,9 @@ route.post('/courseattendence', upload.single('excelfile'), controller.p_coursea
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
 
+route.get('/forgotpwdfaculty', controller.g_forgotpwdfaculty);
+route.post('/forgotpwdfaculty', controller.p_forgotpwdfaculty);
+
 route.get('/logoutfaculty', controller.logoutfaculty);
 
 
@@ -138,8 +144,12 @@ route.get('/viewattendence', controller.g_viewattendence);
 // route.post('/viewattendence', controller.p_viewattendence);
 
 route.get('/student-announcement', controller.g_student_announcement);
+
 route.get('/changepwdstudent', controller.g_changepwdstudent);
 route.post('/changepwdstudent', controller.p_changepwdstudent);
+
+route.get('/forgotpwdstudent', controller.g_forgotpwdstudent);
+route.post('/forgotpwdstudent', controller.p_forgotpwdstudent);
 
 route.get('/logoutstudent', controller.logoutstudent);
 

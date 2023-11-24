@@ -37,7 +37,7 @@ const StudentSchema = new mongoose.Schema({
         // match: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
     },
     Address: String,
-    Parent_Email_Id: {
+    Personal_Email_id: {
         type: String,
         // match: /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/,
     },
