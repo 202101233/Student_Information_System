@@ -94,7 +94,7 @@ route.post('/admin-announcement', controller.p_addmin_announcement);
 route.get('/changepwdadmin', controller.g_changepwdadmin);
 route.post('/changepwdadmin', controller.p_changepwdadmin);
 
-route.delete('/logoutadmin', controller.logoutadmin);
+route.get('/logoutadmin', controller.logoutadmin);
 
 
 
@@ -118,7 +118,7 @@ route.post('/courseattendence', upload.single('excelfile'), controller.p_coursea
 route.get('/changepwdfaculty', controller.g_changepwdfaculty);
 route.post('/changepwdfaculty', controller.p_changepwdfaculty);
 
-route.delete('/logoutfaculty', controller.logoutfaculty);
+route.get('/logoutfaculty', controller.logoutfaculty);
 
 
 //Student Functionality
@@ -141,7 +141,7 @@ route.get('/student-announcement', controller.g_student_announcement);
 route.get('/changepwdstudent', controller.g_changepwdstudent);
 route.post('/changepwdstudent', controller.p_changepwdstudent);
 
-route.delete('/logoutstudent', controller.logoutstudent);
+route.get('/logoutstudent', controller.logoutstudent);
 
 //forgot password
 

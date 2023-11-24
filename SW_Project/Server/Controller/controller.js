@@ -74,8 +74,8 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
             console.log(user)
             console.log(user.admin_name)
             //check if password matches
-            const result = await bcrypt.compare(req.body.a_password, user.Password);
-            // const result = await req.body.a_password === user.Password;
+            //const result = await bcrypt.compare(req.body.a_password, user.Password);
+            const result = await req.body.a_password === user.Password;
             console.log(req.body.a_password);
             console.log(user.Password);
             if (result) {
@@ -165,18 +165,10 @@ exports.p_facultylogin = async (req, res) => {
 
 exports.p_studentlogin = async (req, res) => {
     try {
-        // check if the user exists
-        // console.log("XXX");
-        // const data = req.body;
-        // const email_student = data.s_email;
-        // const pass = data.s_password;
-        // console.log(email_student);
-        // console.log(pass)
+
+
         const user = await Student.findOne({ Email_id: req.body.s_email });
 
-
-        console.log("YYY");
-        console.log(user);
         if (user) {
             //check if password matches
             const loggedstudent = await bcrypt.compare(req.body.s_password, user.Password);
@@ -202,7 +194,7 @@ exports.p_studentlogin = async (req, res) => {
 
                 console.log(stored_token);
                 console.log("KK");
-                const verify_one = jwt.verify(stored_token, secret);
+                const verify_one = jwt.verify(token, secret);
                 console.log(verify_one);
                 // console.log(jwt.verify())
                 res.redirect("/studenthome");
@@ -220,8 +212,9 @@ exports.p_studentlogin = async (req, res) => {
     }
 }
 
-exports.g_adminhome = (isLoggedInadmin, async (req, res) => {
+exports.g_adminhome = (async (req, res) => {
     try {
+        await isLoggedInadmin(req);
         console.log("jay");
         console.log(req.body);
         console.log("jay");
@@ -339,7 +332,7 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
                     <h2> Your student account has been created. </h2>
                     <p> Here are information : </p>
                     <p> <b> Email ID : </b> ${req.body.email} </p>
-                    <p> <b> Password : </b> ${hashedPassward} </p> 
+                    <p> <b> Password : </b> ${randompass} </p> 
                     <a href= "http://localhost:8010/studentlogin">Click here to login</a>       
                     `,
             };
@@ -1011,11 +1004,14 @@ exports.p_changepwdadmin = async (req, res) => {
 
 exports.logoutadmin = async (req, res, next) => {
     try {
-        req.logOut(req.user);
-        res.redirect('/adminlogin');
-    } catch (err) {
-        next(err);
-    }
+        await isLoggedInadmin(req);
+           res.clearCookie("jwtoken");
+           console.log("Logout successfully!!");
+           res.redirect("/adminlogin");
+        }catch (err) {
+        // This block will only execute if isLoggedInstudent returns false
+        res.status(500).send("first you should login and then try to logout");
+        }
 };
 
 
@@ -1089,7 +1085,7 @@ exports.p_updatefaculty = async (req, res) => {
             Gender: req.body.gender,
             Education: req.body.degree,
             Faculty_Block: req.body.fb,
-            // Biography: req.body.biography
+            Biography: req.body.biography
         }
        console.log(update);
 
@@ -1429,10 +1425,14 @@ exports.p_changepwdfaculty = async (req, res) => {
 
 exports.logoutfaculty = async (req, res, next) => {
     try {
-        req.logOut(req.user);
-        res.redirect('/facultylogin');
-    } catch (err) {
-        next(err);
+        await isLoggedInfaculty(req);
+           res.clearCookie("f_jwtoken");
+           console.log("Logout successfully!!");
+           res.redirect("/facultylogin");
+        }catch (err) {
+        // This block will only execute if isLoggedInstudent returns false
+        res.status(500).send("first you should login and then try to logout");
+        //res.redirect('/facultylogin');
     }
 };
 
@@ -1517,7 +1517,7 @@ exports.g_updatestudent = async (req, res) => {
         console.log(program);
         console.log("eeeee");
 
-        res.render("Student/student-profile.ejs", { student, program });
+        res.render("Student/editprofilestudent.ejs", { student, program });
 
     } catch (err) {
         console.error(err);
@@ -1527,26 +1527,31 @@ exports.g_updatestudent = async (req, res) => {
 
 exports.p_updatestudent = async (req, res) => {
     try {
-        const validphone = validatePhoneNumber.validate(req.body.mobileNO)
-        if (!validphone) {
+        //const validphone = validatePhoneNumber.validate(req.body.mobileNO)
+        if (req.body.mobileNO.length!=10) {
             const title = "ERROR";
             const message = " Mobile no is invalid";
             const icon = "error";
             const href = "/viewstudent";
-            res.status(401).render("alert.ejs", { title, message, icon, href });
+            res.status(401).render("Admin/alert.ejs", { title, message, icon, href });
         }
 
-        const validemail = validator.validate(req.body.myemail);
-        if (!validemail) {
-            const title = "ERROR";
-            const message = " Email ID is invalid";
-            const icon = "error";
-            const href = "/viewstudent";
-            res.status(401).render("alert.ejs", { title, message, icon, href });
-        }
+        // const validemail = validator.validate(req.body.myemail);
+        // if (!validemail) {
+        //     const title = "ERROR";
+        //     const message = " Email ID is invalid";
+        //     const icon = "error";
+        //     const href = "/viewstudent";
+        //     res.status(401).render("alert.ejs", { title, message, icon, href });
+        // }
 
-        const ID = req.student.id;
+        const stored_token = req.cookies.jwtokenstudent;
+        const verify_one = jwt.verify(stored_token, "sagar1");
+        const email = verify_one.email_id;
+        const student = await Student.find({ Email_id: email });
+        //const ID = req.student.id;
         const update = {
+            stud_id : req.body.id,
             firstname: req.body.firstname,
             middlename: req.body.middlename,
             lastname: req.body.lastname,
@@ -1560,14 +1565,14 @@ exports.p_updatestudent = async (req, res) => {
 
         }
 
-
-        await Student.updateOne({ ID, update }).exec();
+        console.log()
+        await Student.updateOne({_id: student[0]._id}, update );
 
         const title = "SUCCESS";
         const message = "Student details updated!";
         const icon = "success";
         const href = "/viewstudent";
-        res.render("alert.ejs", { title, message, icon, href });
+        res.render("Admin/alert.ejs", { title, message, icon, href });
 
 
     } catch (err) {
@@ -1977,14 +1982,17 @@ exports.p_changepwdstudent = async (req, res) => {
     }
 }
 
-exports.logoutstudent = async (req, res, next) => {
+exports.logoutstudent = (async (req, res) => {
     try {
-        req.logOut(req.user);
-        res.redirect('/studentlogin');
-    } catch (err) {
-        next(err);
+           await isLoggedInstudent(req);
+           res.clearCookie("jwtokenstudent");
+           console.log("Logout successfully!!");
+           res.redirect("/studentlogin");
+        }catch (err) {
+        // This block will only execute if isLoggedInstudent returns false
+        res.status(500).send("first you should login and then try to logout");
     }
-};
+});
 
 isvalidpwd = (password) => {
 
@@ -1998,19 +2006,60 @@ isvalidpwd = (password) => {
 
 
 }
-function isLoggedInadmin(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect("/adminlogin");
-}
 
-function isLoggedInfaculty(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect("/facultylogin");
-}
-function isLoggedInstudent(req, res, next) {
-    if (req.isAuthenticated()) return next();
-    res.redirect("/studentlogin");
-}
+async function isLoggedInstudent(req, res, next){
+    try{
+        
+        const token = req.cookies.jwtokenstudent;
+        console.log(token);
+        const verifyuser = jwt.verify(token, "sagar1");
+        console.log(verifyuser);
+
+        const student = await Student.findOne({Email_id:verifyuser.email_id});
+        console.log(student.firstname);
+
+        //next();
+
+    }catch (err) {
+            res.send(err);
+    }
+};
+
+async function isLoggedInfaculty(req, res, next){
+    try{
+        
+        const token = req.cookies.f_jwtoken;
+        console.log(token);
+        const verifyuser = jwt.verify(token, "sagar");
+        console.log(verifyuser);
+
+        const faculty = await Faculty.findOne({Email_id:verifyuser.email_id});
+        console.log(faculty.firstname);
+
+        //next();
+
+    }catch (err) {
+            res.send(err);
+    }
+};
+
+async function isLoggedInadmin(req, res, next){
+    try{
+        
+        const token = req.cookies.jwtoken;
+        console.log(token);
+        const verifyuser = jwt.verify(token, "sagar");
+        console.log(verifyuser);
+
+        const admin = await Admin.findOne({Email_id:verifyuser.email_id});
+        console.log(admin.Email_id);
+
+        //next();
+
+    }catch (err) {
+            res.send(err);
+    }
+};
 
 // exports.g_forgotpwd = async (req, res) => {
 //     res.render("forgotpwd.ejs"); // Render a page to enter the email

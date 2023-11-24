@@ -101,8 +101,7 @@ const FacultySchema = new mongoose.Schema({
         required: true,
     },
     Biography: {
-        type: String,
-        
+        type: String,   
     },
     Profile_image: Buffer,
 });

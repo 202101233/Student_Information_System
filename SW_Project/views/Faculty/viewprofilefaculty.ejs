@@ -63,7 +63,14 @@
     
                     <i class="fa fa-mars-stroke" aria-hidden="true"></i><input readonly id="genderplace1" name="gender" class="genderplace" type="text" value="<%= user[0].Gender%>"><br>
 
-                    <i class="fa fa-calendar-o" aria-hidden="true"></i><input readonly id="dobplace1"  class="dobplace" type="date" name="dob" id="" value="<%= user[0].DOB%>">
+                    <% var options={ weekday: 'long' , year: 'numeric' , month: 'long' , day: 'numeric' }; %>  
+                    <% if (user[0].DOB) { %>
+                        <i class="fa fa-calendar-o" aria-hidden="true"></i><input readonly id="dobplace1"  class="dobplace" type="text" name="dob" id="" value= "<%= user[0].DOB.toLocaleDateString("en-US" ,options)%>" </input>
+                    <% } else { %>
+                        <i class="fa fa-calendar-o" aria-hidden="true"></i><input readonly id="dobplace1"  class="dobplace" type="text" name="dob" id="" placeholder="Month Date, Year"> </input>
+                    <% } %>
+                    
+                    
                 
             </div>
 
@@ -71,8 +78,8 @@
                 <h2>Biography</h2>
                 <br>
                 
-                <textarea readonly name="" id="paras1" cols="110" rows="10" class="paras">
-                Saurabh Tiwari is a Faculty Member at Dhirubhai Ambani Institute of Information and Communication Technology (DA-IICT), Gandhinagar (India). Previously, he worked as a Postdoc Researcher at MÃ¤lardalen University, (Sweden) worked with Volvo Construction Equipment AB in the area of Model-Based System Engineering (MBT, MBD). His current research interests are in the area of Requirements Engineering, Empirical Software Engineering, and Model-Based Software Engineering. He graduated with an MTech degree from National Institute of Technology, Allahabad (India), and the PhD degree in Computer Science and Engineering from Indian Institute of Information Technology, Design and Manufacturing (IIITDM), Jabalpur (India) in June 2010 and June 2016 respectively 
+                <textarea readonly id="paras1" name="biography" cols="110" rows="10" type="text" class="paras">
+                <%= user[0].Biography%>
                 </textarea>
                 
       
