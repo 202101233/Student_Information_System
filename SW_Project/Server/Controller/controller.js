@@ -1,5 +1,5 @@
-var { Student, Admin, Faculty, Degree, Branch, Course, Program, Transcript, Announcement,
-    Course_Allotment, Attendance, Grade, Course_Enrollment, Result } = require('../Model/model');
+var { Student, Admin, Faculty, Degree, Branch, Course, Program, Announcement,
+    Course_Allotment, Attendance, Grade, Course_Enrollment } = require('../Model/model');
 const { proppatch, use } = require('../Routes/router');
 
 const path = require("path");
@@ -60,6 +60,13 @@ exports.g_studentlogin = (req, res) => {
 
 exports.p_adminlogin = async (req, res) => {         //passport??????
     try {
+        // console.log(req.body);
+        // if(req.body)
+        // {
+        //     console.log("ture");
+        //     // return;
+        // }
+
         // check if the user exists
         const user = await Admin.findOne({ Email_id: req.body.a_email });
         if (user) {
@@ -67,8 +74,10 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
             console.log(user)
             console.log(user.admin_name)
             //check if password matches
-            // const result = await bcrypt.compare(req.body.a_password, user.Password);
-            const result = await req.body.a_password=== user.Password;
+            const result = await bcrypt.compare(req.body.a_password, user.Password);
+            // const result = await req.body.a_password === user.Password;
+            console.log(req.body.a_password);
+            console.log(user.Password);
             if (result) {
                 console.log("nik");
                 //res.render("Admin/adminhome.ejs",{admin : user});
@@ -273,7 +282,7 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
             const title = "ERROR";
             const message = "Invalid Email";
             const icon = "error";
-            const href = "/studentregistration";
+            const href = "/admin-student-registration";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
         }
@@ -284,7 +293,8 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
         // console.log(batch);
         // console.log(req.body.email)
         const student = await Student.findOne({ Email_id: req.body.email });
-        // console.log(student);
+        console.log(student);
+        
 
         if (student) {
             // console.log(student)
@@ -292,8 +302,9 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
             const title = "ERROR";
             const message = "Student Email already exists";
             const icon = "error";
-            const href = "/studentregistration";
+            const href = "/admin-student-registration";
             res.render("Admin/alert.ejs", { title, message, icon, href });
+
         }
         else {
             console.log("hiiii");
@@ -302,8 +313,8 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
 
             const newstudent = new Student({
                 firstname: req.body.name.split(" ")[0],
-                middlename: req.body.name.split(" ")[1],
-                lastname: req.body.name.split(" ")[2],
+                middlename: req.body.name.split(" ")[2],
+                lastname: req.body.name.split(" ")[1],
                 stud_id: ID,
                 Email_id: req.body.email,
                 Password: hashedPassward,
@@ -453,7 +464,16 @@ exports.g_addcourse = async (req, res) => {
 exports.p_addcourse = async (req, res) => {
     // res.send("helloo");
     try {
-
+        const existcourse= await Course.findOne({Course_code : req.body.code});
+        if(existcourse)
+        {
+            const title = "ERROR";
+        const message = "Course already exists!";
+        const icon = "error";
+        const href = "/adminHome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+        return;
+        }
         const newcourse = new Course({
             Course_Name: req.body.name,
             Course_code: req.body.code,
@@ -461,7 +481,12 @@ exports.p_addcourse = async (req, res) => {
         })
 
         await newcourse.save();
-        res.redirect("viewcourse");
+        const title = "SUCCESS";
+        const message = "Course Added successfully!";
+        const icon = "success";
+        const href = "/viewcourse";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+        // res.redirect("viewcourse");
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding course data");
@@ -534,12 +559,26 @@ exports.g_adddegree = async (req, res) => {
 
 exports.p_adddegree = async (req, res) => {
     try {
+        const existdegree= await Degree.findOne({Degree_name : req.body.name});
+        if(existdegree)
+        {
+            const title = "ERROR";
+        const message = "Degree already exists!";
+        const icon = "error";
+        const href = "/adminHome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+        return;
+        }
         const newdegree = new Degree({
             Degree_name: req.body.name
         });
 
         await newdegree.save();
-        res.redirect("/viewdegree");
+        const title = "SUCCESS";
+        const message = "Degree Added successfully!";
+        const icon = "success";
+        const href = "/viewdegree";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding degree data");
@@ -612,12 +651,26 @@ exports.g_addbranch = async (req, res) => {
 
 exports.p_addbranch = async (req, res) => {
     try {
+        const existbranch= await Branch.findOne({Branch_name : req.body.name});
+        if(existbranch)
+        {
+            const title = "ERROR";
+        const message = "Branch already exists!";
+        const icon = "error";
+        const href = "/adminHome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+        return;
+        }
         const newbranch = new Branch({
             Branch_name: req.body.name
         });
 
         await newbranch.save();
-        res.redirect("viewbranch");
+        const title = "SUCCESS";
+        const message = "Branch Added successfully!";
+        const icon = "success";
+        const href = "/viewbranch";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding branch data");
@@ -681,6 +734,23 @@ exports.p_addprogram = async (req, res) => {
     try {
         const { degree, branch, courses } = req.body;
         console.log(degree.Degree_name);
+      
+
+        const existingProgram = await Program.findOne({
+            DegreeOffered: degree,
+            BranchOffered: branch,
+        });
+        if(existingProgram)
+        {
+            const title = "ERROR";
+        const message = "Program already exists!";
+        const icon = "error";
+        const href = "/adminHome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+        return;
+        }
+
+
 
         const newPrpgram = new Program({
             DegreeOffered: degree,
@@ -689,7 +759,11 @@ exports.p_addprogram = async (req, res) => {
         });
 
         await newPrpgram.save();
-        res.redirect("viewProgram");
+        const title = "SUCCESS";
+        const message = "Program Added successfully!";
+        const icon = "success";
+        const href = "/viewprogram";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding program data");
@@ -867,19 +941,35 @@ exports.g_admin_announcement = async (req, res) => {
 
 exports.p_addmin_announcement = async (req, res) => {
     try {
-        const { title, description, due_date } = req.body;
+        // const { description, due_date } = req.body;
+        const abc=req.body.title;
+        console.log(abc);
+        const description = req.body.description;
+        const due_date = req.body.due_date;
+
+        if(new Date(due_date)<=new Date())
+        {
+            // console.log("wrong date");
+            res.send("Invalid Date!!");
+            return;
+        }
+        // console.log(new Date(due_date));
+        // console.log(new Date());
 
         const newannouncement = new Announcement({
-            Title: title,
+            Title: abc,
             Description: description,
             Due_Date: due_date
         });
         //    console.log(req.body);
 
-
-
         await newannouncement.save();
-        res.redirect("adminhome");
+        const title = "SUCCESS";
+        const message = "New Annoucement added Successfully!";
+        const icon = "success";
+        const href = "/adminhome";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while adding announcement");
@@ -900,6 +990,7 @@ exports.g_changepwdadmin = async (req, res) => {
 
 exports.p_changepwdadmin = async (req, res) => {
     try {
+        console.log("helololoo");
         const stored_token = req.cookies.jwtoken;
         console.log(stored_token);
         const verify_one = jwt.verify(stored_token, "sagar");
@@ -917,7 +1008,7 @@ exports.p_changepwdadmin = async (req, res) => {
             const href = "/changepwdadmin";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return res.status(400).send("New password and confirm password do not match!");
+            return;
         }
         const user = await Admin.findOne({ Email_id: email });
 
@@ -929,7 +1020,7 @@ exports.p_changepwdadmin = async (req, res) => {
             const href = "/changepwdadmin";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return res.status(401).send("Old password is incorrect!");
+            return;
         }
 
         const hashedpwd = await bcrypt.hash(newpwd, saltRounds);
@@ -942,14 +1033,12 @@ exports.p_changepwdadmin = async (req, res) => {
         const href = "/adminhome";
         res.render("Admin/alert.ejs", { title, message, icon, href });
 
-
-        res.status(200).send("Password changed successfully!");
-
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while changing password!");
     }
 }
+
 
 exports.logoutadmin = async (req, res, next) => {
     try {
@@ -1006,7 +1095,7 @@ exports.p_updatefaculty = async (req, res) => {
             const message = " Mobile no is invalid";
             const icon = "error";
             const href = "/updatefaculty";
-            res.status(401).render("alert.ejs", { title, message, icon, href });
+            res.status(401).render("Admin/alert.ejs", { title, message, icon, href });
         }
 
         // const validemail = validator.(req.body.myemail);
@@ -1022,7 +1111,7 @@ exports.p_updatefaculty = async (req, res) => {
         const verify_one = jwt.verify(stored_token, "sagar");
         const email = verify_one.email_id;
         const user = await Faculty.find({ Email_id: email });
-
+      
         const update = {
             fullname: req.body.fullname,
             phoneNo: req.body.mobileNO,
@@ -1030,9 +1119,10 @@ exports.p_updatefaculty = async (req, res) => {
             DOB: req.body.dob,
             Gender: req.body.gender,
             Education: req.body.degree,
-            Faculty_Block: req.body.fb
+            Faculty_Block: req.body.fb,
+            // Biography: req.body.biography
         }
-
+       console.log(update);
 
         await Faculty.updateOne({_id:user[0]._id} , update);
         
@@ -1243,11 +1333,11 @@ exports.p_courseattendence =  async (req, res) => {
         }
         console.log(courseattendence);
         // console.log("helo complete");
-        //await Attendance.insertMany(courseattendence);
+        await Attendance.insertMany(courseattendence);
 
         // req.session.semester = semester;
         const title = "SUCCESS";
-        const message = "New semester added Successfully!";
+        const message = "Attendence uploaded Successfully!";
         const icon = "success";
         const href = "/facultyhome";
         res.render("Admin/alert.ejs", { title, message, icon, href });
@@ -1562,7 +1652,7 @@ exports.g_courseregistration = async (req, res) => {
         // console.log(courses);
         // console.log(coursesTaught);
 
-        res.render("Student/student-course-registration.ejs", { courses, sem_name, p_name, batch, coursesTaught  });
+        res.render("Student/student-course-registration.ejs", { courses, sem_name, p_name, batch, coursesTaught, user  });
     } catch (err) {
         res.status(500).send("An error occured while registering course");
     }
@@ -1825,7 +1915,10 @@ exports.g_viewattendence = async (req, res) => {
 
 exports.g_student_announcement = async (req, res) => {
     try {
-        const student = await Student.findOne(_id = req.user);
+        const Student_token = req.cookies.jwtokenstudent;
+        const verified_student = jwt.verify(Student_token, "sagar1");
+        const email = verified_student.email_id;
+        const student = await Student.find({ Email_id: email });
         const announcements = await Announcement.find({}).exec();
 
         const Curr_date = new Date();
@@ -1852,7 +1945,12 @@ exports.g_student_announcement = async (req, res) => {
 // Change Pwd Student
 exports.g_changepwdstudent = async (req, res) => {
     try {
-        const student = await Student.findOne({ _id: req.user });
+        const stored_token = req.cookies.jwtokenstudent;
+        console.log(stored_token);
+        const verify_one = jwt.verify(stored_token, "sagar1");
+        console.log(verify_one);
+        const email = verify_one.email_id;
+        const student = await Student.findOne({ Email_id: email });
         res.render("Student/changepwdstudent.ejs", { student });
     } catch (err) {
         res.status(500).send("Internal Server Error");
@@ -1878,7 +1976,7 @@ exports.p_changepwdstudent = async (req, res) => {
             const href = "/changepwdstudent";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return res.status(400).send("New password and confirm password do not match!");
+            return ;
         }
         const user = await Student.findOne({ Email_id: email });
         console.log(user);
@@ -1892,7 +1990,7 @@ exports.p_changepwdstudent = async (req, res) => {
             const href = "/changepwdstudent";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return res.status(401).send("Old password is incorrect!");
+            return ;
         }
 
         const hashedpwd = await bcrypt.hash(newpwd, saltRounds);

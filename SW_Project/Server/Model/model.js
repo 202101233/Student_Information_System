@@ -100,6 +100,10 @@ const FacultySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    Biography: {
+        type: String,
+        
+    },
     Profile_image: Buffer,
 });
 
@@ -173,35 +177,13 @@ const ProgramSchema = new mongoose.Schema({
 });
 
 
-// const SemesterSchema = new mongoose.Schema({
-//     Sem_name: {
-//         type: String,
-//         required: true,
-//     },
-//     DateCreated: Date,
-//     Sem_Type: {
-//         type: Boolean,
-//         required: true,
-//     },
-//     ProgramOffered: [{
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "Program",
-//         required: true,
-//     }],
-// });
-
 
 var fee_structureSchema = new mongoose.Schema({
     program_fee : { type : mongoose.Schema.Types.ObjectId, ref : "Program"},
     Fee_structure : Map,
 })
 
-// var fee_historySchema = new mongoose.Schema({
-//     SrudentEnroll : { type : mongoose.Schema.Types.ObjectId, ref : "Student"},
-//     SemesterFee : { type : mongoose.Schema.Types.ObjectId, ref : "Semester"},
-//     Feestatus : Boolean,
-//     Date_Of_payment : Date
-// })
+
 
 
 const AnnouncementSchema = new mongoose.Schema({
@@ -221,23 +203,7 @@ const AnnouncementSchema = new mongoose.Schema({
 });
 
 
-const TranscriptSchema = new mongoose.Schema({
-    Student_details: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Student",
-        required: true, // Add this if it's required
-    },
-    Courses: [{
-        course: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Course",
-            required: true, // Add this if it's required
-        },
-        grade: String, // You can specify the data type for grades
-    }],
-    Totalcredit: Number,
-    CPI: Number,
-});
+
 
 
 
@@ -338,13 +304,7 @@ const Course_EnrollmentSchema = new mongoose.Schema({
         required: true,
     }],
 
-    // grade: Number,
-    // attendance: {
-    //     type: Number,
-    //     // min: 0,
-    //     // max: 100,
-    // },
-    // dateEnrolled: Date,
+    
 });
 
 const ResultSchema = new mongoose.Schema({
@@ -367,16 +327,11 @@ const Degree = mongoose.model("Degree", DegreeSchema);
 const Branch = mongoose.model("Branch", BranchSchema);
 const Course = mongoose.model("Course", CourseSchema);
 const Program = mongoose.model("Program", ProgramSchema);
-// const Semester = mongoose.model("Semester", SemesterSchema);
-// const fee_structure = mongoose.model("fee_structure", fee_structureSchema);
-// const fee_history = mongoose.model("fee_history", fee_historySchema);
-const Transcript = mongoose.model("Transcript", TranscriptSchema);
 const Announcement = mongoose.model("Announcement", AnnouncementSchema);
 const Course_Allotment = mongoose.model("Course_Allotment", Course_AllotmentSchema);
 const Attendance = mongoose.model("Attendance", AttendanceSchema);
 const Grade = mongoose.model("Grade", GradeSchema);
 const Course_Enrollment = mongoose.model("Course_Enrollment", Course_EnrollmentSchema);
-const Result = mongoose.model("Result", ResultSchema);
 
 
 // Set up Passport configuration
@@ -409,5 +364,5 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Transcript,Announcement,
-    Course_Allotment,Attendance,Grade,Course_Enrollment,Result};
+module.exports = {Student,Admin,Faculty,Degree,Branch,Course,Program,Announcement,
+    Course_Allotment,Attendance,Grade,Course_Enrollment};
