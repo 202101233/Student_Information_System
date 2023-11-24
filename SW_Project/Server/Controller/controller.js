@@ -987,7 +987,8 @@ exports.p_changepwdadmin = async (req, res) => {
 exports.g_forgotpwdadmin = async (req,res) => {
     try{
         console.log("Hello");
-        res.send("heeeeeeeeee");
+        res.render("Admin/forgotpwdadmin.ejs");
+        // res.send("heeeeeeeeee");
     }catch(err)
     {
         console.error(err);
@@ -1482,7 +1483,7 @@ exports.p_changepwdfaculty = async (req, res) => {
 exports.g_forgotpwdfaculty = async (req,res) => {
     try{
         console.log("Hello");
-        res.send("heeeeeeeeee");
+        res.render("Faculty/forgotpwdfaculty.ejs");
     }catch(err)
     {
         console.error(err);
@@ -1732,6 +1733,17 @@ exports.g_courseregistration = async (req, res) => {
         const batch = user[0].Batch;
         // console.log(p_name);
         // console.log(batch);
+
+        const test = await Course_Enrollment.find({ studentEnrolled : user, semesterEnrolled : sem_name });
+        console.log(test);
+        if(test){
+            const title = "ERROR";
+            const message = "You have already registerd!";
+            const icon = "error";
+            const href = "/studenthome";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+            return ;
+        }
 
         const coursesTaught = await Course_Allotment.aggregate([
             {
@@ -2147,7 +2159,7 @@ exports.p_changepwdadmin = async (req, res) => {
         const user = await Admin.findOne({ Email_id: email });
 
         const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
-        // const pwdinvalid = oldpwd === user.Password;
+        //  const pwdinvalid = oldpwd === user.Password;
         console.log(oldpwd);
         console.log(user.Password);
         if (!pwdinvalid) {
@@ -2176,17 +2188,17 @@ exports.p_changepwdadmin = async (req, res) => {
     }
 }
 
-exports.g_studentpwdadmin = async (req,res) => {
+exports.g_forgotpwdstudent = async (req,res) => {
     try{
         console.log("Hello");
-        res.send("heeeeeeeeee");
+        res.render("Student/forgotpwdstudent.ejs");
     }catch(err)
     {
         console.error(err);
         res.status(500).send("An error occured while changing password!");
     }
 }
-exports.p_studentpwdadmin = async (req, res) => {
+exports.p_forgotpwdstudent = async (req, res) => {
     try {
         //console.log(req.body.a_email);
         const student = Student.findOne({ Email_id : req.body.s_email });

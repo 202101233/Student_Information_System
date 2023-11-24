@@ -93,7 +93,7 @@
                                                 </center>
                                             </td>
                                             <td>
-                                                <input type="checkbox" class="center" name="register"
+                                                <input type="checkbox" <%= coursesTaught[i].Course_type ? 'checked' : '' %> disabled class="center" name="register"
                                                     value="<%= courses[i]._id %>">
 
                                             </td>

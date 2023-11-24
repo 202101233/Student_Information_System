@@ -175,16 +175,6 @@ const ProgramSchema = new mongoose.Schema({
     }],
 });
 
-
-
-var fee_structureSchema = new mongoose.Schema({
-    program_fee : { type : mongoose.Schema.Types.ObjectId, ref : "Program"},
-    Fee_structure : Map,
-})
-
-
-
-
 const AnnouncementSchema = new mongoose.Schema({
     Title: {
         type: String,
@@ -200,11 +190,6 @@ const AnnouncementSchema = new mongoose.Schema({
         required: true,
     },
 });
-
-
-
-
-
 
 const Course_AllotmentSchema = new mongoose.Schema({
     Program_associate: {

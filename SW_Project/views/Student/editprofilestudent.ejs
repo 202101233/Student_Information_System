@@ -57,7 +57,7 @@
                 </div>
     
                 <div class="student-name">
-                  <%= student[0].firstname%>
+                  <%= student[0].firstname%> <%= student[0].lastname%>
                 </div>
     
             </div>
@@ -100,7 +100,7 @@
                     <td>Student ID</td>
                     <td>:</td>
                     <td>
-                      <input type="text" class="ip-boxes-editable" name="id" value="<%= student[0].stud_id%>" id="student-id">
+                      <input type="text" class="ip-boxes-editable" name="id" value="<%= student[0].stud_id%>" id="student-id" disabled>
                     </td> 
               </tr>
                 
@@ -139,7 +139,7 @@
                 <td>Email Address</td>
                 <td>:</td>
                 <td>
-                  <input type="email" class="ip-boxes-editable" name="email_id" value="<%= student[0].Email_id%>" id="emailaddr">  
+                  <input type="email" class="ip-boxes-editable" name="email_id" value="<%= student[0].Email_id%>" id="emailaddr" disabled>  
                 </td>
               </tr>
                 
@@ -167,7 +167,7 @@
               <td>Batch</td>
               <td>:</td>
               <td>
-                <input type="text" class="ip-boxes-editable" name="batch" value="<%= student[0].Batch%>" id="batch">
+                <input type="text" class="ip-boxes-editable" name="batch" value="<%= student[0].Batch%>" id="batch" disabled>
               </td>
             </tr>
     
@@ -185,7 +185,7 @@
               <td>ProgramRegistered</td>
               <td>:</td>
               <td>
-                <input type="text" class="ip-boxes-editable" name="program" value="<%= program.DegreeOffered.Degree_name + ' (' + program.BranchOffered.Branch_name + ')' %>" id="programme">
+                <input type="text" class="ip-boxes-editable" name="program" value="<%= program.DegreeOffered.Degree_name + ' (' + program.BranchOffered.Branch_name + ')' %>" id="programme" disabled>
               </td>
             </tr>
     
