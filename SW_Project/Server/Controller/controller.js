@@ -217,10 +217,13 @@ exports.g_adminhome = (async (req, res) => {
         await isLoggedInadmin(req);
         console.log("jay");
         console.log(req.body);
-        console.log("jay");
-        const adm = await Admin.findOne({ _id: req.user });
-        // console.log(adm);
-        res.render("Admin/adminhome.ejs", { admin: adm });
+        
+        const stored_token = req.cookies.jwtoken;
+        const verify_one = jwt.verify(stored_token, "sagar");
+        const email = verify_one.email_id;
+        const user = await Admin.find({ Email_id: email })
+
+        res.render("Admin/adminhome.ejs", { user });
     } catch (err) {
         console.log("nikErr");
         console.error(err);
@@ -257,8 +260,12 @@ exports.g_studenthome = (isLoggedInstudent, async (req, res) => {
 
 // Admin Functionality
 
-exports.g_studentregistration = (isLoggedInstudent, (req, res) => {
-    res.render("Admin/studentregistration.ejs");
+exports.g_studentregistration = (isLoggedInstudent, async (req, res) => {
+    const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
+    res.render("Admin/studentregistration.ejs", {user});
 })
 
 exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  mail valu baki
@@ -387,9 +394,13 @@ function generatePass() {
 
 exports.g_viewcourse = async (req, res) => {
     try {
+        const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
         const courses = await Course.find({}).exec();
         console.log(courses);
-        res.render("Admin/viewcourse.ejs", { course: courses });
+        res.render("Admin/viewcourse.ejs", { course: courses , user});
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching course data");
@@ -399,8 +410,12 @@ exports.g_viewcourse = async (req, res) => {
 exports.p_viewcourse = async (req, res) => {
     try {
         if (req.body.edit) {
+            const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
             const course = await Course.findOne({ _id: req.body.edit });
-            res.render("Admin/updatecourse.ejs", { course });
+            res.render("Admin/updatecourse.ejs", { course , user});
         }
         else {
             await Course.deleteOne({ _id: req.body.delete }).exec();
@@ -431,8 +446,12 @@ exports.p_updatecourse = async (req, res) => {
     }
 }
 
-exports.g_addcourse = (req, res) => {
-    res.render("Admin/addcourse.ejs");
+exports.g_addcourse = async (req, res) => {
+    const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
+    res.render("Admin/addcourse.ejs", {user});
 }
 
 exports.p_addcourse = async (req, res) => {
@@ -471,8 +490,13 @@ exports.p_addcourse = async (req, res) => {
 
 exports.g_viewdegree = async (req, res) => {
     try {
+        const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
+
         const degrees = await Degree.find({}).exec();
-        res.render("Admin/viewdegree.ejs", { degree: degrees });
+        res.render("Admin/viewdegree.ejs", { degree: degrees , user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching degree data");
@@ -482,8 +506,13 @@ exports.g_viewdegree = async (req, res) => {
 exports.p_viewdegree = async (req, res) => {
     try {
         if (req.body.edit) {
+            const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
+
             const degree = await Degree.findOne({ _id: req.body.edit });
-            res.render("Admin/updatedegree.ejs", { degree });
+            res.render("Admin/updatedegree.ejs", { degree , user});
         }
         else {
             await Degree.deleteOne({ _id: req.body.delete }).exec();
@@ -512,7 +541,13 @@ exports.p_updatedegree = async (req, res) => {
 }
 
 exports.g_adddegree = async (req, res) => {
-    res.render("Admin/adddegree.ejs");
+
+    const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
+
+    res.render("Admin/adddegree.ejs", {user});
 }
 
 exports.p_adddegree = async (req, res) => {
@@ -547,8 +582,13 @@ exports.p_adddegree = async (req, res) => {
 
 exports.g_viewbranch = async (req, res) => {
     try {
+        const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
+        
         const branches = await Branch.find({}).exec();
-        res.render("Admin/viewbranch.ejs", { branch: branches });
+        res.render("Admin/viewbranch.ejs", { branch: branches, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching branch data");
@@ -558,10 +598,14 @@ exports.g_viewbranch = async (req, res) => {
 exports.p_viewbranch = async (req, res) => {
     try {
         if (req.body.edit) {
-            console.log("Branchhhh");
+            const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
+    
             const branch = await Branch.findOne({ _id: req.body.edit });
             console.log(branch);
-            res.render("Admin/updatebranch.ejs", { branch });
+            res.render("Admin/updatebranch.ejs", { branch, user });
         }
         else {
             await Branch.deleteOne({ _id: req.body.delete }).exec();
@@ -591,7 +635,11 @@ exports.p_updatebranch = async (req, res) => {
 }
 
 exports.g_addbranch = async (req, res) => {
-    res.render("Admin/addbranch.ejs");
+    const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
+    res.render("Admin/addbranch.ejs", {user});
 }
 
 exports.p_addbranch = async (req, res) => {
@@ -626,11 +674,15 @@ exports.p_addbranch = async (req, res) => {
 
 exports.g_viewprogram = async (req, res) => {
     try {
+        const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
         const programs = await Program.find({})
             .populate('DegreeOffered BranchOffered CourseOffered')
             .exec();
 
-        res.render("Admin/viewprogram.ejs", { program: programs });
+        res.render("Admin/viewprogram.ejs", { program: programs, user });
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching program data .....");
@@ -655,11 +707,15 @@ exports.p_viewprogram = async (req, res) => {
 
 exports.g_addprogram = async (req, res) => {
     try {
+        const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
         const degrees = await Degree.find({}).exec();
         const branches = await Branch.find({}).exec();
         const courses = await Course.find({}).exec();
-        res.render("Admin/addprogram.ejs", { degrees, branches, courses });
-        console.log("hellooo");
+        res.render("Admin/addprogram.ejs", { degrees, branches, courses, user });
+        
 
     } catch (err) {
         console.error(err);
@@ -707,32 +763,16 @@ exports.p_addprogram = async (req, res) => {
     }
 }
 
-// Admin Semester Manegement
-
-// exports.g_viewsemester = async (req, res) => {
-//     try {
-//         res.render("Admin/admin-semester.ejs");
-//     } catch (err) {
-//         res.status(500).send("Internal Server Error");
-//     }
-// }
-
-// exports.p_viewsemester = async (req, res) => {
-//     try {
-//         await Course_Allotment.deleteOne({ _id: req.body.delete }).exec();
-//         //const course = await Course.find({});
-//         res.redirect("viewsemester");
-//     } catch (err) {
-//         res.status(500).send("Internal Server Error");
-//     }
-// }
-
 exports.g_addsemester = async (req, res) => {
     try {
+        const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
         const degree = await Degree.find({}).exec();
         const branch = await Branch.find({}).exec();
 
-        res.render("Admin/addsemester.ejs", { degree, branch });
+        res.render("Admin/addsemester.ejs", { degree, branch , user});
     } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while fetching program data .....");
@@ -824,7 +864,6 @@ exports.p_addsemester = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        console.error("Error occured while proccesing and uploading semester data");
         res.status(500).send("Error occured while proccesing and uploading semester data");
     }
 };
@@ -877,14 +916,17 @@ exports.p_addsemester = async (req, res) => {
 //     return sem_data;
 // }
 
-// Admin Fee Management
 
 // Admin announcement
 
 exports.g_admin_announcement = async (req, res) => {
     try {
+        const stored_token = req.cookies.jwtoken;
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
         const announcement = await Announcement.find({}).exec();
-        res.render("Admin/admin-announcement.ejs", { announcement });
+        res.render("Admin/admin-announcement.ejs", { announcement, user });
     } catch (err) {
         res.status(500).send("Internal Server Error");
     }
@@ -929,17 +971,10 @@ exports.p_addmin_announcement = async (req, res) => {
 
 exports.g_changepwdadmin = async (req, res) => {
     try {
-        console.log("byeeeee");
         const stored_token = req.cookies.jwtoken;
-        console.log(stored_token);
-        const verify_one = jwt.verify(stored_token, "sagar");
-        console.log(verify_one);
-        const email = verify_one.email_id;
-
-        
-       
-        const user = await Admin.findOne({ Email_id: email });
-        console.log(user);
+    const verify_one = jwt.verify(stored_token, "sagar");
+    const email = verify_one.email_id;
+    const user = await Admin.find({ Email_id: email })
         res.render("Admin/changepwdadmin", { user });
     } catch (err) {
         res.status(500).send("Internal Server Error");
@@ -969,12 +1004,8 @@ exports.p_changepwdadmin = async (req, res) => {
             return;
         }
         const user = await Admin.findOne({ Email_id: email });
-        // console.log(user);
-        // console.log(oldpwd);
-        // console.log(user.Password);
 
         const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
-        // console.log(pwdvalid);
         if (pwdinvalid) {
             const title = "ERROR";
             const message = "Old Passward is incorrect!";
