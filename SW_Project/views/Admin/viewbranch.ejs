@@ -6,7 +6,6 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/admin-common-page.css">
     <link rel="stylesheet" href="css/admin-branch.css">
-    <link rel="stylesheet" href="css/admin-addbranch.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -39,7 +38,7 @@
                     </li>
                     <li><a href="/viewdegree"><i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp;Degree
                             Management </a></li>
-                    <li><a href="/viewbranch"><i class="fa-solid fa-clipboard"></i>&nbsp;branch Management </a>
+                    <li><a href="/viewbranch"><i class="fa-solid fa-clipboard"></i>&nbsp;Branch Management </a>
                     </li>
                     <li><a href="/viewprogram"><i class="fa-solid fa-clipboard"></i>&nbsp;Programme Management
                         </a></li>
@@ -47,7 +46,7 @@
 
                     <li><a href="/admin-announcement"><i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;Announcement </a></li>
 
-                    <li><a href="#"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>&nbsp;Fees </a></li>
+                    
                     <li><a href="/changepwdadmin"><i class="fa-solid fa-key"></i> Change Password
                         </a></li>
                     <li><a href="/adminlogin"><i class="fa-solid fa-right-to-bracket"></i> Logout </a></li>
@@ -58,7 +57,7 @@
                     
                 </div>
                 <div class="currusername">
-                    nothing
+                    <%= user[0].admin_name %> 
                 </div>
             </div>
         </div>
