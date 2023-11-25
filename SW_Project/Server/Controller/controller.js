@@ -891,9 +891,11 @@ exports.p_addmin_announcement = async (req, res) => {
         const due_date = req.body.due_date;
 
         if (new Date(due_date) <= new Date()) {
-            // console.log("wrong date");
-            res.send("Invalid Date!!");
-            return;
+            const title = "ERROR";
+            const message = "Please enter valid due date!";
+            const icon = "error";
+            const href = "/admin-announcement";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
         }
         // console.log(new Date(due_date));
         // console.log(new Date());

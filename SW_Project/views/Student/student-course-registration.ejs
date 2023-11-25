@@ -94,7 +94,7 @@
                                             </td>
                                             <td>
                                                 <center>
-                                                <input class="ip-boxe" type="checkbox" <%= coursesTaught[i].Course_type ? 'checked' : '' %> disabled class="center" name="register"
+                                                <input class="ip-boxe" type="checkbox" <%= coursesTaught[i].Course_type ? 'checked' : '' %> <%= coursesTaught[i].Course_type ? 'disabled' : '' %> class="center" name="register">
                                                     value="<%= courses[i]._id %>">
                                                 </center>
                                             </td>
