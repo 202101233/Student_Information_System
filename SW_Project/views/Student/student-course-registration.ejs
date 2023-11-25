@@ -55,12 +55,12 @@
                     <div class="table-wrapper">
                         <table>
                             <thead>
-                                <th style="width: 15%;">Sr No.</th>
-                                <th style="width: 55%;">Course-Name</th>
-                                <th style="width: 15%;">Code</th>
-                                <th style="width: 15%;">Credit</th>
-                                <th style="width: 15%;">Type</th>
-                                <th style="width: 15%;">Select</th>
+                                <th style="width: 10%;">Sr No.</th>
+                                <th style="width: 50%;">Course-Name</th>
+                                <th style="width: 10%;">Code</th>
+                                <th style="width: 10%;">Credit</th>
+                                <th style="width: 10%;">Type</th>
+                                <th style="width: 10%;">Select</th>
                             </thead>
 
 
@@ -93,14 +93,14 @@
                                                 </center>
                                             </td>
                                             <td>
-                                                <input type="checkbox" <%= coursesTaught[i].Course_type ? 'checked' : '' %> disabled class="center" name="register"
+                                                <center>
+                                                <input class="ip-boxe" type="checkbox" <%= coursesTaught[i].Course_type ? 'checked' : '' %> disabled class="center" name="register"
                                                     value="<%= courses[i]._id %>">
-
+                                                </center>
                                             </td>
 
                                         </tr>
                                         <% } %>
-
 
                                 </div>
                             </tbody>
@@ -108,7 +108,7 @@
                     </div>
 
                     <div class="btn-place">
-                        <button type="submit" class="btn"><b>Submit</b></button>
+                        <button type="submit" class="btn">Submit</button>
                     </div>
 
                 </form>

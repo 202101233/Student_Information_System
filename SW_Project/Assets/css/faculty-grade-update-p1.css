@@ -251,16 +251,17 @@ tr:hover{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 10%;
-    border: 2px solid red;
+    height: 8%;
     backdrop-filter: blur(50px);
+    box-shadow: 2px 2px 2px black;
+    border-radius: 10px;
   }
   
   
   .upper-form .up-table{
     
     /* box-shadow: 2px 2px 2px black;  */
-    border: 2px solid green;
+
     border-radius: 10px;
     width: 70vw; 
     height: 1vh;
@@ -280,6 +281,7 @@ tr:hover{
     height: 3vh;
     width: 10vw;
     font-size: 1.9vh;
+    margin-left: 1vh;
   }
   
   .file-ip{

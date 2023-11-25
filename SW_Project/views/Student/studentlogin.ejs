@@ -7,6 +7,27 @@
     <link href="css/login-student.css" rel="stylesheet">
     <link rel="stylesheet" href="css/login-student.css">
     <title>Student Login</title>
+
+    <script>
+
+        function validateForm() {
+            var x = document.forms["nam"]["s_email"].value;
+            var y = document.forms["nam"]["s_password"].value;
+
+            if ( x == "") {
+            document.querySelector(".errtxt").textContent="Please Enter Email Address";
+            document.querySelector(".errtxt").style.display="flex";
+            return false;
+            }
+            if(y == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Enter Password";
+                return false;
+            }
+        }
+  
+    </script>
+
 </head>
 
 <body>
@@ -17,7 +38,7 @@
     </div>
     
     <div class="formbox">
-    <form action="/studentlogin" class="form" method="post">
+    <form action="/studentlogin" class="form" method="post" onsubmit="return validateForm()" name="nam">
         <h2>Student
         </h2>
         <div class="logoandinput">
@@ -30,6 +51,9 @@
             <input type="password" name="s_password" class="box" placeholder="Enter password">
             </div>
         <hr>
+        <div class="errplc">
+            <p class="errtxt">Please Enter Email Address</p>
+        </div>
         <input type="submit" value="Login" class="submit">
         <a href="/forgotpwdstudent" > Forgot Passward?</a>
     </form>

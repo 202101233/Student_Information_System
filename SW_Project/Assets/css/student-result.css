@@ -209,7 +209,7 @@ h2{
     height: 15%;
     margin-top: 1vh;
     display: grid;
-    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-columns: 25% 25% 25% 25%;
     grid-template-rows: 25% 52% 23%;
     
 }
@@ -224,7 +224,7 @@ h2{
 
 #forspanning{
     grid-column-start: 1;
-    grid-column-end: 6;
+    grid-column-end: 5;
     border: none;
     
     
