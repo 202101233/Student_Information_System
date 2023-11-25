@@ -22,6 +22,7 @@
             if(y == "")
             {
                 document.querySelector(".errtxt").textContent="Please Enter Password";
+                document.querySelector(".errtxt").style.display="flex";
                 return false;
             }
         }
@@ -40,7 +41,7 @@
     <div class="formbox">
     <form action="/studentlogin" class="form" method="post" onsubmit="return validateForm()" name="nam">
         <h2>Student
-        </h2>
+        </h2> 
         <div class="logoandinput">
         <img class="sidelogo" src="https://img.freepik.com/premium-vector/email-symbol-white-background-drawing-by-illustration_872756-174.jpg?w=740" alt="" id="maillogo">
         <input type="email" name="s_email" class="box" placeholder="Enter E-mail">

@@ -265,19 +265,26 @@ exports.g_studentregistration = (isLoggedInstudent, async (req, res) => {
     const verify_one = jwt.verify(stored_token, "sagar");
     const email = verify_one.email_id;
     const user = await Admin.find({ Email_id: email })
-    res.render("Admin/studentregistration.ejs", { user });
+    const degree = await Degree.find({}).exec();
+    const branch = await Branch.find({}).exec();
+    res.render("Admin/studentregistration.ejs", { user, degree, branch });
 })
 
 exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  mail valu baki
     try {
-
+        console.log(req.body.i_email.split("@")[0].length);
+        if(req.body.i_email.split("@")[0].length!=9 ) 
+        {
+            console.log("asdsfsgfd");
+            return;
+        }
         if (req.body.i_email.split("@")[1] != "daiict.ac.in") {
             const title = "ERROR";
             const message = "Invalid Email";
             const icon = "error";
             const href = "/admin-student-registration";
             res.render("Admin/alert.ejs", { title, message, icon, href });
-            return ;
+            return;
         }
 
         const ID = req.body.i_email.split("@")[0];
@@ -287,6 +294,19 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
         // console.log(req.body.email)
         const student = await Student.findOne({ Email_id: req.body.i_email });
         console.log(student);
+        const degree = req.body.degree;
+        const branch = req.body.branch;
+        const existingProgram = await Program.findOne({
+            DegreeOffered: degree,
+            BranchOffered: branch,
+        });
+
+        if (!existingProgram) {
+            // Handle the case when the Program does not exist
+            console.error('Program not found based on degree and branch names.');
+            return; // or throw an error, depending on your use case
+        }
+
 
 
         if (student) {
@@ -313,7 +333,8 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
                 Email_id: req.body.i_email,
                 Password: hashedPassward,
                 Batch: batch,
-                Personal_Email_id : req.body.p_email
+                ProgramRegistered: existingProgram,
+                Personal_Email_id: req.body.p_email
             })
             console.log(newstudent);
             await newstudent.save();
@@ -384,12 +405,12 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
 function generatePass() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}|:<>?-=[];,./';
     let password = '';
-    
+
     for (let i = 0; i < 12; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      password += characters.charAt(randomIndex);
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        password += characters.charAt(randomIndex);
     }
-    
+
     return password;
 }
 
@@ -986,13 +1007,12 @@ exports.p_changepwdadmin = async (req, res) => {
     }
 }
 
-exports.g_forgotpwdadmin = async (req,res) => {
-    try{
+exports.g_forgotpwdadmin = async (req, res) => {
+    try {
         console.log("Hello");
         res.render("Admin/forgotpwdadmin.ejs");
         // res.send("heeeeeeeeee");
-    }catch(err)
-    {
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while changing password!");
     }
@@ -1000,7 +1020,7 @@ exports.g_forgotpwdadmin = async (req,res) => {
 exports.p_forgotpwdadmin = async (req, res) => {
     try {
         //console.log(req.body.a_email);
-        const admin = Admin.findOne({ Email_id : req.body.a_email });
+        const admin = Admin.findOne({ Email_id: req.body.a_email });
         //console.log(admin);
         if (admin == null) {
             const title = "ERROR";
@@ -1068,7 +1088,12 @@ exports.logoutadmin = async (req, res, next) => {
         await isLoggedInadmin(req);
         res.clearCookie("jwtoken");
         console.log("Logout successfully!!");
-        res.redirect("/adminlogin");
+        const title = "SUCCESS";
+        const message = "You have logged out successfully!";
+        const icon = "success";
+        const href = "/adminlogin";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
+
     } catch (err) {
         // This block will only execute if isLoggedInstudent returns false
         res.status(500).send("first you should login and then try to logout");
@@ -1482,12 +1507,11 @@ exports.p_changepwdfaculty = async (req, res) => {
 
 
 
-exports.g_forgotpwdfaculty = async (req,res) => {
-    try{
+exports.g_forgotpwdfaculty = async (req, res) => {
+    try {
         console.log("Hello");
         res.render("Faculty/forgotpwdfaculty.ejs");
-    }catch(err)
-    {
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while changing password!");
     }
@@ -1495,7 +1519,7 @@ exports.g_forgotpwdfaculty = async (req,res) => {
 exports.p_forgotpwdfaculty = async (req, res) => {
     try {
         //console.log(req.body.a_email);
-        const faculty = Faculty.findOne({ Email_id : req.body.f_email });
+        const faculty = Faculty.findOne({ Email_id: req.body.f_email });
         //console.log(admin);
         if (faculty == null) {
             const title = "ERROR";
@@ -1563,7 +1587,11 @@ exports.logoutfaculty = async (req, res, next) => {
         await isLoggedInfaculty(req);
         res.clearCookie("f_jwtoken");
         console.log("Logout successfully!!");
-        res.redirect("/facultylogin");
+        const title = "SUCCESS";
+        const message = "You have logged out successfully!";
+        const icon = "success";
+        const href = "/facultyLogin";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
     } catch (err) {
         // This block will only execute if isLoggedInstudent returns false
         res.status(500).send("first you should login and then try to logout");
@@ -1736,15 +1764,15 @@ exports.g_courseregistration = async (req, res) => {
         // console.log(p_name);
         // console.log(batch);
 
-        const test = await Course_Enrollment.find({ studentEnrolled : user, semesterEnrolled : sem_name });
+        const test = await Course_Enrollment.findOne({ studentEnrolled: user, semesterEnrolled: sem_name });
         console.log(test);
-        if(test){
+        if (test) {
             const title = "ERROR";
             const message = "You have already registerd!";
             const icon = "error";
             const href = "/studenthome";
             res.render("Admin/alert.ejs", { title, message, icon, href });
-            return ;
+            return;
         }
 
         const coursesTaught = await Course_Allotment.aggregate([
@@ -2097,8 +2125,9 @@ exports.p_changepwdstudent = async (req, res) => {
         console.log(user);
 
         const pwdinvalid = await bcrypt.compare(oldpwd, user.Password);
+        console.log(oldpwd);
 
-        if (pwdinvalid) {
+        if (!pwdinvalid) {
             const title = "ERROR";
             const message = "Old Passward is incorrect!";
             const icon = "error";
@@ -2190,12 +2219,11 @@ exports.p_changepwdadmin = async (req, res) => {
     }
 }
 
-exports.g_forgotpwdstudent = async (req,res) => {
-    try{
+exports.g_forgotpwdstudent = async (req, res) => {
+    try {
         console.log("Hello");
         res.render("Student/forgotpwdstudent.ejs");
-    }catch(err)
-    {
+    } catch (err) {
         console.error(err);
         res.status(500).send("An error occured while changing password!");
     }
@@ -2203,7 +2231,7 @@ exports.g_forgotpwdstudent = async (req,res) => {
 exports.p_forgotpwdstudent = async (req, res) => {
     try {
         //console.log(req.body.a_email);
-        const student = Student.findOne({ Email_id : req.body.s_email });
+        const student = Student.findOne({ Email_id: req.body.s_email });
         //console.log(admin);
         if (student == null) {
             const title = "ERROR";
@@ -2271,7 +2299,11 @@ exports.logoutstudent = (async (req, res) => {
         await isLoggedInstudent(req);
         res.clearCookie("jwtokenstudent");
         console.log("Logout successfully!!");
-        res.redirect("/studentlogin");
+        const title = "SUCCESS";
+        const message = "You have logged out successfully!";
+        const icon = "success";
+        const href = "/studentlogin";
+        res.render("Admin/alert.ejs", { title, message, icon, href });
     } catch (err) {
         // This block will only execute if isLoggedInstudent returns false
         res.status(500).send("first you should login and then try to logout");

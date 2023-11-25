@@ -145,9 +145,9 @@ option{
 
 .addcourse-wrapper{
   
-  height: 60%;
+  height: 80%;
   padding: 6vh;
-  width: 40%;
+  width: 50%;
   border-radius: 13px;
   backdrop-filter: blur(50px);
   box-shadow: 2px 2px 2px black;

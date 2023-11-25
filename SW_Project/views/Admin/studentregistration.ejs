@@ -101,6 +101,40 @@
                                 <hr>
                             </div>
                         </div>
+                        
+                        <div class="temp-wrapper">
+                            <div class="tag-place">
+                                <p class="tag-text"><b>Select Degree :-</b></p>
+                            </div>
+                            <div class="inputbox-place">
+                                <select name="degree" id="course-dropdown" class="dropmenu">
+
+                                    <option value="none" 
+                                        class="dropitems">Select Degree</option>
+                                        <% for(var i=0;i<degree.length;i++) { %>
+                                            <option class="dropitmes" value="<%= degree[i]._id %>"><%= degree[i].Degree_name %></option>
+                                            <% } %>
+                                </select>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="temp-wrapper">
+                            <div class="tag-place">
+                                <p class="tag-text"><b>Select Branch :-</b></p>
+                            </div>
+                            <div class="inputbox-place">
+                                <select name="branch" id="course-dropdown" class="dropmenu">
+
+                                    <option value="none" 
+                                        class="dropitems">Select Branch</option>
+                                        <% for(var i=0;i<branch.length;i++) { %>
+                                            <option class="dropitmes" value="<%= branch[i]._id %>"><%= branch[i].Branch_name %></option>
+                                            <% } %>
+                                </select>
+                                <hr>
+                            </div>
+                        </div>
 
                         <div class="btn-place">
                             <!-- <a href="/adminhome"> -->
