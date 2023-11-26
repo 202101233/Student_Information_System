@@ -32,6 +32,11 @@
                 document.querySelector(".errtxt").style.display="flex";
                 return false;
             }
+            if (isNaN(z) || parseFloat(z) > 5) {
+            document.querySelector(".errtxt").textContent = "Credit must be  lesser than 5";
+            document.querySelector(".errtxt").style.display = "flex";
+            return false;
+        }
         }
   
     </script>

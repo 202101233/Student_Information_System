@@ -111,12 +111,22 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
                 //console.log("nik");
 
             } else {
-                res.status(400).json({ error: "Password doesn't match" });
+                const title = "ERROR";
+                const message = "Password doesn't match!";
+                const icon = "error";
+                const href = "/Adminlogin";
+                res.render("Admin/alert.ejs", { title, message, icon, href });
+
+
                 console.log("nik");
             }
         } else {
             console.log(req.body);
-            res.status(400).json({ error: "User doesn't exist" });
+            const title = "ERROR";
+            const message = "User doesn't exists!";
+            const icon = "error";
+            const href = "/adminlogin";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
         }
     } catch (err) {
         res.status(400).json({ err });
@@ -153,10 +163,18 @@ exports.p_facultylogin = async (req, res) => {
                 console.log(verify_one);
                 res.redirect("/facultyhome");
             } else {
-                res.status(400).json({ error: "Password doesn't match" });
+                const title = "ERROR";
+                const message = "Password doesn't match!";
+                const icon = "error";
+                const href = "/Facultylogin";
+                res.render("Admin/alert.ejs", { title, message, icon, href });
             }
         } else {
-            res.status(400).json({ error: "User doesn't exist" });
+            const title = "ERROR";
+            const message = "User doesn't exists!";
+            const icon = "error";
+            const href = "/facultylogin";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
         }
     } catch (err) {
         res.status(400).json({ err });
@@ -202,10 +220,18 @@ exports.p_studentlogin = async (req, res) => {
                 //console.log("nik");
             }
             else {
-                res.status(400).json({ error: "Password doesn't match" });
+                const title = "ERROR";
+                const message = "Password doesn't match!";
+                const icon = "error";
+                const href = "/Studentlogin";
+                res.render("Admin/alert.ejs", { title, message, icon, href });
             }
         } else {
-            res.status(400).json({ error: "User doesn't exist" });
+            const title = "ERROR";
+            const message = "User doesn't exists!";
+            const icon = "error";
+            const href = "/Studentlogin";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
         }
     } catch (err) {
         res.status(400).json({ err });
@@ -273,12 +299,11 @@ exports.g_studentregistration = (isLoggedInstudent, async (req, res) => {
 exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  mail valu baki
     try {
         console.log(req.body.i_email.split("@")[0].length);
-        if(req.body.i_email.split("@")[0].length!=9 ) 
-        {
-            console.log("asdsfsgfd");
-            return;
-        }
-        if (req.body.i_email.split("@")[1] != "daiict.ac.in") {
+        // if (req.body.i_email.split("@")[0].length != 9) {
+        //     console.log("asdsfsgfd");
+        //     return;
+        // }
+        if (req.body.i_email.split("@")[1] != "daiict.ac.in" || req.body.i_email.split("@")[0].length != 9) {
             const title = "ERROR";
             const message = "Invalid Email";
             const icon = "error";
@@ -1572,7 +1597,7 @@ exports.p_forgotpwdfaculty = async (req, res) => {
                 const title = "SUCCESS";
                 const message = "Check your mail to access your new password";
                 const icon = "success";
-                const href = "/facultyLogin";
+                const href = "/studentlogin";
                 res.render("Admin/alert.ejs", { title, message, icon, href });
             })
         }
@@ -2284,7 +2309,7 @@ exports.p_forgotpwdstudent = async (req, res) => {
                 const title = "SUCCESS";
                 const message = "Check your mail to access your new password";
                 const icon = "success";
-                const href = "/adminLogin";
+                const href = "/studentlogin";
                 res.render("Admin/alert.ejs", { title, message, icon, href });
             })
         }
