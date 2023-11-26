@@ -112,7 +112,7 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
 
             } else {
                 const title = "ERROR";
-                const message = "Password doesn't match!";
+                const message = "Password does not match!";
                 const icon = "error";
                 const href = "/Adminlogin";
                 res.render("Admin/alert.ejs", { title, message, icon, href });
@@ -123,7 +123,7 @@ exports.p_adminlogin = async (req, res) => {         //passport??????
         } else {
             console.log(req.body);
             const title = "ERROR";
-            const message = "User doesn't exists!";
+            const message = "User does not exists!";
             const icon = "error";
             const href = "/adminlogin";
             res.render("Admin/alert.ejs", { title, message, icon, href });
@@ -140,7 +140,7 @@ exports.p_facultylogin = async (req, res) => {
         if (user) {
             //check if password matches
             const result = await bcrypt.compare(req.body.f_password, user.Password);
-            //const result = await req.body.f_password === user.Password;
+            // const result = await req.body.f_password === user.Password;
 
             if (result) {
                 const secret = "sagar";
@@ -164,14 +164,14 @@ exports.p_facultylogin = async (req, res) => {
                 res.redirect("/facultyhome");
             } else {
                 const title = "ERROR";
-                const message = "Password doesn't match!";
+                const message = "Password does not match!";
                 const icon = "error";
-                const href = "/Facultylogin";
+                const href = "/facultylogin";
                 res.render("Admin/alert.ejs", { title, message, icon, href });
             }
         } else {
             const title = "ERROR";
-            const message = "User doesn't exists!";
+            const message = "User does not exists!";
             const icon = "error";
             const href = "/facultylogin";
             res.render("Admin/alert.ejs", { title, message, icon, href });
@@ -221,14 +221,14 @@ exports.p_studentlogin = async (req, res) => {
             }
             else {
                 const title = "ERROR";
-                const message = "Password doesn't match!";
+                const message = "Password does not match!";
                 const icon = "error";
                 const href = "/Studentlogin";
                 res.render("Admin/alert.ejs", { title, message, icon, href });
             }
         } else {
             const title = "ERROR";
-            const message = "User doesn't exists!";
+            const message = "User does not exists!";
             const icon = "error";
             const href = "/Studentlogin";
             res.render("Admin/alert.ejs", { title, message, icon, href });
@@ -380,7 +380,7 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
 
             const mailOptions = {
                 from: '202101234@daiict.ac.in', // Sender's email address
-                to: req.body.p_email,//'202101234@daiict.ac.in', // Recipient's email address
+                to: req.body.p_email,//'202101234@daiict.ac.in', // Recipient's persnol email address
                 subject: "Account Created", // Subject of the email
                 text: 'This is a test email sent from Node.js using Nodemailer.',
                 html: `
@@ -1116,7 +1116,7 @@ exports.logoutadmin = async (req, res, next) => {
         const title = "SUCCESS";
         const message = "You have logged out successfully!";
         const icon = "success";
-        const href = "/adminlogin";
+        const href = "/";
         res.render("Admin/alert.ejs", { title, message, icon, href });
 
     } catch (err) {
@@ -1615,7 +1615,7 @@ exports.logoutfaculty = async (req, res, next) => {
         const title = "SUCCESS";
         const message = "You have logged out successfully!";
         const icon = "success";
-        const href = "/facultyLogin";
+        const href = "/";
         res.render("Admin/alert.ejs", { title, message, icon, href });
     } catch (err) {
         // This block will only execute if isLoggedInstudent returns false
@@ -1773,6 +1773,7 @@ exports.p_updatestudent = async (req, res) => {
 
 exports.g_courseregistration = async (req, res) => {
     try {
+        
         const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
         const sem_name = last_sem[0].Semester_name;
 
@@ -1833,7 +1834,7 @@ exports.g_courseregistration = async (req, res) => {
 exports.p_courseregistration = async (req, res) => {
     try {
 
-        // console.log(req.body);
+        console.log(req.body);
 
         if (req.body.register.length !== 5) {
             const title = "ERROR";
@@ -2327,7 +2328,7 @@ exports.logoutstudent = (async (req, res) => {
         const title = "SUCCESS";
         const message = "You have logged out successfully!";
         const icon = "success";
-        const href = "/studentlogin";
+        const href = "/";
         res.render("Admin/alert.ejs", { title, message, icon, href });
     } catch (err) {
         // This block will only execute if isLoggedInstudent returns false

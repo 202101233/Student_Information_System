@@ -87,7 +87,7 @@ const FacultySchema = new mongoose.Schema({
     
     Education: {
         type: String,
-        required: true
+        
     },
 
     Password: {
@@ -98,7 +98,7 @@ const FacultySchema = new mongoose.Schema({
     
     Faculty_Block: {
         type: String,
-        required: true,
+
     },
     Biography: {
         type: String,   
