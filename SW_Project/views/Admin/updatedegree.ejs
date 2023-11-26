@@ -8,6 +8,20 @@
     <link rel="stylesheet" href="css/admin-common-page.css">
     <link rel="stylesheet" href="css/editdegree.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
+    <script>
+
+        function validateForm() {
+            var x = document.forms["nam"]["name"].value;
+           
+            if ( x == "") {
+            document.querySelector(".errtxt").textContent="Please Enter Degree Name";
+            document.querySelector(".errtxt").style.display="flex";
+            return false;
+            }
+           
+        }
+  
+    </script>
 </head>
 
 <body>
@@ -72,7 +86,7 @@
                     <div class="maintag-place">
                         <h1>Edit Degree</h1>
                     </div>
-                    <form action="/updatedegree" method="post">
+                    <form action="/updatedegree" method="post" onsubmit="return validateForm()" name="nam">
                         <div class="temp-wrapper">
                             <div class="tag-place">
                                 <p class="tag-text"><b>Degree Name :-</b></p>
@@ -83,6 +97,9 @@
                             </div>
                         </div>
                         <input type="hidden" id="custId" name="id" value="<%= degree._id%>">
+                        <div class="errplc">
+                            <p class="errtxt">Please Enter Email Address</p>
+                        </div>
                         <div class="btn-place">
                             <!-- <a href="/viewdegree"> -->
                                 <button type="submit" class="btn">Save</button>

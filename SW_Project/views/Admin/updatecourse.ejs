@@ -8,6 +8,33 @@
     <link rel="stylesheet" href="css/admin-common-page.css">
     <link rel="stylesheet" href="css/editcourse.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
+    <script>
+
+        function validateForm() {
+            var x = document.forms["nam"]["name"].value;
+            var y = document.forms["nam"]["code"].value;
+            var z = document.forms["nam"]["credit"].value;
+
+            if ( x == "") {
+            document.querySelector(".errtxt").textContent="Please Enter Course Name";
+            document.querySelector(".errtxt").style.display="flex";
+            return false;
+            }
+            if(y == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Enter Course Code";
+                document.querySelector(".errtxt").style.display="flex";
+                return false;
+            }
+            if(z == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Enter  Course Credit";
+                document.querySelector(".errtxt").style.display="flex";
+                return false;
+            }
+        }
+  
+    </script>
 </head>
 
 <body>
@@ -73,7 +100,7 @@
                         <h1>Edit Course</h1>
                     </div>
 
-                    <form action="/updatecourse" method="post">
+                    <form action="/updatecourse" method="post" onsubmit="return validateForm()" name="nam">
                         <div class="temp-wrapper">
                             <div class="tag-place">
                                 <p class="tag-text"><b>Course Name :-</b></p>
@@ -100,6 +127,9 @@
                                 <input type="number" name="credit" class="ip-box" id="ip-credit" value="<%= course.Course_credit%>">
                                 <hr>
                             </div>
+                        </div>
+                        <div class="errplc">
+                            <p class="errtxt">Please Enter Email Address</p>
                         </div>
                         <input type="hidden" id="custId" name="id" value="<%= course._id%>">
                         <div class="btn-place">

@@ -183,6 +183,21 @@ option{
     
    
 }
+.errplc{
+    
+    height: 11%;
+    width: 82%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    
+}
+
+.errtxt{
+    color: red;
+    font-size: 1.7vh;
+    display: none;
+}
 
 .tag-place{
     

@@ -8,6 +8,48 @@
     <link rel="stylesheet" href="css/student-common-page.css">
     <link rel="stylesheet" href="css/admin-student-registration.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
+
+    <script>
+
+        function validateForm() {
+            var x = document.forms["nam"]["name"].value;
+            var y = document.forms["nam"]["p_email"].value;
+            var z = document.forms["nam"]["i_email"].value;
+            var a = document.forms["nam"]["degree"].value;
+            var b = document.forms["nam"]["branch"].value;
+
+            if ( x == "") {
+            document.querySelector(".errtxt").textContent="Please Enter Student Name";
+            document.querySelector(".errtxt").style.display="flex";
+            return false;
+            }
+            if(y == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Enter Personal Email";
+                document.querySelector(".errtxt").style.display="flex";
+                return false;
+            }
+            if(z == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Enter Institute Email";
+                document.querySelector(".errtxt").style.display="flex";
+                return false;
+            }
+            if(a == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Select Degree";
+                document.querySelector(".errtxt").style.display="flex";
+                return false;
+            }
+            if(b == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Select Branch";
+                document.querySelector(".errtxt").style.display="flex";
+                return false;
+            }
+        }
+  
+    </script>
 </head>
 
 <body>
@@ -72,7 +114,8 @@
                     <div class="maintag-place">
                         <h1>Student Registration</h1>
                     </div>
-                    <form action="/admin-student-registration" method="post">
+                    <form action="/admin-student-registration" class="form" method="post" onsubmit="return validateForm()" name="nam">
+                   
                         <div class="temp-wrapper">
                             <div class="tag-place">
                                 <p class="tag-text"><b>Student Name :-</b></p>
@@ -134,6 +177,9 @@
                                 </select>
                                 <hr>
                             </div>
+                        </div>
+                        <div class="errplc">
+                            <p class="errtxt">Please Enter Email Address</p>
                         </div>
 
                         <div class="btn-place">

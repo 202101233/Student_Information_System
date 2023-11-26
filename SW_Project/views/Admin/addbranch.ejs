@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="css/admin-branch.css">
     <link rel="stylesheet" href="css/admin-addbranch.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
+
+    <script>
+
+        function validateForm() {
+            var x = document.forms["nam"]["name"].value;
+           
+
+            if ( x == "") {
+            document.querySelector(".errtxt").textContent="Please Enter Branch Name";
+            document.querySelector(".errtxt").style.display="flex";
+            return false;
+            }
+            
+        }
+  
+    </script>
 </head>
 
 <body>
@@ -72,7 +88,7 @@
                     <div class="maintag-place">
                         <h1>Add Branch</h1>
                     </div>
-                    <form action="/addbranch" method="post">
+                    <form action="/addbranch" method="post" onsubmit="return validateForm()" name="nam">
                         <div class="temp-wrapper">
                             <div class="tag-place">
                                 <p class="tag-text"><b>Branch Name :-</b></p>
@@ -81,6 +97,9 @@
                                 <input type="text" name="name" class="ip-box" id="ip-name">
                                 <hr>
                             </div>
+                        </div>
+                        <div class="errplc">
+                            <p class="errtxt">Please Enter Email Address</p>
                         </div>
 
                         <div class="btn-place">

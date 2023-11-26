@@ -8,6 +8,34 @@
     <link rel="stylesheet" href="css/student-common-page.css">
     <link rel="stylesheet" href="css/student-change-password.css">
     <script src="https://kit.fontawesome.com/300fc8e5c2.js" crossorigin="anonymous"></script>
+
+    <script>
+
+function validateForm() {
+            var x = document.forms["nam"]["oldpwd"].value;
+            var y = document.forms["nam"]["newpwd"].value;
+            var z = document.forms["nam"]["confirmpwd"].value;
+
+            if ( x == "") {
+            document.querySelector(".errtxt").textContent="Please Enter Old Password";
+            document.querySelector(".errtxt").style.display="flex";
+            return false;
+            }
+            if(y == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Enter New Password";
+                document.querySelector(".errtxt").style.display="flex";
+                return false;
+            }
+            if(z == "")
+            {
+                document.querySelector(".errtxt").textContent="Please Enter  Confirm Password";
+                document.querySelector(".errtxt").style.display="flex";
+                return false;
+            }
+        }
+  
+    </script>
 </head>
 
 <body>
@@ -57,7 +85,7 @@
                     <div class="changepasswordtagplace">
                         <center>Change Password</center>
                     </div>
-                    <form action="changepwdstudent" method="post">
+                    <form action="changepwdstudent" method="post" onsubmit="return validateForm()" name="nam">
                         <br>
                         <p class="subtags">Old Password</p>
                         <div class="containerforinput">
@@ -91,6 +119,9 @@
                                 <hr class="horizontalline">
                             </div>
 
+                        </div>
+                        <div class="errplc">
+                            <p class="errtxt">Please Enter Email Address</p>
                         </div>
 
                         <div class="placeforbutton">
