@@ -288,3 +288,19 @@ tr:hover{
     height: 90%;
     font-size: 1.9vh;
   }
+
+  .errplc{
+    
+    height: 3vh;
+    width: 100%;
+    margin-top: 2vh;
+    
+  }
+
+  .errtxt{
+    display: none;
+    justify-content: center;
+    color: red;
+    font-size: 2vh;
+    
+  }
