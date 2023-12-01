@@ -329,7 +329,12 @@ exports.p_studentregistration = (isLoggedInstudent, async (req, res) => { ////  
         if (!existingProgram) {
             // Handle the case when the Program does not exist
             console.error('Program not found based on degree and branch names.');
-            return; // or throw an error, depending on your use case
+            const title = "ERROR";
+            const message = "Program not found based on degree and branch selected!";
+            const icon = "error";
+            const href = "/admin-student-registration";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+            return;
         }
 
 
