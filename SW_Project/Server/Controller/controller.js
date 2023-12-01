@@ -1722,6 +1722,7 @@ exports.p_updatestudent = async (req, res) => {
             const icon = "error";
             const href = "/viewstudent";
             res.status(401).render("Admin/alert.ejs", { title, message, icon, href });
+            return;
         }
 
         // const validemail = validator.validate(req.body.myemail);
@@ -1773,7 +1774,7 @@ exports.p_updatestudent = async (req, res) => {
 
 exports.g_courseregistration = async (req, res) => {
     try {
-        
+
         const last_sem = await Course_Allotment.find().sort({ Date_created: -1 });
         const sem_name = last_sem[0].Semester_name;
 
@@ -1910,7 +1911,7 @@ exports.g_viewgrade = async (req, res) => {
             const href = "/studenthome";
             res.render("Admin/alert.ejs", { title, message, icon, href });
 
-            return res.status(400).send("Student has not registered yet!");
+            return ;
         }
         const enrolledcourse = courses.courseEnrolled;
 
@@ -1937,7 +1938,17 @@ exports.g_viewgrade = async (req, res) => {
             }
         ])
         console.log("Hello");
+        console.log(data.length);
         console.log(data);
+        if (data.length!=5) {
+            const title = "ERROR";
+            const message = "Faculty has not uploaded grade yet!";
+            const icon = "error";
+            const href = "/studenthome";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
+
+            return ;
+        }
 
         const Courses = [];
         for (let i = 0; i < enrolledcourse.length; i++) {
@@ -1947,6 +1958,7 @@ exports.g_viewgrade = async (req, res) => {
         }
         res.render("Student/result.ejs", { student, sem_name, data, Courses, p_name });
     } catch (err) {
+        console.error(err);
         res.status(500).send("An error occured while fetching semester data");
     }
 }
@@ -2010,22 +2022,16 @@ exports.g_viewattendence = async (req, res) => {
         ])
         console.log("Hello");
         console.log(data);
+        if (data.length!=5) {
+            const title = "ERROR";
+            const message = "Faculty has not uploaded attendence yet!";
+            const icon = "error";
+            const href = "/studenthome";
+            res.render("Admin/alert.ejs", { title, message, icon, href });
 
-        // for(let i=0;i<enrolledcourse.length; i++)
-        // {
-        //     const courseID = enrolledcourse[i];
-        //     //console.log(courseID);
+            return ;
+        }
 
-        //     const data = await Attendance.find({
-        //         A_courseEnrolled : enrolledcourse,
-        //         'Attendance_data' : {
-        //             $elemMatch : {
-        //                 'Student_enrolled' : student[0].stud_id
-        //             }
-        //         }
-        //     }).exec();
-        // }
-        // //console.log(data);
         const Courses = [];
         for (let i = 0; i < enrolledcourse.length; i++) {
             const x = enrolledcourse[i];

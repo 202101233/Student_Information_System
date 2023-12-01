@@ -65,7 +65,7 @@
 
             <i class="fa fa-envelope"></i><input id="email1"  name="myemail" class="email" type="text" value="<%= user[0].Email_id%>"><br>
 
-            <i class="fa fa-mars-stroke" aria-hidden="true"></i><input id="genderplace1" name="gender" class="genderplace" type="text" value="<%= user[0].Gender%>"><br>
+            <i class="fa fa-mars-stroke" aria-hidden="true"></i><input id="genderplace1" name="gender" class="genderplace" type="text" value="<%= user[0].Gender%>" disabled><br>
 
             <% var options={ weekday: 'long' , year: 'numeric' , month: 'long' , day: 'numeric' }; %>  
             <% if (user[0].DOB) { %>
